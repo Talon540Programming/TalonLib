@@ -195,6 +195,7 @@ public class LimelightVision extends SubsystemBase {
                 this.limelightTable.getEntry("ledMode").setNumber(2); // light blinking
                 break;
 
+            case DEFAULT:
             default:
                 this.limelightTable.getEntry("ledMode").setNumber(0); // as per pipeline mode (usually on)
 
