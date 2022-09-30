@@ -1,4 +1,4 @@
-package org.talon540.vision;
+package org.talon540.vision.limelight;
 
 public enum LimelightLEDStates {
     /** Turn on the Limelight LEDs */
