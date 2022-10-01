@@ -12,7 +12,7 @@ public class LimelightVision extends SubsystemBase {
     private double mountAngle, mountHeight;
 
     public boolean targetViewed;
-    public double offsetX, offsetY, targetArea, targetSkew, piplineLatencyMS, totalEstimateLatencyMS;
+    public double offsetX, offsetY, targetArea, targetSkew, piplineLatencyMS, totalEstimatedLatencyMS;
     public int pipeline;
     public LimelightLEDStates LEDState;
 
@@ -47,7 +47,7 @@ public class LimelightVision extends SubsystemBase {
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("tl").addListener(event -> {
             this.piplineLatencyMS = event.value.getDouble();
-            this.totalEstimateLatencyMS = this.piplineLatencyMS + 11;
+            this.totalEstimatedLatencyMS = this.piplineLatencyMS + 11;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("getpipe").addListener(event -> {
             this.pipeline = (int) event.value.getDouble();

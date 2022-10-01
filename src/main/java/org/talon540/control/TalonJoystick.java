@@ -5,7 +5,7 @@ import edu.wpi.first.math.MathUtil;
 
 
 public class TalonJoystick extends Joystick {
-    private double deadband;
+    public double deadband;
 
     /**
      * @param port port on the driverstation
@@ -33,7 +33,7 @@ public class TalonJoystick extends Joystick {
     }
 
     /**
-     * Get the X value from the joysticks and check if it is within the deadband provided
+     * Get the Y value from the joysticks and check if it is within the deadband provided
      * @return normalized Y
      */
     public double getDeadbandY() {
@@ -50,7 +50,7 @@ public class TalonJoystick extends Joystick {
             return 0;
         }
 
-        return MathUtil.clamp(-1, val, 1);
+        return MathUtil.clamp(val, -1, 1);
     }
 
 }
