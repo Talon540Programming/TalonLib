@@ -49,7 +49,7 @@ dependencies {
     implementation 'edu.wpi.first.wpiutil:wpiutil-java:'+WPILIB_VERSION
     implementation 'edu.wpi.first.ntcore:ntcore-java:'+WPILIB_VERSION
 
-    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2022.4.1'
+    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:'+WPILIB_VERSION
 
     // CTRE
     implementation 'com.ctre.phoenix:api-java:5.21.1'
