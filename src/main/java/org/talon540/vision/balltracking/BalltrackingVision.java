@@ -13,7 +13,7 @@ public class BalltrackingVision extends SubsystemBase {
     public double ty = 0;
     public double ta = 0;
 
-    BalltrackingVision() {
+    public BalltrackingVision() {
         setName(this.tableName);
 
         NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("robotready").setBoolean(true);

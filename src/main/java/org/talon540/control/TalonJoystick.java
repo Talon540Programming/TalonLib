@@ -11,7 +11,7 @@ public class TalonJoystick extends Joystick {
      * @param port port on the driverstation
      * @param deadbandPercentage minimum percent required to bypass deadband.
      */
-    TalonJoystick(int port, double deadbandPercentage) {
+    public TalonJoystick(int port, double deadbandPercentage) {
         super(port);
         this.deadband = deadbandPercentage;
     }
@@ -20,7 +20,7 @@ public class TalonJoystick extends Joystick {
      * Create a joystick with 20% deadband (default)
      * @param port
      */
-    TalonJoystick(int port) {
+    public TalonJoystick(int port) {
         this(port, 0.2);
     }
 

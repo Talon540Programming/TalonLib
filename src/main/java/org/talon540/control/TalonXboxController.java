@@ -10,7 +10,7 @@ public class TalonXboxController extends XboxController {
      * @param port               port on the driverstation
      * @param deadbandPercentage minimum percent required to bypass deadband.
      */
-    TalonXboxController(int port, double deadbandPercentage) {
+    public TalonXboxController(int port, double deadbandPercentage) {
         super(port);
         this.deadband = deadbandPercentage;
     }
@@ -20,7 +20,7 @@ public class TalonXboxController extends XboxController {
      * 
      * @param port
      */
-    TalonXboxController(int port) {
+    public TalonXboxController(int port) {
         this(port, 0.1);
     }
 

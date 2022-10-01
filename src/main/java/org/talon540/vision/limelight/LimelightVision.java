@@ -22,7 +22,7 @@ public class LimelightVision extends SubsystemBase {
      * @param mountAngle  mount angle of the limelight in degrees
      * @param mountHeight mount height of the limelight from the floor in meters
      */
-    LimelightVision(double mountAngle, double mountHeight) {
+    public LimelightVision(double mountAngle, double mountHeight) {
         setName(this.tableName);
         this.mountAngle = mountAngle;
         this.mountHeight = mountHeight;
