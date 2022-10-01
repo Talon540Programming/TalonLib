@@ -22,22 +22,22 @@ repositories {
 allprojects {
     group 'org.talon540'
     version '1.0.0'
+}
 
-    repositories {
-        mavenCentral()
+repositories {
+    mavenCentral()
 
-        // WPILIB
-        maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
+    // WPILIB
+    maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
 
-        // CTRE
-        maven { url = uri('https://maven.ctr-electronics.com/release/') }
+    // CTRE
+    maven { url = uri('https://maven.ctr-electronics.com/release/') }
 
-        // REV
-        maven { url = uri('https://maven.revrobotics.com/') }
+    // REV
+    // maven { url = uri('https://maven.revrobotics.com/') }
 
-        // Kauailabs
-        maven { url = uri('"https://repo1.maven.org/maven2/"') }
-    }
+    // Kauailabs
+    maven { url = uri('"https://repo1.maven.org/maven2/"') }
 }
 
 def WPILIB_VERSION = '2022.4.1'
