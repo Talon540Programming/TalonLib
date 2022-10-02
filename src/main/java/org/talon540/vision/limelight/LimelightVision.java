@@ -6,6 +6,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class LimelightVision extends SubsystemBase {
     private String tableName = "limelight";
     private volatile NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable(this.tableName);;
@@ -15,6 +17,9 @@ public class LimelightVision extends SubsystemBase {
     public double offsetX, offsetY, targetArea, targetSkew, piplineLatencyMS, totalEstimatedLatencyMS;
     public int pipeline;
     public LimelightLEDStates LEDState;
+
+    /** Timestamp of the last time the state was updated */
+    public double visionStateTimestamp = 0;
 
     /**
      * Construct a limelight object
@@ -31,26 +36,33 @@ public class LimelightVision extends SubsystemBase {
         this.limelightTable.getEntry("camMode").setNumber(0);
 
         this.limelightTable.getEntry("tv").addListener(event -> {
-            this.targetViewed = event.value.getDouble() == 1;
+            this.targetViewed = event.value.getDouble() == 1.0;
+            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("tx").addListener(event -> {
             this.offsetX = event.value.getDouble();
+            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("ty").addListener(event -> {
             this.offsetY = event.value.getDouble();
+            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("ta").addListener(event -> {
             this.targetArea = event.value.getDouble();
+            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("ts").addListener(event -> {
             this.targetSkew = event.value.getDouble();
+            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("tl").addListener(event -> {
             this.piplineLatencyMS = event.value.getDouble();
             this.totalEstimatedLatencyMS = this.piplineLatencyMS + 11;
+            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("getpipe").addListener(event -> {
             this.pipeline = (int) event.value.getDouble();
+            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("ledMode").addListener(event -> {
             switch ((int) event.value.getDouble()) {
@@ -70,6 +82,7 @@ public class LimelightVision extends SubsystemBase {
                     this.LEDState = LimelightLEDStates.ON;
                     break;
             }
+            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
 
     }
@@ -148,6 +161,9 @@ public class LimelightVision extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType(this.tableName);
 
+        builder.addDoubleProperty("stateChangeTimestamp", () -> {
+            return this.visionStateTimestamp;
+        }, null);
         builder.addBooleanProperty("targetInView", () -> {
             return this.targetViewed;
         }, null);
