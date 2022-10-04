@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj.Timer;
 
+
+/**
+ * An object used to get data and manipulate the state of a limelight camera
+ */
 public class LimelightVision extends SubsystemBase {
     private String tableName = "limelight";
     private volatile NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable(this.tableName);;

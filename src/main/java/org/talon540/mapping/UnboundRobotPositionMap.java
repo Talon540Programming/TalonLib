@@ -4,17 +4,35 @@ import java.util.TreeMap;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
+
+/**
+ * An object used in the logging and retriving of the Robot's position on the field in the form of a {@link Pose2d} object
+ */
 public class UnboundRobotPositionMap {
     protected TreeMap<Double, Pose2d> map = new TreeMap<Double, Pose2d>();
 
+    /**
+     * Add a position to the position map
+     * @param position position of the robot in the form of a Pose2d object
+     * @param timestamp timestamp key
+     */
     public void addPositionToMap(Pose2d position, double timestamp) {
         this.map.put(timestamp, position);
     }
 
+    /**
+     * Get the last entered position in the position map
+     * @return
+     */
     public Pose2d getLatestPosition() {
         return this.map.lastEntry().getValue();
     }
 
+    /**
+     * Get the estimated position of the robot at a specific time. If the time provided is between two different positions, it will interpolate the difference between the two timeslots and return the estimated position
+     * @param timestamp timestamp to reference
+     * @return robot's position on the field
+     */
     public Pose2d getPositionFromTimestamp(double timestamp) {
         if (timestamp <= this.map.firstKey()) {
             return this.map.firstEntry().getValue();
