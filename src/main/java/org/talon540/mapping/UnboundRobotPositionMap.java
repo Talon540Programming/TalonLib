@@ -5,9 +5,9 @@ import java.util.TreeMap;
 import edu.wpi.first.math.geometry.Pose2d;
 
 public class UnboundRobotPositionMap {
-    private TreeMap<Double, Pose2d> map = new TreeMap<Double, Pose2d>();
+    protected TreeMap<Double, Pose2d> map = new TreeMap<Double, Pose2d>();
 
-    public void addPositionToMap(double timestamp, Pose2d position) {
+    public void addPositionToMap(Pose2d position, double timestamp) {
         this.map.put(timestamp, position);
     }
 
@@ -27,6 +27,6 @@ public class UnboundRobotPositionMap {
         double lowerKeyBound = this.map.floorKey(timestamp);
         double ceilingKeyBound = this.map.ceilingKey(timestamp);
 
-        return this.map.get(lowerKeyBound).interpolate(this.map.get(ceilingKeyBound),(timestamp - lowerKeyBound) / ((ceilingKeyBound - lowerKeyBound)));
+        return this.map.get(lowerKeyBound).interpolate(this.map.get(ceilingKeyBound), (timestamp - lowerKeyBound) / ((ceilingKeyBound - lowerKeyBound)));
     }
 }
