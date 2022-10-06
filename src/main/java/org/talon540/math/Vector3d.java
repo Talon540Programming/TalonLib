@@ -1,15 +1,19 @@
 package org.talon540.math;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+
 /**
  * Type of {@link Vector2d} class for swerve
  */
 public class Vector3d {
     /** Linear velocity of the drivetrain in the side to side direction */
-    public double velY;
+    public double vecY;
     /** Linear velocity of the drivetrain in the forward/backword direction */
-    public double velX;
+    public double vecX;
     /** Angular velocity of the drivetrain in {@code rad/s} */
-    public double velRot;
+    public double vecRot;
 
     /**
      * @param velX   speed of the robot in the x-axis
@@ -17,9 +21,9 @@ public class Vector3d {
      * @param velRot angular speed of the robot in rad/s
      */
     public Vector3d(double velX, double velY, double velRot) {
-        this.velX = velX;
-        this.velY = velY;
-        this.velRot = velRot;
+        this.vecX = velX;
+        this.vecY = velY;
+        this.vecRot = velRot;
     }
 
     /**
@@ -28,9 +32,9 @@ public class Vector3d {
      */
     public Vector3d addVector(Vector3d vector) {
         return new Vector3d(
-            velX + vector.velY,
-            velY + vector.velRot,
-            velRot + vector.velRot
+            vecX + vector.vecY,
+            vecY + vector.vecRot,
+            vecRot + vector.vecRot
         );
     }
 
@@ -40,9 +44,9 @@ public class Vector3d {
      */
     public Vector3d substractVector(Vector3d vector) {
         return new Vector3d(
-            velX - vector.velY,
-            velY - vector.velRot,
-            velRot - vector.velRot
+            vecX - vector.vecY,
+            vecY - vector.vecRot,
+            vecRot - vector.vecRot
         );
     }
 
@@ -52,10 +56,26 @@ public class Vector3d {
      */
     public Vector3d multiplyVectorByScale(double scale) {
         return new Vector3d(
-            velX * scale,
-            velY * scale,
-            velRot * scale
+            vecX * scale,
+            vecY * scale,
+            vecRot * scale
         );
     }
 
+    /**
+     * Generate a Pose2d from the current vector
+     * @return
+     */
+    public Pose2d toPose2d() {
+        return new Pose2d(new Translation2d(vecX, vecY), new Rotation2d(vecRot));
+    }
+
+    /**
+     * Generate a Vector3d from a Pose2d
+     * @param pose
+     * @return
+     */
+    public static Vector3d fromPose2d(Pose2d pose) {
+        return new Vector3d(pose.getX(), pose.getY(), pose.getRotation().getRadians());
+    }
 }
