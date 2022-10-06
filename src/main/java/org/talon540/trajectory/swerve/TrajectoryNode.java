@@ -29,4 +29,12 @@ public class TrajectoryNode {
             this(time, new Pose2d(new Translation2d(posX, posY), new Rotation2d(posDirection)), new Vector3d(velX, velY, velRotation));
     }
 
+    public static TrajectoryNode fromPoint(double... pointInfo) {
+        if(pointInfo.length != 6) {
+            throw new IllegalArgumentException();
+        }
+
+        return new TrajectoryNode(pointInfo[0], new Pose2d(new Translation2d(pointInfo[1], pointInfo[2]), new Rotation2d(pointInfo[3])), new Vector3d(pointInfo[4], pointInfo[5], pointInfo[6]));
+    }
+
 }
