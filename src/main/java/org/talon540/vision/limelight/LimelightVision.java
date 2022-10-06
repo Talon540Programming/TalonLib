@@ -1,4 +1,4 @@
-package org.talon540.vision.limelight;
+package org.talon540.vision.Limelight;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
@@ -165,9 +165,7 @@ public class LimelightVision extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType(this.tableName);
 
-        builder.addDoubleProperty("stateChangeTimestamp", () -> {
-            return this.visionStateTimestamp;
-        }, null);
+        builder.addDoubleProperty("stateChangeTimestamp", () -> { return this.visionStateTimestamp; }, null);
         builder.addBooleanProperty("targetInView", () -> {
             return this.targetViewed;
         }, null);
