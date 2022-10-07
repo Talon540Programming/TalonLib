@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj.Timer;
 
-
 /**
  * An object used to get data and manipulate the state of a limelight camera
  */
@@ -165,22 +164,12 @@ public class LimelightVision extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType(this.tableName);
 
-        builder.addDoubleProperty("stateChangeTimestamp", () -> { return this.visionStateTimestamp; }, null);
-        builder.addBooleanProperty("targetInView", () -> {
-            return this.targetViewed;
-        }, null);
-        builder.addDoubleProperty("offsetX", () -> {
-            return this.offsetX;
-        }, null);
-        builder.addDoubleProperty("offsetY", () -> {
-            return this.offsetY;
-        }, null);
-        builder.addDoubleProperty("pipelineLatency", () -> {
-            return this.piplineLatencyMS;
-        }, null);
-        builder.addDoubleProperty("pipeline", () -> {
-            return this.pipeline;
-        }, null);
+        builder.addDoubleProperty("stateChangeTimestamp", () -> this.visionStateTimestamp, null);
+        builder.addBooleanProperty("targetInView", () -> this.targetViewed, null);
+        builder.addDoubleProperty("offsetX", () -> this.offsetX, null);
+        builder.addDoubleProperty("offsetY", () -> this.offsetY, null);
+        builder.addDoubleProperty("pipelineLatency", () -> this.piplineLatencyMS, null);
+        builder.addDoubleProperty("pipeline", () -> this.pipeline, null);
 
     }
 }
