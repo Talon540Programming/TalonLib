@@ -1,11 +1,12 @@
 package org.talon540.trajectory.swerve;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
 public abstract class TalonTrajectory {
-    public List<TrajectoryNode> trajectoryList;
+    public List<TrajectoryNode> trajectoryList = new ArrayList<TrajectoryNode>();
 
     /** Override this value if you don't want to use the default value */
     public double kMaxTranslationalVelocity;
@@ -53,14 +54,36 @@ public abstract class TalonTrajectory {
      * 
      * @return runtime in seconds
      */
-    public double totalTrajectoryTime() {
+    public double getTrajectoryTime() {
         return getEndingNode().time;
+    }
+
+    /**
+     * Return the difference in runtime between two nodes
+     * 
+     * @param index
+     * @return remaining runtime
+     */
+    public double getTrajectoryTime(int index) {
+        return getTrajectoryTime() - this.trajectoryList.get(index).time;
+    }
+
+    /**
+     * Return the remaining time from the provided time
+     * 
+     * @param time
+     * @param estimated if true, substracts the provided time, else conduct a binary
+     *                  search to find the correct node and substract that time
+     * @return remaining runtime
+     */
+    public double getTrajectoryTime(double time, boolean estimated) {
+        return getTrajectoryTime() - (estimated ? time : getNodeFromTime(time).time);
     }
 
     /**
      * Return the estimated total length of the trajectory
      */
-    public double totalTrajectoryLength() {
+    public double getTrajectoryLength() {
         double distance = 0;
 
         // Subtract two so we dont throw out of bounds excpetion
@@ -77,6 +100,69 @@ public abstract class TalonTrajectory {
     }
 
     /**
+     * Get the remaining trajectory length from a specific node
+     * 
+     * @param index
+     * @return remaining length
+     */
+    public double getTrajectoryLength(int index) {
+        if (index == 0)
+            return getTrajectoryLength();
+        if (index > trajectoryList.size())
+            return -1;
+
+        double distance = 0;
+
+        // Subtract two so we dont throw out of bounds excpetion
+        for (int i = index; i < trajectoryList.size() - 2; i++) {
+            Pose2d currentPosition = trajectoryList.get(i).position;
+            Pose2d nextPosition = trajectoryList.get(i + 1).position;
+
+            distance += Math.sqrt(Math.pow(nextPosition.getX() - currentPosition.getX(), 2)
+                    + Math.pow(nextPosition.getY() - currentPosition.getY(), 2));
+        }
+
+        return distance;
+    }
+
+    /**
+     * Get the remaining trajectory length from a specific node
+     * 
+     * @param time
+     * @return remaining length
+     */
+    public double getTrajectoryLength(double time) {
+        try {
+            // IDK how java streams work so im just gonna assume this works
+            // List<TrajectoryNode> shortenedList = trajectoryList.stream().filter(node ->
+            // time < node.time).collect(Collectors.toList());
+            // List<TrajectoryNode> shortenedList =
+            // trajectoryList.subList(getNodeIndexFromTime(time), this.trajectoryList.size()
+            // - 1);
+
+            List<TrajectoryNode> shortenedList = new ArrayList<TrajectoryNode>();
+
+            shortenedList.add(getNodeFromTime(time));
+            shortenedList.addAll(trajectoryList.subList(getNodeIndexFromTime(time), this.trajectoryList.size() - 1));
+
+            double distance = 0;
+
+            // Subtract two so we dont throw out of bounds excpetion
+            for (int i = 0; i < shortenedList.size() - 2; i++) {
+                Pose2d currentPosition = shortenedList.get(i).position;
+                Pose2d nextPosition = shortenedList.get(i + 1).position;
+
+                distance += Math.sqrt(Math.pow(nextPosition.getX() - currentPosition.getX(), 2)
+                        + Math.pow(nextPosition.getY() - currentPosition.getY(), 2));
+            }
+
+            return distance;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /**
      * Sort the trajectory list by time, only needed if random points are inserted
      */
     public void sortTrajectoryList() {
@@ -84,22 +170,17 @@ public abstract class TalonTrajectory {
     }
 
     /**
-     * Return a TrajectoryNode from the Trajectory using the time provided.
-     * If the exact time of the requested node is not found, it will instead
-     * interpolate the requested node.
-     * If the given time is under or over the total time, the min or max node is
-     * returned respectively
+     * Conduct a binary search on trajectory nodes to find upper bound node index
      * 
-     * @param time in {@code seconds}
-     * @return {@link TrajectoryNode} at requested time
+     * @param time
+     * @return
      */
-    public TrajectoryNode getNodeFromTime(double time) {
-        TrajectoryNode startingNode = getStartingNode();
-        TrajectoryNode endingNode = getEndingNode();
-
+    public int getNodeIndexFromTime(double time) {
         // Make sure the input time is in bound
-        if (time <= startingNode.time) return startingNode;
-        if (time >= endingNode.time) return endingNode;
+        if (time <= getStartingNode().time)
+            return 0;
+        if (time >= getEndingNode().time)
+            return this.trajectoryList.size() - 1;
 
         // Conduct a binary search to find current trajectory node
         int leftBound = 0;
@@ -115,10 +196,27 @@ public abstract class TalonTrajectory {
             }
         }
 
-        TrajectoryNode lastNode = trajectoryList.get(leftBound - 1);
-        TrajectoryNode currentNode = trajectoryList.get(leftBound);
+        return leftBound;
+    }
 
-        if (currentNode.time - lastNode.time == 0) return currentNode;
+    /**
+     * Return a TrajectoryNode from the Trajectory using the time provided.
+     * If the exact time of the requested node is not found, it will instead
+     * interpolate the requested node.
+     * If the given time is under or over the total time, the min or max node is
+     * returned respectively
+     * 
+     * @param time in {@code seconds}
+     * @return {@link TrajectoryNode} at requested time
+     */
+    public TrajectoryNode getNodeFromTime(double time) {
+        int currentIndex = getNodeIndexFromTime(time);
+
+        TrajectoryNode lastNode = trajectoryList.get(currentIndex - 1);
+        TrajectoryNode currentNode = trajectoryList.get(currentIndex);
+
+        if (currentNode.time - lastNode.time == 0)
+            return currentNode;
 
         return lastNode.interpolateNode(currentNode, (time - lastNode.time) / (currentNode.time - lastNode.time));
     }

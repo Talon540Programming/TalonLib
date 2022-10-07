@@ -28,42 +28,43 @@ public class Vector3d {
 
     /**
      * Contruct a new vector by adding a vector to the current vector
+     * 
      * @param vector
      */
     public Vector3d addVector(Vector3d vector) {
         return new Vector3d(
-            vecX + vector.vecY,
-            vecY + vector.vecRot,
-            vecRot + vector.vecRot
-        );
+                vecX + vector.vecY,
+                vecY + vector.vecRot,
+                vecRot + vector.vecRot);
     }
 
     /**
      * Contruct a new vector by subtracting a vector to the current vector
+     * 
      * @param vector
      */
     public Vector3d substractVector(Vector3d vector) {
         return new Vector3d(
-            vecX - vector.vecY,
-            vecY - vector.vecRot,
-            vecRot - vector.vecRot
-        );
+                vecX - vector.vecY,
+                vecY - vector.vecRot,
+                vecRot - vector.vecRot);
     }
 
     /**
      * Contruct a new vector by multiplying the current vector by a scale value
+     * 
      * @param scale
      */
     public Vector3d multiplyVectorByScale(double scale) {
         return new Vector3d(
-            vecX * scale,
-            vecY * scale,
-            vecRot * scale
-        );
+                vecX * scale,
+                vecY * scale,
+                vecRot * scale);
     }
 
     /**
      * Generate a Pose2d from the current vector
+     * 
      * @return
      */
     public Pose2d toPose2d() {
@@ -72,6 +73,7 @@ public class Vector3d {
 
     /**
      * Generate a Vector3d from a Pose2d
+     * 
      * @param pose
      * @return
      */
