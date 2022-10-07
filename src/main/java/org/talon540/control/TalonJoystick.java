@@ -11,7 +11,7 @@ public class TalonJoystick extends Joystick {
     public double deadband;
 
     /**
-     * @param port               port on the driverstation
+     * @param port port on the driverstation
      * @param deadbandPercentage minimum percent required to bypass deadband.
      */
     public TalonJoystick(int port, double deadbandPercentage) {
