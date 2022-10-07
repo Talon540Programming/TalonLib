@@ -5,7 +5,8 @@ import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
-public abstract class TalonTrajectory {
+public class TalonTrajectory {
+    public String TrajectoryName;
     public List<TrajectoryNode> trajectoryList = new ArrayList<TrajectoryNode>();
 
     /** Override this value if you don't want to use the default value */
@@ -14,6 +15,17 @@ public abstract class TalonTrajectory {
     public double kMaxAccelerationSquared;
     /** Override this value if you don't want to use the default value */
     public double kMaxRotationalVelocity;
+
+    public TalonTrajectory(String name, double maxTrans, double maxAccel, double maxRot) {
+        this.TrajectoryName = name;
+        this.kMaxTranslationalVelocity = maxTrans;
+        this.kMaxAccelerationSquared = maxAccel;
+        this.kMaxRotationalVelocity = maxRot;
+    }
+
+    public TalonTrajectory(String name) {
+        this(name, 0, 0 ,0);
+    }
 
     /**
      * Add an array of datapoints to the trajectory
