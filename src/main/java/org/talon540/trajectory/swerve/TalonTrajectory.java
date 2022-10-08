@@ -9,22 +9,40 @@ public class TalonTrajectory {
     public String TrajectoryName;
     public List<TrajectoryNode> trajectoryList = new ArrayList<TrajectoryNode>();
 
-    /** Override this value if you don't want to use the default value */
+    /** 
+     * Max translational velocity in {@code meters per second}
+     * Override this value if you don't want to use the default value (defined in rbt code) 
+     */
     public double kMaxTranslationalVelocity;
-    /** Override this value if you don't want to use the default value */
-    public double kMaxAccelerationSquared;
-    /** Override this value if you don't want to use the default value */
+    /** 
+     * Max translational acceleration in {@code meters per second squared}
+     * Override this value if you don't want to use the default value (defined in rbt code)
+     */
+    public double kMaxTranslationalAcceleration;
+    /** 
+     * Max rotational angular velocity in {@code radians per second}
+     * Override this value if you don't want to use the default value (defined in rbt code)
+     */
     public double kMaxRotationalVelocity;
+    /** 
+     * Max rotational angular acceleration in {@code radians per second squared}
+     * Override this value if you don't want to use the default value (defined in rbt code) 
+     */
+    public double kMaxRotationalAcceleration;
 
-    public TalonTrajectory(String name, double maxTrans, double maxAccel, double maxRot) {
+
+    public TalonTrajectory(String name, double maxTVel, double maxTAcc, double maxRVel, double maxRAcc) {
         this.TrajectoryName = name;
-        this.kMaxTranslationalVelocity = maxTrans;
-        this.kMaxAccelerationSquared = maxAccel;
-        this.kMaxRotationalVelocity = maxRot;
+    
+        this.kMaxTranslationalVelocity = maxTVel;
+        this.kMaxTranslationalAcceleration = maxTAcc;
+
+        this.kMaxRotationalVelocity = maxRVel;
+        this.kMaxRotationalAcceleration = maxRAcc;
     }
 
     public TalonTrajectory(String name) {
-        this(name, 0, 0 ,0);
+        this(name, 0, 0 ,0, 0);
     }
 
     /**
@@ -227,7 +245,7 @@ public class TalonTrajectory {
         TrajectoryNode lastNode = trajectoryList.get(currentIndex - 1);
         TrajectoryNode currentNode = trajectoryList.get(currentIndex);
 
-        if (currentNode.time - lastNode.time == 0)
+        if (currentNode.time - lastNode.time < 1E-9)
             return currentNode;
 
         return lastNode.interpolateNode(currentNode, (time - lastNode.time) / (currentNode.time - lastNode.time));
