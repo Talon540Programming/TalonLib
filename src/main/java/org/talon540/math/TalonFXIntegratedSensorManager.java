@@ -2,7 +2,7 @@ package org.talon540.math;
 
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 
-public class TalonFXIntegratedSensorCollection {
+public class TalonFXIntegratedSensorManager {
     private TalonFXSensorCollection collection;
     private double kGearRatio, kRadius;
 
@@ -12,7 +12,7 @@ public class TalonFXIntegratedSensorCollection {
      * @param radius radius of the attached item in meters
      * @param gearRatio gear ratio between the motor and the object. If it is not linear i.e drivetrain gearbox is 54:20, enter 54.0/20.0
      */
-    public TalonFXIntegratedSensorCollection(TalonFXSensorCollection collection, double radius, double gearRatio) {
+    public TalonFXIntegratedSensorManager(TalonFXSensorCollection collection, double radius, double gearRatio) {
         this.collection = collection;
         this.kGearRatio = gearRatio;
         this.kRadius = radius;
@@ -24,7 +24,7 @@ public class TalonFXIntegratedSensorCollection {
      * @param radius radius of the attached item in meters
      * @implNote Assumes there is no gearbox attached (1:1) gear ratio
      */
-    public TalonFXIntegratedSensorCollection(TalonFXSensorCollection collection, double radius) {
+    public TalonFXIntegratedSensorManager(TalonFXSensorCollection collection, double radius) {
         this(collection, radius, 1);
     }
 
