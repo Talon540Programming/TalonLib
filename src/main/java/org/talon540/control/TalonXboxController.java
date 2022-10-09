@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.XboxController;
 public class TalonXboxController extends XboxController {
     public double deadband;
 
+    public XboxControllerButtons buttons = new XboxControllerButtons(this);
+
     /**
      * @param port               port on the driverstation
      * @param deadbandPercentage minimum percent required to bypass deadband.

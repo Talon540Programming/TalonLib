@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Joystick;
 public class TalonJoystick extends Joystick {
     public double deadband;
 
+    public AttackJoystickButtons buttons = new AttackJoystickButtons(this);
+
     /**
      * @param port               port on the driverstation
      * @param deadbandPercentage minimum percent required to bypass deadband.
