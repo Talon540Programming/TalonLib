@@ -4,18 +4,18 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class AttackJoystickButtons {
-    public JoystickButton TRIGGER, TOPMIDDLE, TOPLEFT, TOPRIGHT, LEFTTOP, LEFTBOTTOM, RIGHTTOP, RIGHTBOTTOM, BOTTOMLEFT, BOTTOMRIGHT;
+    public JoystickButton TRIGGER, TOP_MIDDLE, TOP_LEFT, TOP_RIGHT, LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT;
 
     public AttackJoystickButtons(Joystick joystick) {
         TRIGGER = new JoystickButton(joystick, AttackJoystickButtonBindings.TRIGGER);
-        TOPMIDDLE = new JoystickButton(joystick, AttackJoystickButtonBindings.TOPMIDDLE);
-        TOPLEFT = new JoystickButton(joystick, AttackJoystickButtonBindings.TOPLEFT);
-        TOPRIGHT = new JoystickButton(joystick, AttackJoystickButtonBindings.TOPRIGHT);
-        LEFTTOP = new JoystickButton(joystick, AttackJoystickButtonBindings.LEFTTOP);
-        LEFTBOTTOM = new JoystickButton(joystick, AttackJoystickButtonBindings.LEFTBOTTOM);
-        RIGHTTOP = new JoystickButton(joystick, AttackJoystickButtonBindings.RIGHTTOP);
-        RIGHTBOTTOM = new JoystickButton(joystick, AttackJoystickButtonBindings.RIGHTBOTTOM);
-        BOTTOMLEFT = new JoystickButton(joystick, AttackJoystickButtonBindings.BOTTOMLEFT);
-        BOTTOMRIGHT = new JoystickButton(joystick, AttackJoystickButtonBindings.BOTTOMRIGHT);
+        TOP_MIDDLE = new JoystickButton(joystick, AttackJoystickButtonBindings.TOP_MIDDLE);
+        TOP_LEFT = new JoystickButton(joystick, AttackJoystickButtonBindings.TOP_LEFT);
+        TOP_RIGHT = new JoystickButton(joystick, AttackJoystickButtonBindings.TOP_RIGHT);
+        LEFT_TOP = new JoystickButton(joystick, AttackJoystickButtonBindings.LEFT_TOP);
+        LEFT_BOTTOM = new JoystickButton(joystick, AttackJoystickButtonBindings.LEFT_BOTTOM);
+        RIGHT_TOP = new JoystickButton(joystick, AttackJoystickButtonBindings.RIGHT_TOP);
+        RIGHT_BOTTOM = new JoystickButton(joystick, AttackJoystickButtonBindings.RIGHT_BOTTOM);
+        BOTTOM_LEFT = new JoystickButton(joystick, AttackJoystickButtonBindings.BOTTOM_LEFT);
+        BOTTOM_RIGHT = new JoystickButton(joystick, AttackJoystickButtonBindings.BOTTOM_RIGHT);
     }
 }
