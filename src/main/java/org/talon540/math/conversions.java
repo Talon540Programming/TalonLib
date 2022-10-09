@@ -56,7 +56,7 @@ public abstract class conversions {
      * @return linear velocity of the rotating item
      */
     public static double Falcon500VelocityToLinearVelocity(double FXVel, double radius, double gearRatio) {
-        return RPMtoLinearVelocity(Falcon500VelocityToRPM(FXVel), radius) * gearRatio;
+        return RPMtoLinearVelocity(Falcon500VelocityToRPM(FXVel), radius) / gearRatio;
     }
 
     /**
@@ -69,7 +69,7 @@ public abstract class conversions {
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
      */
     public static double LinearVelocityToFalcon500Velocity(double linearVelocity, double radius, double gearRatio) {
-        return RPMtoFalcon500Velocity(LinearVelocityToRPM(linearVelocity, radius)) / gearRatio;
+        return RPMtoFalcon500Velocity(LinearVelocityToRPM(linearVelocity, radius)) * gearRatio;
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class conversions {
      * @return angular velocity of the rotating item in {@code rad/s}
      */
     public static double Falcon500VelocityToAngularVelocity(double FXVel, double gearRatio) {
-        return RPMtoAngularVelocty(Falcon500VelocityToRPM(FXVel)) * gearRatio;
+        return RPMtoAngularVelocty(Falcon500VelocityToRPM(FXVel)) / gearRatio;
     }
 
     /**
@@ -95,7 +95,7 @@ public abstract class conversions {
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
      */
     public static double AngularVelocityToFalcon500Velocity(double angularVelocity, double gearRatio) {
-        return RPMtoFalcon500Velocity(AngularVelocityToRPM(angularVelocity)) / gearRatio;
+        return RPMtoFalcon500Velocity(AngularVelocityToRPM(angularVelocity)) * gearRatio;
     }
 
     /**
