@@ -1,7 +1,6 @@
 package org.talon540.control;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.math.MathUtil;
 
 /**
  * Extends the normal WPI Joystick class with methods for calculating deadband
@@ -11,7 +10,7 @@ public class TalonJoystick extends Joystick {
     public double deadband;
 
     /**
-     * @param port port on the driverstation
+     * @param port               port on the driverstation
      * @param deadbandPercentage minimum percent required to bypass deadband.
      */
     public TalonJoystick(int port, double deadbandPercentage) {
@@ -55,11 +54,15 @@ public class TalonJoystick extends Joystick {
      * @return Checked deadband value
      */
     private double checkDeadband(double val) {
-        if (-this.deadband < val && val < this.deadband) {
-            return 0;
+        if (Math.abs(val) > deadband) {
+            if (val > 0.0) {
+                return (val - deadband) / (1.0 - deadband);
+            } else {
+                return (val + deadband) / (1.0 - deadband);
+            }
+        } else {
+            return 0.0;
         }
-
-        return MathUtil.clamp(val, -1, 1);
     }
 
 }

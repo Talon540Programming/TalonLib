@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class LimelightVision extends SubsystemBase {
     private String tableName = "limelight";
-    private volatile NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable(this.tableName);;
+    private volatile NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable(this.tableName);
     private double mountAngle, mountHeight;
 
     public boolean targetViewed;

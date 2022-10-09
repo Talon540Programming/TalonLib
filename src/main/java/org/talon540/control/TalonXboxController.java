@@ -1,6 +1,5 @@
 package org.talon540.control;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -75,11 +74,15 @@ public class TalonXboxController extends XboxController {
      * @return Checked deadband value
      */
     private double checkDeadband(double val) {
-        if (-this.deadband < val && val < this.deadband) {
-            return 0;
+        if (Math.abs(val) > deadband) {
+            if (val > 0.0) {
+                return (val - deadband) / (1.0 - deadband);
+            } else {
+                return (val + deadband) / (1.0 - deadband);
+            }
+        } else {
+            return 0.0;
         }
-
-        return MathUtil.clamp(val, -1, 1);
     }
 
 }
