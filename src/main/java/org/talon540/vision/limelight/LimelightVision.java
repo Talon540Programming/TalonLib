@@ -18,6 +18,8 @@ public class LimelightVision extends SubsystemBase {
 
     public boolean targetViewed;
     public double offsetX, offsetY, targetArea, targetSkew, piplineLatencyMS, totalEstimatedLatencyMS;
+    public double nonZeroX, nonZeroY;
+
     public int pipeline;
     public LimelightLEDStates LEDState;
 
@@ -44,10 +46,12 @@ public class LimelightVision extends SubsystemBase {
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("tx").addListener(event -> {
             this.offsetX = event.value.getDouble();
+            if(this.offsetX != 0) nonZeroX = this.offsetX;
             this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("ty").addListener(event -> {
             this.offsetY = event.value.getDouble();
+            if(this.offsetY != 0) nonZeroY = this.offsetY;
             this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
         this.limelightTable.getEntry("ta").addListener(event -> {
@@ -132,6 +136,20 @@ public class LimelightVision extends SubsystemBase {
      */
     public void disableLEDS() {
         this.setLEDState(LimelightLEDStates.OFF);
+    }
+
+    /**
+     * This function sets the LEDS to on
+     */
+    public void enableLEDS() {
+        this.setLEDState(LimelightLEDStates.ON);
+    }
+
+    /**
+     * This function sets the LEDS to blink
+     */
+    public void blinkLEDS() {
+        this.setLEDState(LimelightLEDStates.BLINK);
     }
 
     /**
