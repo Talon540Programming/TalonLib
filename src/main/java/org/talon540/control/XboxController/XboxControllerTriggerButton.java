@@ -1,6 +1,6 @@
-package org.talon540.control;
+package org.talon540.control.XboxController;
 
-import org.talon540.control.XboxControllerBinds.Triggers;
+import org.talon540.control.XboxController.XboxControllerBinds.Triggers;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;

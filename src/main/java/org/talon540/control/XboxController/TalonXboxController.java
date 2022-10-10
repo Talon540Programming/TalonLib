@@ -1,4 +1,4 @@
-package org.talon540.control;
+package org.talon540.control.XboxController;
 
 import edu.wpi.first.wpilibj.XboxController;
 

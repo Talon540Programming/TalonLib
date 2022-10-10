@@ -1,4 +1,4 @@
-package org.talon540.control;
+package org.talon540.control.AttackJoystick;
 
 public interface AttackJoystickButtonBindings {
     public int TRIGGER = 0; // TODO
