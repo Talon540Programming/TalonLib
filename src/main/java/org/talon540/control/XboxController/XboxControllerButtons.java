@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 public class XboxControllerButtons {
     public JoystickButton LEFT_BUMPER, RIGHT_BUMPER, LEFT_STICK, RIGHT_STICK, A, B, X, Y, BACK, START;
     public Button LEFT_TRIGGER, RIGHT_TRIGGER;
-    public Button DPAD_NORTH, DPAD_NORTHEAST, DPAD_EAST, DPAD_SOUTHEAST, DPAD_SOUTH, DPAD_SOUTHWEST, DPAD_WEST, DPAD_NORTHWEST;
+    public XboxControllerDPADButton DPAD_NORTH, DPAD_NORTHEAST, DPAD_EAST, DPAD_SOUTHEAST, DPAD_SOUTH, DPAD_SOUTHWEST, DPAD_WEST, DPAD_NORTHWEST;
 
     public XboxControllerButtons(XboxController controller) {
         LEFT_BUMPER = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);

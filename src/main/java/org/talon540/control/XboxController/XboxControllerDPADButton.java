@@ -23,4 +23,12 @@ public class XboxControllerDPADButton extends Button {
     public boolean get() {
         return controller.getPOV() == selectedButton.POV;
     }
+
+    /**
+     * Returns true if the requested button or either axis on either side of the button is true
+     * @return
+     */
+    public boolean getWithNeighbor() {
+        return get() || controller.getPOV() == selectedButton.POV + 45 || controller.getPOV() == selectedButton.POV - 45;
+    }
 }
