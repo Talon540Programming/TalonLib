@@ -4,26 +4,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
-/**
- * Type of {@link Vector2d} class for swerve
- */
 public class Vector3d {
-    /** Linear velocity of the drivetrain in the side to side direction */
     public double vecY;
-    /** Linear velocity of the drivetrain in the forward/backword direction */
     public double vecX;
-    /** Angular velocity of the drivetrain in {@code rad/s} */
-    public double vecRot;
+    public double vecZ;
 
-    /**
-     * @param velX   speed of the robot in the x-axis
-     * @param velY   speed of the robot in the y-axis
-     * @param velRot angular speed of the robot in rad/s
-     */
     public Vector3d(double velX, double velY, double velRot) {
         this.vecX = velX;
         this.vecY = velY;
-        this.vecRot = velRot;
+        this.vecZ = velRot;
     }
 
     /**
@@ -34,8 +23,8 @@ public class Vector3d {
     public Vector3d addVector(Vector3d vector) {
         return new Vector3d(
                 vecX + vector.vecY,
-                vecY + vector.vecRot,
-                vecRot + vector.vecRot);
+                vecY + vector.vecZ,
+                vecZ + vector.vecZ);
     }
 
     /**
@@ -46,8 +35,8 @@ public class Vector3d {
     public Vector3d substractVector(Vector3d vector) {
         return new Vector3d(
                 vecX - vector.vecY,
-                vecY - vector.vecRot,
-                vecRot - vector.vecRot);
+                vecY - vector.vecZ,
+                vecZ - vector.vecZ);
     }
 
     /**
@@ -59,7 +48,7 @@ public class Vector3d {
         return new Vector3d(
                 vecX * scale,
                 vecY * scale,
-                vecRot * scale);
+                vecZ * scale);
     }
 
     /**
@@ -68,7 +57,7 @@ public class Vector3d {
      * @return
      */
     public Pose2d toPose2d() {
-        return new Pose2d(new Translation2d(vecX, vecY), new Rotation2d(vecRot));
+        return new Pose2d(new Translation2d(vecX, vecY), new Rotation2d(vecZ));
     }
 
     /**
