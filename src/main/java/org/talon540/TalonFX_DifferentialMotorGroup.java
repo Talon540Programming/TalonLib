@@ -2,7 +2,6 @@ package org.talon540;
 
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class TalonFX_DifferentialMotorGroup extends MotorControllerGroup {
