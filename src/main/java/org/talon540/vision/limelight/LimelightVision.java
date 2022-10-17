@@ -18,7 +18,7 @@ public class LimelightVision extends SubsystemBase {
 
     public boolean targetViewed;
     public double offsetX, offsetY, targetArea, targetSkew, piplineLatencyMS, totalEstimatedLatencyMS;
-    public double nonZeroX, nonZeroY;
+    public Double nonZeroX, nonZeroY = null;
 
     public int pipeline;
     public LimelightLEDStates LEDState;
