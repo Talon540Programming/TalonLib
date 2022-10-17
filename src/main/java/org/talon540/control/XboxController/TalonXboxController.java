@@ -70,6 +70,24 @@ public class TalonXboxController extends XboxController {
     }
 
     /**
+     * Start rumbling both sides of the controller to some percent
+     * @param percent percent in [-1,1]
+     */
+    public void startRumble(double percent) {
+        this.setRumble(RumbleType.kLeftRumble, percent);
+        this.setRumble(RumbleType.kRightRumble, percent);
+    }
+
+    /**
+     * Stop the controller from rumbling
+     */
+    public void stopRumble() {
+        this.setRumble(RumbleType.kLeftRumble, 0);
+        this.setRumble(RumbleType.kRightRumble, 0);
+
+    }
+
+    /**
      * Return 0 if the reported value is within the deadband
      * 
      * @param val current val within domain [-1, 1]
