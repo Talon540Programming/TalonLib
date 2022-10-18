@@ -21,7 +21,6 @@ public class LimelightVision extends SubsystemBase {
     public Double nonZeroX, nonZeroY = null;
 
     public int pipeline;
-    public LimelightLEDStates LEDState;
 
     /** Timestamp of the last time the state was updated */
     public double visionStateTimestamp = 0;
@@ -71,26 +70,6 @@ public class LimelightVision extends SubsystemBase {
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("getpipe").addListener(event -> {
             this.pipeline = (int) event.value.getDouble();
-            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
-        }, EntryListenerFlags.kUpdate);
-        limelightTable.getEntry("ledMode").addListener(event -> {
-            switch ((int) event.value.getDouble()) {
-                case 0:
-                    this.LEDState = LimelightLEDStates.DEFAULT;
-                    break;
-                case 1:
-                    this.LEDState = LimelightLEDStates.OFF;
-
-                    break;
-                case 2:
-                    this.LEDState = LimelightLEDStates.BLINK;
-
-                    break;
-                default:
-                case 3:
-                    this.LEDState = LimelightLEDStates.ON;
-                    break;
-            }
             this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
         }, EntryListenerFlags.kUpdate);
 
@@ -191,7 +170,6 @@ public class LimelightVision extends SubsystemBase {
         builder.addDoubleProperty("offsetY", () -> this.offsetY, null);
         builder.addDoubleProperty("pipelineLatency", () -> this.piplineLatencyMS, null);
         builder.addDoubleProperty("pipeline", () -> this.pipeline, null);
-        builder.addStringProperty("LED Mode", () -> this.LEDState.toString(), null);
 
     }
 }
