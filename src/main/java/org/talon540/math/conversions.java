@@ -102,7 +102,7 @@ public abstract class conversions {
      * Convert the velocity reported by the {@code TalonFX} integrated sensor to the
      * linear velocity of something connected to it
      * 
-     * @implNote this method assumes a gear ratio of 1 (i.e nothing between the two)
+     * Note: this method assumes a gear ratio of 1 (i.e nothing between the two)
      * @param FXVel  the velocity reported by the motor in encoder
      *               {@code ticks / 100ms}
      * @param radius radius of the item attached to motor
@@ -116,7 +116,7 @@ public abstract class conversions {
      * Convert the linear velocity of something connected to a {@code TalonFX} to a
      * CTRE velocity
      * 
-     * @implNote this method assumes a gear ratio of 1 (i.e nothing between the two)
+     * Note: this method assumes a gear ratio of 1 (i.e nothing between the two)
      * @param linearVelocity linear velocity in the same unit as radius
      * @param radius         linear velocity in the same unit as radius
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
@@ -129,7 +129,7 @@ public abstract class conversions {
      * Convert the velocity reported by the {@code TalonFX} integrated sensor to the
      * angular velocity of something connected to it
      * 
-     * @implNote this method assumes a gear ratio of 1 (i.e nothing between the two)
+     * Note:  this method assumes a gear ratio of 1 (i.e nothing between the two)
      * @param FXVel the velocity reported by the motor in encoder
      *              {@code ticks / 100ms}
      * @return angular velocity of the rotating item in {@code rad/s}
@@ -142,7 +142,7 @@ public abstract class conversions {
      * Convert the angular velocity of something connected to a {@code TalonFX} to a
      * CTRE velocity
      * 
-     * @implNote this method assumes a gear ratio of 1 (i.e nothing between the two)
+     * Note:  this method assumes a gear ratio of 1 (i.e nothing between the two)
      * @param angularVelocity angular velocity of the rotating object in
      *                        {@code rad/s}
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}

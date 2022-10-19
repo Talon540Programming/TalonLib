@@ -56,7 +56,7 @@ public class TrajectoryNode {
      * Create a Trajectory node from it's data, mostly used for reading from a file
      * 
      * @param data
-     * @implNote must be of len 7, even if a datapoint is 0 (which it shouldn't be)
+     * Note:  must be of len 7, even if a datapoint is 0 (which it shouldn't be)
      *           add a zero for blank spaces or an exception is thrown
      */
     public static TrajectoryNode fromData(double... data) {
@@ -74,7 +74,7 @@ public class TrajectoryNode {
      * @param pos         where the requested node is between the current node and
      *                    higher node within [0, 1]
      * @return interpolated {@link TrajectoryNode}
-     * @implNote assumes this node is the floor node
+     * Note:  assumes this node is the floor node
      */
     public TrajectoryNode interpolateNode(TrajectoryNode ceilingNode, double pos) {
         // Uses forumula:

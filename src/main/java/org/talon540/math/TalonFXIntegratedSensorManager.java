@@ -22,7 +22,7 @@ public class TalonFXIntegratedSensorManager {
      * Construct sensor collection using integrated sensor collection and dimmensions of attached objects.
      * @param collection {@link TalonFXSensorCollection} from the motor controller
      * @param radius radius of the attached item in meters
-     * @implNote Assumes there is no gearbox attached (1:1) gear ratio
+     * Note:  Assumes there is no gearbox attached (1:1) gear ratio
      */
     public TalonFXIntegratedSensorManager(TalonFXSensorCollection collection, double radius) {
         this(collection, radius, 1);
