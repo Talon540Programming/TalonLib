@@ -1,4 +1,4 @@
-package org.talon540.control.RoboRio;
+package org.talon540.control;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.RobotController;

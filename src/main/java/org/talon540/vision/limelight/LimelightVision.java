@@ -141,16 +141,16 @@ public class LimelightVision extends SubsystemBase {
     public void setLEDState(LimelightLEDStates dLedStates) {
         NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ledMode");
         switch (dLedStates) {
-            case ON:
-            ledEntry.setNumber(3); // light on
-                break;
-
             case OFF:
             ledEntry.setNumber(1); // light off
                 break;
 
             case BLINK:
             ledEntry.setNumber(2); // light blinking
+                break;
+
+            case ON:
+            ledEntry.setNumber(3); // light on
                 break;
 
             case DEFAULT:
@@ -160,16 +160,32 @@ public class LimelightVision extends SubsystemBase {
         }
     }
 
+    public LimelightLEDStates getLEDState() {
+        NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ledMode");
+
+        switch(ledEntry.getNumber(0).intValue()) {
+            default:
+            case 0:
+                return LimelightLEDStates.DEFAULT;
+            case 1:
+                return LimelightLEDStates.OFF;
+            case 2:
+                return LimelightLEDStates.BLINK;
+            case 3:
+                return LimelightLEDStates.ON;
+        }
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType(this.tableName);
 
-        builder.addDoubleProperty("stateChangeTimestamp", () -> this.visionStateTimestamp, null);
         builder.addBooleanProperty("targetInView", () -> this.targetViewed, null);
         builder.addDoubleProperty("offsetX", () -> this.offsetX, null);
         builder.addDoubleProperty("offsetY", () -> this.offsetY, null);
         builder.addDoubleProperty("pipelineLatency", () -> this.piplineLatencyMS, null);
+        builder.addDoubleProperty("timestamp", () -> this.visionStateTimestamp, null);
         builder.addDoubleProperty("pipeline", () -> this.pipeline, null);
-
+        builder.addStringProperty("LED Mode", () -> this.getLEDState().toString(), null);
     }
 }
