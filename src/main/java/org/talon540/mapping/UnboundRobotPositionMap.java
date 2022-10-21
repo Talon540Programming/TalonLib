@@ -29,7 +29,13 @@ public class UnboundRobotPositionMap implements Sendable {
      * @return
      */
     public Pose2d getLatestPosition() {
-        return this.map.lastEntry().getValue();
+        // return this.map.lastEntry().getValue();
+
+        try {
+            return this.map.lastEntry().getValue();
+        } catch (Exception e) {
+            return new Pose2d();
+        }
     }
 
     /**
@@ -63,6 +69,12 @@ public class UnboundRobotPositionMap implements Sendable {
         builder.addDoubleProperty("count", () -> map.size(), null);
 
         builder.addStringProperty("cPosition", () -> getLatestPosition().toString(), null);
-        builder.addDoubleProperty("cTimestamp", () -> map.firstKey(), null);
+        builder.addDoubleProperty("cTimestamp", () -> {
+            try {
+                return map.firstKey();
+            } catch (Exception e) {
+                return 0;
+            }
+        }, null);
     }
 }
