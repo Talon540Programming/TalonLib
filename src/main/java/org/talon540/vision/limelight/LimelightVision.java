@@ -183,9 +183,26 @@ public class LimelightVision extends SubsystemBase {
         builder.addBooleanProperty("targetInView", () -> this.targetViewed, null);
         builder.addDoubleProperty("offsetX", () -> this.offsetX, null);
         builder.addDoubleProperty("offsetY", () -> this.offsetY, null);
+        builder.addDoubleProperty("nonZeroOffsetX", () -> this.nonZeroX == null ? 0 : this.nonZeroX, null);
+        builder.addDoubleProperty("nonZeroOffsetY", () -> this.nonZeroY == null ? 0 : this.nonZeroY, null);
         builder.addDoubleProperty("pipelineLatency", () -> this.piplineLatencyMS, null);
         builder.addDoubleProperty("timestamp", () -> this.visionStateTimestamp, null);
         builder.addDoubleProperty("pipeline", () -> this.pipeline, null);
-        builder.addStringProperty("LED Mode", () -> this.getLEDState().toString(), null);
+        builder.addStringProperty("LED Mode", () -> this.getLEDState().toString(), (targetMode) -> {
+            switch(targetMode.toLowerCase()) {
+                case "on":
+                    setLEDState(LimelightLEDStates.ON);
+                    break;
+                case "off":
+                    setLEDState(LimelightLEDStates.OFF);
+                    break;
+                case "blink":
+                    setLEDState(LimelightLEDStates.BLINK);
+                    break;
+                default:
+                    setLEDState(LimelightLEDStates.DEFAULT);
+                    break;
+            }
+        });
     }
 }
