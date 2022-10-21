@@ -64,10 +64,7 @@ public class UnboundRobotPositionMap implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Robot Position Map");
-
         builder.addDoubleProperty("count", () -> map.size(), null);
-
         builder.addStringProperty("cPosition", () -> getLatestPosition().toString(), null);
         builder.addDoubleProperty("cTimestamp", () -> {
             try {

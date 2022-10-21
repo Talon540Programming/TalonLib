@@ -178,8 +178,6 @@ public class LimelightVision extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType(this.tableName);
-
         builder.addBooleanProperty("targetInView", () -> this.targetViewed, null);
         builder.addDoubleProperty("offsetX", () -> this.offsetX, null);
         builder.addDoubleProperty("offsetY", () -> this.offsetY, null);

@@ -54,8 +54,6 @@ public class TalonTrackingVision extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType(this.tableName);
-
         builder.addDoubleProperty("gamePieceX", () -> this.tx, null);
         builder.addDoubleProperty("gamePieceY", () -> this.ty, null);
         builder.addDoubleProperty("gamePieceA", () -> this.ta, null);
