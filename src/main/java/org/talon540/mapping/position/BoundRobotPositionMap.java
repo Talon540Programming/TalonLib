@@ -1,4 +1,4 @@
-package org.talon540.mapping;
+package org.talon540.mapping.position;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
  * on the number of entries that can be made into the map. This is usually for
  * memory and speed purposes
  */
-public class BoundRobotPositionTreeMap extends UnboundRobotPositionMap {
+public class BoundRobotPositionMap extends UnboundRobotPositionMap {
     private int mapSize;
 
     /**
@@ -15,7 +15,7 @@ public class BoundRobotPositionTreeMap extends UnboundRobotPositionMap {
      * 
      * @param mapSize max number of entries in the map
      */
-    public BoundRobotPositionTreeMap(int mapSize) {
+    public BoundRobotPositionMap(int mapSize) {
         this.mapSize = mapSize;
     }
 

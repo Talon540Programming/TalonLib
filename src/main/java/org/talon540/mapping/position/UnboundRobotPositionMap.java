@@ -1,4 +1,4 @@
-package org.talon540.mapping;
+package org.talon540.mapping.position;
 
 import java.util.TreeMap;
 
