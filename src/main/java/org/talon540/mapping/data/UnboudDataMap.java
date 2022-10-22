@@ -58,6 +58,10 @@ public class UnboudDataMap implements Sendable {
         return Math.sqrt(getVariance());
     }
 
+    public void clearList() {
+        nodeList.clear();
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("Node Count", () -> nodeList.size(), null);
