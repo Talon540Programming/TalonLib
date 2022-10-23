@@ -13,14 +13,43 @@ import edu.wpi.first.wpilibj.Timer;
  * An object used to get data and manipulate the state of a limelight camera
  */
 public class LimelightVision extends SubsystemBase {
-    private String tableName = "limelight";
+    private final String tableName = "limelight";
 
     private double mountAngle, mountHeight;
 
+    /**
+     * Is the target currently in the viewport of the limelight
+     */
     public boolean targetViewed;
 
-    public double offsetX, offsetY, nonZeroX, nonZeroY, targetArea, targetSkew, piplineLatencyMS;
-
+    /**
+     * Horizontal offset from the crosshair
+     */
+    public double offsetX;
+    /**
+     * Vertical offset from the crosshair
+     */
+    public double offsetY;
+    /**
+     * Horizontal offset from the crosshair. Doesnt record 0 values in case the target is lost from view
+     */
+    public double nonZeroX;
+    /**
+     * Vertical offset from the crosshair. Doesnt record 0 values in case the target is lost from view
+     */
+    public double nonZeroY;
+    /**
+     * Area of the total screen of the target
+     */
+    public double targetArea;
+    /**
+     * Target skew or rotation
+     */
+    public double targetSkew;
+    /**
+     * Latency of the calculations of the computer vision processing
+     */
+    public double piplineLatencyMS;
     /**
      * Timestamp of the last time the state was updated.
      * Accounts for pipeline latency
@@ -44,31 +73,36 @@ public class LimelightVision extends SubsystemBase {
         limelightTable.getEntry("pipeline").setNumber(pipeline);
         limelightTable.getEntry("camMode").setNumber(ledMode);
 
+        limelightTable.getEntry("NZtx").setDefaultDouble(0);
+        limelightTable.getEntry("NZtx").setPersistent();
+        limelightTable.getEntry("NZty").setDefaultDouble(0);
+        limelightTable.getEntry("NZty").setPersistent();
+
         limelightTable.getEntry("tv").addListener(event -> {
             this.targetViewed = event.value.getDouble() == 1.0;
-            feed();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("tx").addListener(event -> {
             this.offsetX = event.value.getDouble();
-            if (this.offsetX != 0) nonZeroX = this.offsetX;
-            feed();
+            if (this.offsetX != 0) limelightTable.getEntry("NZtx").setDouble(this.offsetX);
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ty").addListener(event -> {
             this.offsetY = event.value.getDouble();
-            if (this.offsetY != 0) nonZeroY = this.offsetY;
-            feed();
+            if (this.offsetY != 0) limelightTable.getEntry("NZty").setDouble(this.offsetY);
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ta").addListener(event -> {
             this.targetArea = event.value.getDouble();
-            feed();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ts").addListener(event -> {
             this.targetSkew = event.value.getDouble();
-            feed();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("tl").addListener(event -> {
             this.piplineLatencyMS = event.value.getDouble();
-            feed();
+        }, EntryListenerFlags.kUpdate);
+        limelightTable.getEntry("NZtx").addListener(event -> {
+            this.nonZeroX = event.value.getDouble();
+        }, EntryListenerFlags.kUpdate);
+        limelightTable.getEntry("NZtv").addListener(event -> {
+            this.nonZeroY = event.value.getDouble();
         }, EntryListenerFlags.kUpdate);
 
     }
@@ -82,6 +116,11 @@ public class LimelightVision extends SubsystemBase {
      */
     public LimelightVision(double mountAngle, double mountHeight) {
         this(mountAngle, mountHeight, 0, 0);
+    }
+
+    @Override
+    public void periodic() {
+        this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
     }
 
     /**
@@ -230,10 +269,6 @@ public class LimelightVision extends SubsystemBase {
                     break;
             }
         });
-    }
-
-    private void feed() {
-        this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
     }
 
 }
