@@ -1,4 +1,4 @@
-package org.talon540.trajectory.swerve;
+package org.talon540.drive.swerve.trajectory;
 
 import java.util.ArrayList;
 import java.util.List;

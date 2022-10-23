@@ -1,4 +1,4 @@
-package org.talon540.trajectory.swerve;
+package org.talon540.drive.swerve.trajectory;
 
 import org.talon540.math.Vector3d;
 

@@ -1,4 +1,4 @@
-package org.talon540;
+package org.talon540.drive.differential;
 
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
