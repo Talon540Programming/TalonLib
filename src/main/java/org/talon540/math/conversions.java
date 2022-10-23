@@ -64,7 +64,7 @@ public abstract class conversions {
      * CTRE velocity
      * 
      * @param linearVelocity linear velocity in the same unit as radius
-     * @param radius         linear velocity in the same unit as radius
+     * @param radius         radius of object
      * @param gearRatio      gear ratio between the rotating object and the motor
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
      */
@@ -164,6 +164,7 @@ public abstract class conversions {
      * Convert angular velocity to linear velocity
      * 
      * @param angularVelocity angular velocity in {@code rad/s}
+     * @return linear velocity in {@code meters per second}
      */
     public static double AngularVelocityToLinearVelocity(double angularVelocity, double radius) {
         return angularVelocity * radius;
@@ -173,7 +174,7 @@ public abstract class conversions {
      * Convert the CTRE velocity reported by a Falcon500's integrated sensor to RPM
      * 
      * @param FXVel
-     * @return CTRE velocity in {@code ticks / 100ms}
+     * @return RPM of the motor
      */
     public static double Falcon500VelocityToRPM(double FXVel) {
         return FXVel * 600.0 / 2048.0;

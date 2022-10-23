@@ -7,7 +7,7 @@ public class TalonFXIntegratedSensorManager {
     private double kGearRatio, kRadius;
 
     /**
-     * Construct sensor collection using integrated sensor collection and dimmensions of attached objects
+     * Construct sensor manager using integrated sensor collection and dimmensions of attached objects
      * @param collection {@link TalonFXSensorCollection} from the motor controller
      * @param radius radius of the attached item in meters
      * @param gearRatio gear ratio between the motor and the object. If it is not linear i.e drivetrain gearbox is 54:20, enter 54.0/20.0
@@ -19,7 +19,7 @@ public class TalonFXIntegratedSensorManager {
     }
 
     /**
-     * Construct sensor collection using integrated sensor collection and dimmensions of attached objects.
+     * Construct sensor manager using integrated sensor collection and dimmensions of attached objects.
      * @param collection {@link TalonFXSensorCollection} from the motor controller
      * @param radius radius of the attached item in meters
      * Note:  Assumes there is no gearbox attached (1:1) gear ratio
