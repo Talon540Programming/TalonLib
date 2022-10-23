@@ -10,7 +10,7 @@ public class UnboudDataMap implements Sendable {
     protected List<Double> nodeList = new ArrayList<Double>();
 
     /**
-     * Add datapoint to list of data
+     * Add datapoint to dataset
      * @param val value to add
      */
     public void addNode(double val) {
@@ -58,6 +58,16 @@ public class UnboudDataMap implements Sendable {
         return Math.sqrt(getVariance());
     }
 
+    /**
+     * Get the number of datapoints in the dataset
+     */
+    public int getNodeCount() {
+        return nodeList.size();
+    }
+
+    /**
+     * Reset the dataset
+     */
     public void clearList() {
         nodeList.clear();
     }

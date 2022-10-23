@@ -9,7 +9,7 @@ public class BoundDataMap extends UnboudDataMap {
 
     @Override
     public void addNode(double val) {
-        if(super.nodeList.size() > this.limit) super.nodeList.remove(0);
+        if(this.limit <= super.nodeList.size()) super.nodeList.remove(0);
         super.addNode(val);
     }
 }
