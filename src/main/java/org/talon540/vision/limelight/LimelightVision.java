@@ -14,91 +14,109 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class LimelightVision extends SubsystemBase {
     private String tableName = "limelight";
+
     private double mountAngle, mountHeight;
 
     public boolean targetViewed;
-    public double offsetX, offsetY, targetArea, targetSkew, piplineLatencyMS, totalEstimatedLatencyMS;
-    public Double nonZeroX, nonZeroY = null;
 
-    public int pipeline;
+    public double offsetX, offsetY, nonZeroX, nonZeroY, targetArea, targetSkew, piplineLatencyMS;
 
-    /** Timestamp of the last time the state was updated */
-    public double visionStateTimestamp = 0;
+    /**
+     * Timestamp of the last time the state was updated.
+     * Accounts for pipeline latency
+     */
+    public double visionStateTimestamp;
 
     /**
      * Construct a limelight object
      * 
      * @param mountAngle  mount angle of the limelight in degrees
-     * @param mountHeight mount height of the limelight from the floor in meters
+     * @param mountHeight mount height of the center of the limelight's lens from
+     *                    the floor in meters
      */
-    public LimelightVision(double mountAngle, double mountHeight) {
+    public LimelightVision(double mountAngle, double mountHeight, int ledMode, int pipeline) {
         setName(this.tableName);
         this.mountAngle = mountAngle;
         this.mountHeight = mountHeight;
 
         NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable(this.tableName);
 
-        limelightTable.getEntry("pipeline").setNumber(0);
-        limelightTable.getEntry("camMode").setNumber(0);
+        limelightTable.getEntry("pipeline").setNumber(pipeline);
+        limelightTable.getEntry("camMode").setNumber(ledMode);
 
         limelightTable.getEntry("tv").addListener(event -> {
             this.targetViewed = event.value.getDouble() == 1.0;
-            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
+            feed();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("tx").addListener(event -> {
             this.offsetX = event.value.getDouble();
-            if(this.offsetX != 0) nonZeroX = this.offsetX;
-            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
+            if (this.offsetX != 0) nonZeroX = this.offsetX;
+            feed();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ty").addListener(event -> {
             this.offsetY = event.value.getDouble();
-            if(this.offsetY != 0) nonZeroY = this.offsetY;
-            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
+            if (this.offsetY != 0) nonZeroY = this.offsetY;
+            feed();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ta").addListener(event -> {
             this.targetArea = event.value.getDouble();
-            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
+            feed();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ts").addListener(event -> {
             this.targetSkew = event.value.getDouble();
-            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
+            feed();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("tl").addListener(event -> {
             this.piplineLatencyMS = event.value.getDouble();
-            this.totalEstimatedLatencyMS = this.piplineLatencyMS + 11;
-            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
-        }, EntryListenerFlags.kUpdate);
-        limelightTable.getEntry("getpipe").addListener(event -> {
-            this.pipeline = (int) event.value.getDouble();
-            this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
+            feed();
         }, EntryListenerFlags.kUpdate);
 
     }
 
     /**
-     * Get distance from a specified target's base
+     * Create a limelight object with the LEDs and Pipeline set to default
      * 
-     * @param targetHeight height of the retroreflector in meters
-     * @return distance from the base of the target in meters
+     * @param mountAngle  mount angle of the limelight in degrees
+     * @param mountHeight mount height of the center of the limelight's lens from
+     *                    the floor in meters
+     */
+    public LimelightVision(double mountAngle, double mountHeight) {
+        this(mountAngle, mountHeight, 0, 0);
+    }
+
+    /**
+     * Get distance from a specified target's base. Follows
+     * https://docs.limelightvision.io/en/latest/cs_estimating_distance.html
+     * 
+     * @param targetHeight height of the retroreflector in meters. Already offsets
+     *                     for mount height
+     * @return distance from the base of the target in {@code meters}. Returns
+     *         {@link Double#NaN} if target is not found or value is unrealistic
      */
     public double getDistanceFromTargetBase(double targetHeight) {
-        double verticalOffset = Math.toRadians(this.offsetY);
-        double limelightAngle = Math.toRadians(this.mountAngle);
+        if (!targetViewed)
+            return Double.NaN;
 
-        return ((targetHeight - this.mountHeight) / (Math.tan((limelightAngle + verticalOffset))));
+        double deltaAngle = Math.toRadians(this.mountAngle + this.offsetY);
+        return (targetHeight - this.mountHeight) / Math.tan(deltaAngle);
     }
 
     /**
-     * Get distance from a specified target (Hypotenuse)
+     * Get distance from a specified target (Hypotenuse). Follows
+     * https://docs.limelightvision.io/en/latest/cs_estimating_distance.html
      * 
-     * @param targetHeight height of the retroreflector in meters
-     * @return distance from the target in meters
+     * @param targetHeight height of the retroreflector in meters. Already offsets
+     *                     for mount height
+     * @return distance from the target in {@code meters}. Returns
+     *         {@link Double#NaN} if target is not found or value is unrealistic
      */
     public double getDistanceFromTarget(double targetHeight) {
-        double verticalOffset = Math.toRadians(this.offsetY);
-        double limelightAngle = Math.toRadians(this.mountAngle);
+        if (!targetViewed)
+            return Double.NaN;
 
-        return ((targetHeight - this.mountHeight) / (Math.sin((limelightAngle + verticalOffset))));
+        double deltaAngle = Math.toRadians(this.mountAngle + this.offsetY);
+
+        return (targetHeight - this.mountHeight) / Math.sin(deltaAngle);
     }
 
     /**
@@ -107,9 +125,10 @@ public class LimelightVision extends SubsystemBase {
      * @param piplineID pipline id within [0,9]
      */
     public void setPipeline(int piplineID) {
-        if (0 <= piplineID && piplineID <= 9) {
-            NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("pipeline").setNumber(piplineID);
-        }
+        if (!(0 <= piplineID && piplineID <= 9))
+            throw new IllegalArgumentException("Pipeline must be within 0-9");
+
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("pipeline").setNumber(piplineID);
     }
 
     /**
@@ -142,20 +161,20 @@ public class LimelightVision extends SubsystemBase {
         NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ledMode");
         switch (dLedStates) {
             case OFF:
-            ledEntry.setNumber(1); // light off
+                ledEntry.setNumber(1); // light off
                 break;
 
             case BLINK:
-            ledEntry.setNumber(2); // light blinking
+                ledEntry.setNumber(2); // light blinking
                 break;
 
             case ON:
-            ledEntry.setNumber(3); // light on
+                ledEntry.setNumber(3); // light on
                 break;
 
             case DEFAULT:
             default:
-            ledEntry.setNumber(0); // as per pipeline mode (usually on)
+                ledEntry.setNumber(0); // as per pipeline mode (usually on)
 
         }
     }
@@ -163,7 +182,7 @@ public class LimelightVision extends SubsystemBase {
     public LimelightLEDStates getLEDState() {
         NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ledMode");
 
-        switch(ledEntry.getNumber(0).intValue()) {
+        switch (ledEntry.getNumber(0).intValue()) {
             default:
             case 0:
                 return LimelightLEDStates.DEFAULT;
@@ -176,18 +195,27 @@ public class LimelightVision extends SubsystemBase {
         }
     }
 
+    /**
+     * Get the current pipeline
+     * 
+     * @return
+     */
+    public double getPipeline() {
+        return (int) NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("getpipe").getDouble(0);
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addBooleanProperty("targetInView", () -> this.targetViewed, null);
-        builder.addDoubleProperty("offsetX", () -> this.offsetX, null);
-        builder.addDoubleProperty("offsetY", () -> this.offsetY, null);
-        builder.addDoubleProperty("nonZeroOffsetX", () -> this.nonZeroX == null ? 0 : this.nonZeroX, null);
-        builder.addDoubleProperty("nonZeroOffsetY", () -> this.nonZeroY == null ? 0 : this.nonZeroY, null);
-        builder.addDoubleProperty("pipelineLatency", () -> this.piplineLatencyMS, null);
-        builder.addDoubleProperty("timestamp", () -> this.visionStateTimestamp, null);
-        builder.addDoubleProperty("pipeline", () -> this.pipeline, null);
+        builder.addDoubleProperty("tX", () -> this.offsetX, null);
+        builder.addDoubleProperty("tY", () -> this.offsetY, null);
+        builder.addDoubleProperty("NZtX", () -> this.nonZeroX, null);
+        builder.addDoubleProperty("NZtY", () -> this.nonZeroY, null);
+        builder.addDoubleProperty("pLatency", () -> this.piplineLatencyMS, null);
+        builder.addDoubleProperty("sTimestamp", () -> this.visionStateTimestamp, null);
+        builder.addDoubleProperty("pipeId", this::getPipeline, null);
         builder.addStringProperty("LED Mode", () -> this.getLEDState().toString(), (targetMode) -> {
-            switch(targetMode.toLowerCase()) {
+            switch (targetMode.toLowerCase()) {
                 case "on":
                     setLEDState(LimelightLEDStates.ON);
                     break;
@@ -203,4 +231,9 @@ public class LimelightVision extends SubsystemBase {
             }
         });
     }
+
+    private void feed() {
+        this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
+    }
+
 }
