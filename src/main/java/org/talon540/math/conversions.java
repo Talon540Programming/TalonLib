@@ -1,6 +1,6 @@
 package org.talon540.math;
 
-public abstract class conversions {
+public final class conversions {
 
     /**
      * Return the velocity of a wheel from it's RPM

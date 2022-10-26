@@ -1,10 +1,9 @@
 package org.talon540.control.XboxController;
 
-import org.talon540.control.XboxController.XboxControllerBinds.DPAD;
-
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.talon540.control.XboxController.XboxControllerBinds.DPAD;
 
 public class XboxControllerButtons {
     public JoystickButton LEFT_BUMPER, RIGHT_BUMPER, LEFT_STICK, RIGHT_STICK, A, B, X, Y, BACK, START;

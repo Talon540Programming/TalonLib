@@ -1,10 +1,9 @@
 package org.talon540.drive.swerve.trajectory;
 
-import org.talon540.math.Vector3d;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import org.talon540.math.Vector3d;
 
 /**
  * Repersents a point on a trajectory path with a robot's position and speed at

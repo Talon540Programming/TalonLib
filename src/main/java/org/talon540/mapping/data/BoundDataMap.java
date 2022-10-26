@@ -1,7 +1,7 @@
 package org.talon540.mapping.data;
 
 public class BoundDataMap extends UnboudDataMap {
-    private int limit;
+    private final int limit;
 
     public BoundDataMap(int limit) {
         this.limit = limit;

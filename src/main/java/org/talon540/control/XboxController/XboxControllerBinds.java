@@ -1,12 +1,12 @@
 package org.talon540.control.XboxController;
 
 public class XboxControllerBinds {
-    public static enum Triggers {
+    public enum Triggers {
         LEFT_TRIGGER,
         RIGHT_TRIGGER
     }
 
-    public static enum DPAD {
+    public enum DPAD {
         NORTH(0),
         NORTHEAST(45),
         EAST(90),
@@ -21,7 +21,7 @@ public class XboxControllerBinds {
          */
         public final int POV;
 
-        private DPAD(int pov) {
+        DPAD(int pov) {
             this.POV = pov;
         }
 

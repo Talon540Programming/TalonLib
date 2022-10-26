@@ -1,9 +1,9 @@
 package org.talon540.drive.swerve.trajectory;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.wpi.first.math.geometry.Pose2d;
 
 public class TalonTrajectory {
     public String TrajectoryName;

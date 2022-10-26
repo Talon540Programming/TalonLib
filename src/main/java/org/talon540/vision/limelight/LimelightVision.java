@@ -5,9 +5,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * An object used to get data and manipulate the state of a limelight camera
@@ -15,7 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class LimelightVision extends SubsystemBase {
     private final String tableName = "limelight";
 
-    private double mountAngle, mountHeight;
+    private final double mountAngle, mountHeight;
 
     /**
      * Is the target currently in the viewport of the limelight

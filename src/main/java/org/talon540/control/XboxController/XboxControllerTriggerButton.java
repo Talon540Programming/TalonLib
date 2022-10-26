@@ -1,14 +1,13 @@
 package org.talon540.control.XboxController;
 
-import org.talon540.control.XboxController.XboxControllerBinds.Triggers;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import org.talon540.control.XboxController.XboxControllerBinds.Triggers;
 
 public class XboxControllerTriggerButton extends Button {
-    private XboxController controller;
-    private Triggers selectedTrigger;
-    private double activateThreshold;
+    private final XboxController controller;
+    private final Triggers selectedTrigger;
+    private final double activateThreshold;
 
     /**
      * Create a button from the trigger of an XboxController

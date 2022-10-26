@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class AttackJoystickButtons {
-    public JoystickButton TRIGGER, TOP_MIDDLE, TOP_BOTTOM, TOP_LEFT, TOP_RIGHT, LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT;
+    public final JoystickButton TRIGGER, TOP_MIDDLE, TOP_BOTTOM, TOP_LEFT, TOP_RIGHT, LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT;
 
     public AttackJoystickButtons(Joystick joystick) {
         TRIGGER = new JoystickButton(joystick, AttackJoystickButtonBindings.TRIGGER);

@@ -7,16 +7,16 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TalonTrackingVision extends SubsystemBase {
-    private String tableName = "TalonTracking";
+    private final String tableName = "TalonTracking";
 
-    public double tx = 0;
-    public double ty = 0;
-    public double ta = 0;
+    public double tx;
+    public double ty;
+    public double ta;
 
     public TalonTrackingVision() {
         setName(this.tableName);
 
-        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("robotready").setBoolean(true);
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("robot_ready").setBoolean(true);
 
         NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("tx").addListener(event -> {
             this.tx = event.value.getDouble();

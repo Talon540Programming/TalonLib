@@ -1,13 +1,12 @@
 package org.talon540.control.XboxController;
 
-import org.talon540.control.XboxController.XboxControllerBinds.DPAD;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import org.talon540.control.XboxController.XboxControllerBinds.DPAD;
 
 public class XboxControllerDPADButton extends Button {
-    private XboxController controller;
-    private DPAD selectedButton;
+    private final XboxController controller;
+    private final DPAD selectedButton;
 
     /**
      * Construct a button from a selected button on the DPAD

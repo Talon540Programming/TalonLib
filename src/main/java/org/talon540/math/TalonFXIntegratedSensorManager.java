@@ -3,8 +3,9 @@ package org.talon540.math;
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 
 public class TalonFXIntegratedSensorManager {
-    private TalonFXSensorCollection collection;
-    private double kGearRatio, kRadius;
+    private final TalonFXSensorCollection collection;
+    private final double kGearRatio;
+    private final double kRadius;
 
     /**
      * Construct sensor manager using integrated sensor collection and dimmensions of attached objects
