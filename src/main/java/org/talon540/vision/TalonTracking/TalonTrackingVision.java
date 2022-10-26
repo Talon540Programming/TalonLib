@@ -18,17 +18,11 @@ public class TalonTrackingVision extends SubsystemBase {
 
         NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("robot_ready").setBoolean(true);
 
-        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("tx").addListener(event -> {
-            this.tx = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("tx").addListener(event -> this.tx = event.value.getDouble(), EntryListenerFlags.kUpdate);
 
-        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ty").addListener(event -> {
-            this.ty = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ty").addListener(event -> this.ty = event.value.getDouble(), EntryListenerFlags.kUpdate);
 
-        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ta").addListener(event -> {
-            this.ta = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ta").addListener(event -> this.ta = event.value.getDouble(), EntryListenerFlags.kUpdate);
     }
 
     /**

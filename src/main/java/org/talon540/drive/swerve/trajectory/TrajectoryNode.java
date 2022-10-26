@@ -10,9 +10,9 @@ import org.talon540.math.Vector3d;
  * that point on the trajectory
  */
 public class TrajectoryNode {
-    public double time;
-    public Pose2d position;
-    public Vector3d velocity;
+    public final double time;
+    public final Pose2d position;
+    public final Vector3d velocity;
 
     /**
      * @param time     time-point of this point in the trajectory in seconds

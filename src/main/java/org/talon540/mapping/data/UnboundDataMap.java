@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UnboundDataMap implements Sendable {
-    protected List<Double> nodeList = new ArrayList<Double>();
+    protected final List<Double> nodeList = new ArrayList<>();
 
     /**
      * Add datapoint to dataset

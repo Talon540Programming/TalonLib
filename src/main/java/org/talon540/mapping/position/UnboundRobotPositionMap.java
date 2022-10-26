@@ -11,7 +11,7 @@ import java.util.TreeMap;
  * field in the form of a {@link Pose2d} object
  */
 public class UnboundRobotPositionMap implements Sendable {
-    protected TreeMap<Double, Pose2d> map = new TreeMap<Double, Pose2d>();
+    protected final TreeMap<Double, Pose2d> map = new TreeMap<>();
 
     /**
      * Add a position to the position map

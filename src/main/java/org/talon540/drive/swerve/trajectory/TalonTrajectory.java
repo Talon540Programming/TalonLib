@@ -6,29 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TalonTrajectory {
-    public String TrajectoryName;
-    public List<TrajectoryNode> trajectoryList = new ArrayList<TrajectoryNode>();
+    public final String TrajectoryName;
+    public final List<TrajectoryNode> trajectoryList = new ArrayList<>();
 
     /** 
      * Max translational velocity in {@code meters per second}
      * Override this value if you don't want to use the default value (defined in rbt code) 
      */
-    public double kMaxTranslationalVelocity;
+    public final double kMaxTranslationalVelocity;
     /** 
      * Max translational acceleration in {@code meters per second squared}
      * Override this value if you don't want to use the default value (defined in rbt code)
      */
-    public double kMaxTranslationalAcceleration;
+    public final double kMaxTranslationalAcceleration;
     /** 
      * Max rotational angular velocity in {@code radians per second}
      * Override this value if you don't want to use the default value (defined in rbt code)
      */
-    public double kMaxRotationalVelocity;
+    public final double kMaxRotationalVelocity;
     /** 
      * Max rotational angular acceleration in {@code radians per second squared}
      * Override this value if you don't want to use the default value (defined in rbt code) 
      */
-    public double kMaxRotationalAcceleration;
+    public final double kMaxRotationalAcceleration;
 
 
     public TalonTrajectory(String name, double maxTVel, double maxTAcc, double maxRVel, double maxRAcc) {
@@ -51,8 +51,8 @@ public class TalonTrajectory {
      * @param points { time, posX, posY, posRotRad, velX, velY, velRotRadPerS }
      */
     public void addPointsToTrajectory(double[][] points) {
-        for (int i = 0; i < points.length; i++) {
-            addPointToTrajectory(points[i]);
+        for(double[] data : points) {
+            addPointToTrajectory(data);
         }
     }
 
@@ -170,7 +170,7 @@ public class TalonTrajectory {
             // trajectoryList.subList(getNodeIndexFromTime(time), this.trajectoryList.size()
             // - 1);
 
-            List<TrajectoryNode> shortenedList = new ArrayList<TrajectoryNode>();
+            List<TrajectoryNode> shortenedList = new ArrayList<>();
 
             shortenedList.add(getNodeFromTime(time));
             shortenedList.addAll(trajectoryList.subList(getNodeIndexFromTime(time), this.trajectoryList.size() - 1));

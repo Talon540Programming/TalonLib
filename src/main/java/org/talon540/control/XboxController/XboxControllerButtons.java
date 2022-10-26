@@ -6,9 +6,26 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.talon540.control.XboxController.XboxControllerBinds.DPAD;
 
 public class XboxControllerButtons {
-    public JoystickButton LEFT_BUMPER, RIGHT_BUMPER, LEFT_STICK, RIGHT_STICK, A, B, X, Y, BACK, START;
-    public Button LEFT_TRIGGER, RIGHT_TRIGGER;
-    public XboxControllerDPADButton DPAD_NORTH, DPAD_NORTHEAST, DPAD_EAST, DPAD_SOUTHEAST, DPAD_SOUTH, DPAD_SOUTHWEST, DPAD_WEST, DPAD_NORTHWEST;
+    public final JoystickButton LEFT_BUMPER;
+    public final JoystickButton RIGHT_BUMPER;
+    public final JoystickButton LEFT_STICK;
+    public final JoystickButton RIGHT_STICK;
+    public final JoystickButton A;
+    public final JoystickButton B;
+    public final JoystickButton X;
+    public final JoystickButton Y;
+    public final JoystickButton BACK;
+    public final JoystickButton START;
+    public final Button LEFT_TRIGGER;
+    public final Button RIGHT_TRIGGER;
+    public final XboxControllerDPADButton DPAD_NORTH;
+    public final XboxControllerDPADButton DPAD_NORTHEAST;
+    public final XboxControllerDPADButton DPAD_EAST;
+    public final XboxControllerDPADButton DPAD_SOUTHEAST;
+    public final XboxControllerDPADButton DPAD_SOUTH;
+    public final XboxControllerDPADButton DPAD_SOUTHWEST;
+    public final XboxControllerDPADButton DPAD_WEST;
+    public final XboxControllerDPADButton DPAD_NORTHWEST;
 
     public XboxControllerButtons(XboxController controller) {
         LEFT_BUMPER = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);

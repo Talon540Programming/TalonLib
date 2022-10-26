@@ -1,8 +1,8 @@
 package org.talon540.math;
 
 public class Vector2d {
-    public double vecX;
-    public double vecY;
+    public final double vecX;
+    public final double vecY;
 
     public Vector2d(double vecX, double vecY) {
         this.vecX = vecX;

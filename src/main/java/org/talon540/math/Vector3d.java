@@ -5,9 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class Vector3d {
-    public double vecY;
-    public double vecX;
-    public double vecZ;
+    public final double vecY;
+    public final double vecX;
+    public final double vecZ;
 
     public Vector3d(double velX, double velY, double velRot) {
         this.vecX = velX;

@@ -77,9 +77,7 @@ public class LimelightVision extends SubsystemBase {
         limelightTable.getEntry("NZty").setDefaultDouble(0);
         limelightTable.getEntry("NZty").setPersistent();
 
-        limelightTable.getEntry("tv").addListener(event -> {
-            this.targetViewed = event.value.getDouble() == 1.0;
-        }, EntryListenerFlags.kUpdate);
+        limelightTable.getEntry("tv").addListener(event -> this.targetViewed = event.value.getDouble() == 1.0, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("tx").addListener(event -> {
             this.offsetX = event.value.getDouble();
             if (this.offsetX != 0) limelightTable.getEntry("NZtx").setDouble(this.offsetX);
@@ -88,21 +86,11 @@ public class LimelightVision extends SubsystemBase {
             this.offsetY = event.value.getDouble();
             if (this.offsetY != 0) limelightTable.getEntry("NZty").setDouble(this.offsetY);
         }, EntryListenerFlags.kUpdate);
-        limelightTable.getEntry("ta").addListener(event -> {
-            this.targetArea = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
-        limelightTable.getEntry("ts").addListener(event -> {
-            this.targetSkew = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
-        limelightTable.getEntry("tl").addListener(event -> {
-            this.pipelineLatencyMS = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
-        limelightTable.getEntry("NZtx").addListener(event -> {
-            this.nonZeroX = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
-        limelightTable.getEntry("NZtv").addListener(event -> {
-            this.nonZeroY = event.value.getDouble();
-        }, EntryListenerFlags.kUpdate);
+        limelightTable.getEntry("ta").addListener(event -> this.targetArea = event.value.getDouble(), EntryListenerFlags.kUpdate);
+        limelightTable.getEntry("ts").addListener(event -> this.targetSkew = event.value.getDouble(), EntryListenerFlags.kUpdate);
+        limelightTable.getEntry("tl").addListener(event -> this.pipelineLatencyMS = event.value.getDouble(), EntryListenerFlags.kUpdate);
+        limelightTable.getEntry("NZtx").addListener(event -> this.nonZeroX = event.value.getDouble(), EntryListenerFlags.kUpdate);
+        limelightTable.getEntry("NZtv").addListener(event -> this.nonZeroY = event.value.getDouble(), EntryListenerFlags.kUpdate);
 
     }
 
