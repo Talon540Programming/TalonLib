@@ -36,5 +36,15 @@
       <option name="name" value="maven3" />
       <option name="url" value="https://maven.revrobotics.com/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven6" />
+      <option name="name" value="maven6" />
+      <option name="url" value="https://maven.photonvision.org/repository/snapshots" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven5" />
+      <option name="name" value="maven5" />
+      <option name="url" value="https://maven.photonvision.org/repository/internal" />
+    </remote-repository>
   </component>
 </project>

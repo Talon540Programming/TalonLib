@@ -11,35 +11,23 @@ public class Vector2d {
 
     /**
      * Construct a new vector by adding a vector to the current vector
-     * 
-     * @param vector
      */
     public Vector2d addVector(Vector2d vector) {
-        return new Vector2d(
-                vecX + vector.vecX,
-                vecY + vector.vecY);
+        return new Vector2d(vecX + vector.vecX, vecY + vector.vecY);
     }
 
     /**
      * Construct a new vector by subtracting a vector to the current vector
-     * 
-     * @param vector
      */
     public Vector2d subtractVector(Vector2d vector) {
-        return new Vector2d(
-                vecX - vector.vecX,
-                vecY - vector.vecY);
+        return new Vector2d(vecX - vector.vecX, vecY - vector.vecY);
     }
 
     /**
      * Construct a new vector by multiplying the current vector by a scale value
-     * 
-     * @param scale
      */
     public Vector2d multiplyVectorByScale(double scale) {
-        return new Vector2d(
-                vecX * scale,
-                vecY * scale);
+        return new Vector2d(vecX * scale, vecY * scale);
     }
 
 }

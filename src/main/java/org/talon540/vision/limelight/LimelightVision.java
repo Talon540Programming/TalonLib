@@ -8,6 +8,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 /**
  * An object used to get data and manipulate the state of a limelight camera
  */
@@ -57,10 +58,10 @@ public class LimelightVision extends SubsystemBase {
 
     /**
      * Construct a limelight object
-     * 
-     * @param mountAngle  mount angle of the limelight in degrees
+     *
+     * @param mountAngle mount angle of the limelight in degrees
      * @param mountHeight mount height of the center of the limelight's lens from
-     *                    the floor in meters
+     * the floor in meters
      */
     public LimelightVision(double mountAngle, double mountHeight, int ledMode, int pipeline) {
         setName(this.tableName);
@@ -80,11 +81,13 @@ public class LimelightVision extends SubsystemBase {
         limelightTable.getEntry("tv").addListener(event -> this.targetViewed = event.value.getDouble() == 1.0, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("tx").addListener(event -> {
             this.offsetX = event.value.getDouble();
-            if (this.offsetX != 0) limelightTable.getEntry("NZtx").setDouble(this.offsetX);
+            if (this.offsetX != 0)
+                limelightTable.getEntry("NZtx").setDouble(this.offsetX);
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ty").addListener(event -> {
             this.offsetY = event.value.getDouble();
-            if (this.offsetY != 0) limelightTable.getEntry("NZty").setDouble(this.offsetY);
+            if (this.offsetY != 0)
+                limelightTable.getEntry("NZty").setDouble(this.offsetY);
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ta").addListener(event -> this.targetArea = event.value.getDouble(), EntryListenerFlags.kUpdate);
         limelightTable.getEntry("ts").addListener(event -> this.targetSkew = event.value.getDouble(), EntryListenerFlags.kUpdate);
@@ -96,10 +99,10 @@ public class LimelightVision extends SubsystemBase {
 
     /**
      * Create a limelight object with the LEDs and Pipeline set to default
-     * 
-     * @param mountAngle  mount angle of the limelight in degrees
+     *
+     * @param mountAngle mount angle of the limelight in degrees
      * @param mountHeight mount height of the center of the limelight's lens from
-     *                    the floor in meters
+     * the floor in meters
      */
     public LimelightVision(double mountAngle, double mountHeight) {
         this(mountAngle, mountHeight, 0, 0);
@@ -113,11 +116,11 @@ public class LimelightVision extends SubsystemBase {
     /**
      * Get distance from a specified target's base. Follows
      * https://docs.limelightvision.io/en/latest/cs_estimating_distance.html
-     * 
+     *
      * @param targetHeight height of the retro reflector in meters. Already offsets
-     *                     for mount height
+     * for mount height
      * @return distance from the base of the target in {@code meters}. Returns
-     *         {@link Double#NaN} if target is not found or value is unrealistic
+     * {@link Double#NaN} if target is not found or value is unrealistic
      */
     public double getDistanceFromTargetBase(double targetHeight) {
         if (!targetViewed)
@@ -130,11 +133,11 @@ public class LimelightVision extends SubsystemBase {
     /**
      * Get distance from a specified target (Hypotenuse). Follows
      * https://docs.limelightvision.io/en/latest/cs_estimating_distance.html
-     * 
+     *
      * @param targetHeight height of the retro reflector in meters. Already offsets
-     *                     for mount height
+     * for mount height
      * @return distance from the target in {@code meters}. Returns
-     *         {@link Double#NaN} if target is not found or value is unrealistic
+     * {@link Double#NaN} if target is not found or value is unrealistic
      */
     public double getDistanceFromTarget(double targetHeight) {
         if (!targetViewed)
@@ -147,7 +150,7 @@ public class LimelightVision extends SubsystemBase {
 
     /**
      * Set the limelight's pipeline
-     * 
+     *
      * @param pipelineID pipeline id within [0,9]
      */
     public void setPipeline(int pipelineID) {
@@ -180,7 +183,7 @@ public class LimelightVision extends SubsystemBase {
 
     /**
      * This function sets the LED mode of the Limelight
-     * 
+     *
      * @param dLedStates The state of the LEDS.
      */
     public void setLEDState(LimelightLEDStates dLedStates) {
@@ -223,8 +226,6 @@ public class LimelightVision extends SubsystemBase {
 
     /**
      * Get the current pipeline
-     * 
-     * @return
      */
     public double getPipeline() {
         return (int) NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("getpipe").getDouble(0);

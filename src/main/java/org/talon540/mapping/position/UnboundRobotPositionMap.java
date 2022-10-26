@@ -6,6 +6,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 
 import java.util.TreeMap;
 
+
 /**
  * An object used in the logging and retrieving of the Robot's position on the
  * field in the form of a {@link Pose2d} object
@@ -15,8 +16,8 @@ public class UnboundRobotPositionMap implements Sendable {
 
     /**
      * Add a position to the position map
-     * 
-     * @param position  position of the robot in the form of a Pose2d object
+     *
+     * @param position position of the robot in the form of a Pose2d object
      * @param timestamp timestamp key
      */
     public void addPositionToMap(Pose2d position, double timestamp) {
@@ -25,8 +26,6 @@ public class UnboundRobotPositionMap implements Sendable {
 
     /**
      * Get the last entered position in the position map
-     * 
-     * @return
      */
     public Pose2d getLatestPosition() {
         // return this.map.lastEntry().getValue();
@@ -42,7 +41,7 @@ public class UnboundRobotPositionMap implements Sendable {
      * Get the estimated position of the robot at a specific time. If the time
      * provided is between two different positions, it will interpolate the
      * difference between the two timeslots and return the estimated position
-     * 
+     *
      * @param timestamp timestamp to reference
      * @return robot's position on the field
      */
@@ -58,8 +57,7 @@ public class UnboundRobotPositionMap implements Sendable {
         double lowerKeyBound = this.map.floorKey(timestamp);
         double ceilingKeyBound = this.map.ceilingKey(timestamp);
 
-        return this.map.get(lowerKeyBound).interpolate(this.map.get(ceilingKeyBound),
-                (timestamp - lowerKeyBound) / ((ceilingKeyBound - lowerKeyBound)));
+        return this.map.get(lowerKeyBound).interpolate(this.map.get(ceilingKeyBound), (timestamp - lowerKeyBound) / ((ceilingKeyBound - lowerKeyBound)));
     }
 
     @Override

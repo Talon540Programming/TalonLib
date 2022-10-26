@@ -5,35 +5,36 @@ import edu.wpi.first.math.geometry.Pose2d;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class TalonTrajectory {
     public final String TrajectoryName;
     public final List<TrajectoryNode> trajectoryList = new ArrayList<>();
 
-    /** 
+    /**
      * Max translational velocity in {@code meters per second}
-     * Override this value if you don't want to use the default value (defined in rbt code) 
+     * Override this value if you don't want to use the default value (defined in rbt code)
      */
     public final double kMaxTranslationalVelocity;
-    /** 
+    /**
      * Max translational acceleration in {@code meters per second squared}
      * Override this value if you don't want to use the default value (defined in rbt code)
      */
     public final double kMaxTranslationalAcceleration;
-    /** 
+    /**
      * Max rotational angular velocity in {@code radians per second}
      * Override this value if you don't want to use the default value (defined in rbt code)
      */
     public final double kMaxRotationalVelocity;
-    /** 
+    /**
      * Max rotational angular acceleration in {@code radians per second squared}
-     * Override this value if you don't want to use the default value (defined in rbt code) 
+     * Override this value if you don't want to use the default value (defined in rbt code)
      */
     public final double kMaxRotationalAcceleration;
 
 
     public TalonTrajectory(String name, double maxTVel, double maxTAcc, double maxRVel, double maxRAcc) {
         this.TrajectoryName = name;
-    
+
         this.kMaxTranslationalVelocity = maxTVel;
         this.kMaxTranslationalAcceleration = maxTAcc;
 
@@ -42,23 +43,23 @@ public class TalonTrajectory {
     }
 
     public TalonTrajectory(String name) {
-        this(name, 0, 0 ,0, 0);
+        this(name, 0, 0, 0, 0);
     }
 
     /**
      * Add an array of data-points to the trajectory
-     * 
+     *
      * @param points { time, posX, posY, posRotRad, velX, velY, velRotRadPerS }
      */
     public void addPointsToTrajectory(double[][] points) {
-        for(double[] data : points) {
+        for (double[] data : points) {
             addPointToTrajectory(data);
         }
     }
 
     /**
      * Add a single datapoint to the trajectory
-     * 
+     *
      * @param point { time, posX, posY, posRotRad, velX, velY, velRotRadPerS }
      */
     public void addPointToTrajectory(double[] point) {
@@ -81,7 +82,7 @@ public class TalonTrajectory {
 
     /**
      * Get the total runtime of a trajectory in seconds
-     * 
+     *
      * @return runtime in seconds
      */
     public double getTrajectoryTime() {
@@ -90,8 +91,7 @@ public class TalonTrajectory {
 
     /**
      * Return the difference in runtime between two nodes
-     * 
-     * @param index
+     *
      * @return remaining runtime
      */
     public double getTrajectoryTime(int index) {
@@ -100,10 +100,9 @@ public class TalonTrajectory {
 
     /**
      * Return the remaining time from the provided time
-     * 
-     * @param time
+     *
      * @param estimated if true, subtracts the provided time, else conduct a binary
-     *                  search to find the correct node and subtract that time
+     * search to find the correct node and subtract that time
      * @return remaining runtime
      */
     public double getTrajectoryTime(double time, boolean estimated) {
@@ -121,8 +120,7 @@ public class TalonTrajectory {
             Pose2d currentPosition = trajectoryList.get(i).position;
             Pose2d nextPosition = trajectoryList.get(i + 1).position;
 
-            distance += Math.sqrt(Math.pow(nextPosition.getX() - currentPosition.getX(), 2)
-                    + Math.pow(nextPosition.getY() - currentPosition.getY(), 2));
+            distance += Math.sqrt(Math.pow(nextPosition.getX() - currentPosition.getX(), 2) + Math.pow(nextPosition.getY() - currentPosition.getY(), 2));
         }
 
         return distance;
@@ -131,8 +129,7 @@ public class TalonTrajectory {
 
     /**
      * Get the remaining trajectory length from a specific node
-     * 
-     * @param index
+     *
      * @return remaining length
      */
     public double getTrajectoryLength(int index) {
@@ -148,8 +145,7 @@ public class TalonTrajectory {
             Pose2d currentPosition = trajectoryList.get(i).position;
             Pose2d nextPosition = trajectoryList.get(i + 1).position;
 
-            distance += Math.sqrt(Math.pow(nextPosition.getX() - currentPosition.getX(), 2)
-                    + Math.pow(nextPosition.getY() - currentPosition.getY(), 2));
+            distance += Math.sqrt(Math.pow(nextPosition.getX() - currentPosition.getX(), 2) + Math.pow(nextPosition.getY() - currentPosition.getY(), 2));
         }
 
         return distance;
@@ -157,8 +153,7 @@ public class TalonTrajectory {
 
     /**
      * Get the remaining trajectory length from a specific node
-     * 
-     * @param time
+     *
      * @return remaining length
      */
     public double getTrajectoryLength(double time) {
@@ -182,8 +177,7 @@ public class TalonTrajectory {
                 Pose2d currentPosition = shortenedList.get(i).position;
                 Pose2d nextPosition = shortenedList.get(i + 1).position;
 
-                distance += Math.sqrt(Math.pow(nextPosition.getX() - currentPosition.getX(), 2)
-                        + Math.pow(nextPosition.getY() - currentPosition.getY(), 2));
+                distance += Math.sqrt(Math.pow(nextPosition.getX() - currentPosition.getX(), 2) + Math.pow(nextPosition.getY() - currentPosition.getY(), 2));
             }
 
             return distance;
@@ -201,9 +195,6 @@ public class TalonTrajectory {
 
     /**
      * Conduct a binary search on trajectory nodes to find upper bound node index
-     * 
-     * @param time
-     * @return
      */
     public int getNodeIndexFromTime(double time) {
         // Make sure the input time is in bound
@@ -235,7 +226,7 @@ public class TalonTrajectory {
      * interpolate the requested node.
      * If the given time is under or over the total time, the min or max node is
      * returned respectively
-     * 
+     *
      * @param time in {@code seconds}
      * @return {@link TrajectoryNode} at requested time
      */

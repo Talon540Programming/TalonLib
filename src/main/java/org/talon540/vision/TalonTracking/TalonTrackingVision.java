@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 public class TalonTrackingVision extends SubsystemBase {
     private final String tableName = "TalonTracking";
 
@@ -27,7 +28,7 @@ public class TalonTrackingVision extends SubsystemBase {
 
     /**
      * Set ball tracking data reporting state
-     * 
+     *
      * @param state state to set
      */
     public void setState(TalonTrackingStates state) {

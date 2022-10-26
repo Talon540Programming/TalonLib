@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import org.talon540.control.XboxController.XboxControllerBinds.Triggers;
 
+
 public class XboxControllerTriggerButton extends Button {
     private final XboxController controller;
     private final Triggers selectedTrigger;
@@ -11,6 +12,7 @@ public class XboxControllerTriggerButton extends Button {
 
     /**
      * Create a button from the trigger of an XboxController
+     *
      * @param controller the xbox controller
      * @param trigger the selected trigger {@link XboxControllerBinds}
      * @param activateThreshold threshold which will activate the button
@@ -23,6 +25,7 @@ public class XboxControllerTriggerButton extends Button {
 
     /**
      * Create a trigger button with the default threshold to activate (0.4)
+     *
      * @param controller the xbox controller
      * @param leftTrigger the selected trigger {@link XboxControllerBinds}
      */

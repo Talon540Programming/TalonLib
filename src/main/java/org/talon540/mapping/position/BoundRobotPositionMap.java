@@ -2,6 +2,7 @@ package org.talon540.mapping.position;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
+
 /**
  * Create a type of {@link UnboundRobotPositionMap} which has a specific limit
  * on the number of entries that can be made into the map. This is usually for
@@ -12,7 +13,7 @@ public class BoundRobotPositionMap extends UnboundRobotPositionMap {
 
     /**
      * Create a position map object with a max number of entries
-     * 
+     *
      * @param mapSize max number of entries in the map
      */
     public BoundRobotPositionMap(int mapSize) {

@@ -21,34 +21,42 @@ repositories {
     maven { url = uri('https://maven.ctr-electronics.com/release/') }
 
     // REV
-     maven { url = uri('https://maven.revrobotics.com/') }
+    maven { url = uri('https://maven.revrobotics.com/') }
 
     // Kauailabs
     maven { url = uri("https://repo1.maven.org/maven2/") }
+
+    // PhotonVision
+    maven { url = uri("https://maven.photonvision.org/repository/internal") }
+    maven { url = uri("https://maven.photonvision.org/repository/snapshots") }
 }
 
 dependencies {
     // WPILIB
-    implementation 'edu.wpi.first.wpimath:wpimath-java:'+WPILIB_VERSION
-    implementation 'edu.wpi.first.wpilibj:wpilibj-java:'+WPILIB_VERSION
-    implementation 'edu.wpi.first.wpiutil:wpiutil-java:'+WPILIB_VERSION
-    implementation 'edu.wpi.first.ntcore:ntcore-java:'+WPILIB_VERSION
+    implementation 'edu.wpi.first.wpimath:wpimath-java:' + WPILIB_VERSION
+    implementation 'edu.wpi.first.wpilibj:wpilibj-java:' + WPILIB_VERSION
+    implementation 'edu.wpi.first.wpiutil:wpiutil-java:' + WPILIB_VERSION
+    implementation 'edu.wpi.first.ntcore:ntcore-java:' + WPILIB_VERSION
 
-    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:'+WPILIB_VERSION
+    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:' + WPILIB_VERSION
 
     // CTRE
     implementation 'com.ctre.phoenix:api-java:5.21.1'
     implementation 'com.ctre.phoenix:wpiapi-java:5.21.1'
+
     // REV
-     implementation 'com.revrobotics.frc:REVLib-java:2022.1.0'
+    implementation 'com.revrobotics.frc:REVLib-java:2022.1.0'
+
     // Kauailabs
     implementation 'com.kauailabs.navx.frc:navx-java:4.0.447'
 
-    // Use JUnit Jupiter for testing.
-    // testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    // PhotonVision
+    implementation 'org.photonvision:PhotonLib-java:v2023.1.1-beta-3'
+    implementation 'org.photonvision:PhotonTargeting-java:v2023.1.1-beta-3'
 
-    // This dependency is used by the application.
-    // implementation 'com.google.guava:guava:30.1.1-jre'
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+
 }
 
 java {
@@ -70,14 +78,14 @@ publishing {
 
             pom {
                 name = "TalonLib"
-                description = "A general resource library developed by Talon540 for use within robot code in Java"
+                description = "A general useage library created by Talon540 for use within Java FRC applications."
             }
         }
     }
 }
 
 javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }

@@ -6,11 +6,13 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class UnboundDataMap implements Sendable {
     protected final List<Double> nodeList = new ArrayList<>();
 
     /**
      * Add datapoint to dataset
+     *
      * @param val value to add
      */
     public void addNode(double val) {
@@ -21,14 +23,15 @@ public class UnboundDataMap implements Sendable {
      * Get average of the dataset
      */
     public double getAverage() {
-        if(nodeList.size() == 0) return 0;
+        if (nodeList.size() == 0)
+            return 0;
 
 
         try {
             return nodeList.stream().mapToDouble(a -> a).average().orElse(0);
         } catch (Exception e) {
             double sum = 0;
-            for(int i = 0; i< nodeList.size() - 1; i++) {
+            for (int i = 0; i < nodeList.size() - 1; i++) {
                 sum += nodeList.get(i);
             }
 
@@ -40,12 +43,13 @@ public class UnboundDataMap implements Sendable {
      * Get variance of dataset
      */
     public double getVariance() {
-        if(nodeList.size() == 0) return 0;
+        if (nodeList.size() == 0)
+            return 0;
 
         double mean = getAverage();
 
         double sum = 0;
-        for(int i = 0; i< nodeList.size() - 1; i++) {
+        for (int i = 0; i < nodeList.size() - 1; i++) {
             sum += (Math.pow(nodeList.get(i) - mean, 2));
         }
 
