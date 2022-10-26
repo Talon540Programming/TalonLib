@@ -6,8 +6,8 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnboudDataMap implements Sendable {
-    protected List<Double> nodeList = new ArrayList<Double>();
+public class UnboundDataMap implements Sendable {
+    protected final List<Double> nodeList = new ArrayList<>();
 
     /**
      * Add datapoint to dataset
@@ -23,8 +23,9 @@ public class UnboudDataMap implements Sendable {
     public double getAverage() {
         if(nodeList.size() == 0) return 0;
 
+
         try {
-            return nodeList.stream().mapToDouble(a -> a).average().getAsDouble();
+            return nodeList.stream().mapToDouble(a -> a).average().orElse(0);
         } catch (Exception e) {
             double sum = 0;
             for(int i = 0; i< nodeList.size() - 1; i++) {
@@ -59,7 +60,7 @@ public class UnboudDataMap implements Sendable {
     }
 
     /**
-     * Get the number of datapoints in the dataset
+     * Get the number of data-points in the dataset
      */
     public int getNodeCount() {
         return nodeList.size();
@@ -74,7 +75,7 @@ public class UnboudDataMap implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("Node Count", () -> nodeList.size(), null);
+        builder.addDoubleProperty("Node Count", nodeList::size, null);
         builder.addDoubleProperty("Average", this::getAverage, null);
         builder.addDoubleProperty("Variance", this::getVariance, null);
         builder.addDoubleProperty("Standard Deviance", this::getStandardDeviation, null);

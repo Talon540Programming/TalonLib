@@ -1,17 +1,17 @@
 package org.talon540.mapping.position;
 
-import java.util.TreeMap;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
+import java.util.TreeMap;
+
 /**
- * An object used in the logging and retriving of the Robot's position on the
+ * An object used in the logging and retrieving of the Robot's position on the
  * field in the form of a {@link Pose2d} object
  */
 public class UnboundRobotPositionMap implements Sendable {
-    protected TreeMap<Double, Pose2d> map = new TreeMap<Double, Pose2d>();
+    protected final TreeMap<Double, Pose2d> map = new TreeMap<>();
 
     /**
      * Add a position to the position map
@@ -64,7 +64,7 @@ public class UnboundRobotPositionMap implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("count", () -> map.size(), null);
+        builder.addDoubleProperty("count", map::size, null);
         builder.addStringProperty("cPosition", () -> getLatestPosition().toString(), null);
         builder.addDoubleProperty("cTimestamp", () -> {
             try {

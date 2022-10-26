@@ -5,9 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class Vector3d {
-    public double vecY;
-    public double vecX;
-    public double vecZ;
+    public final double vecY;
+    public final double vecX;
+    public final double vecZ;
 
     public Vector3d(double velX, double velY, double velRot) {
         this.vecX = velX;
@@ -16,7 +16,7 @@ public class Vector3d {
     }
 
     /**
-     * Contruct a new vector by adding a vector to the current vector
+     * Construct a new vector by adding a vector to the current vector
      * 
      * @param vector
      */
@@ -28,11 +28,11 @@ public class Vector3d {
     }
 
     /**
-     * Contruct a new vector by subtracting a vector to the current vector
+     * Construct a new vector by subtracting a vector to the current vector
      * 
      * @param vector
      */
-    public Vector3d substractVector(Vector3d vector) {
+    public Vector3d subtractVector(Vector3d vector) {
         return new Vector3d(
                 vecX - vector.vecY,
                 vecY - vector.vecZ,
@@ -40,7 +40,7 @@ public class Vector3d {
     }
 
     /**
-     * Contruct a new vector by multiplying the current vector by a scale value
+     * Construct a new vector by multiplying the current vector by a scale value
      * 
      * @param scale
      */

@@ -1,34 +1,34 @@
 package org.talon540.drive.swerve.trajectory;
 
+import edu.wpi.first.math.geometry.Pose2d;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.first.math.geometry.Pose2d;
-
 public class TalonTrajectory {
-    public String TrajectoryName;
-    public List<TrajectoryNode> trajectoryList = new ArrayList<TrajectoryNode>();
+    public final String TrajectoryName;
+    public final List<TrajectoryNode> trajectoryList = new ArrayList<>();
 
     /** 
      * Max translational velocity in {@code meters per second}
      * Override this value if you don't want to use the default value (defined in rbt code) 
      */
-    public double kMaxTranslationalVelocity;
+    public final double kMaxTranslationalVelocity;
     /** 
      * Max translational acceleration in {@code meters per second squared}
      * Override this value if you don't want to use the default value (defined in rbt code)
      */
-    public double kMaxTranslationalAcceleration;
+    public final double kMaxTranslationalAcceleration;
     /** 
      * Max rotational angular velocity in {@code radians per second}
      * Override this value if you don't want to use the default value (defined in rbt code)
      */
-    public double kMaxRotationalVelocity;
+    public final double kMaxRotationalVelocity;
     /** 
      * Max rotational angular acceleration in {@code radians per second squared}
      * Override this value if you don't want to use the default value (defined in rbt code) 
      */
-    public double kMaxRotationalAcceleration;
+    public final double kMaxRotationalAcceleration;
 
 
     public TalonTrajectory(String name, double maxTVel, double maxTAcc, double maxRVel, double maxRAcc) {
@@ -46,13 +46,13 @@ public class TalonTrajectory {
     }
 
     /**
-     * Add an array of datapoints to the trajectory
+     * Add an array of data-points to the trajectory
      * 
      * @param points { time, posX, posY, posRotRad, velX, velY, velRotRadPerS }
      */
     public void addPointsToTrajectory(double[][] points) {
-        for (int i = 0; i < points.length; i++) {
-            addPointToTrajectory(points[i]);
+        for(double[] data : points) {
+            addPointToTrajectory(data);
         }
     }
 
@@ -102,8 +102,8 @@ public class TalonTrajectory {
      * Return the remaining time from the provided time
      * 
      * @param time
-     * @param estimated if true, substracts the provided time, else conduct a binary
-     *                  search to find the correct node and substract that time
+     * @param estimated if true, subtracts the provided time, else conduct a binary
+     *                  search to find the correct node and subtract that time
      * @return remaining runtime
      */
     public double getTrajectoryTime(double time, boolean estimated) {
@@ -116,7 +116,7 @@ public class TalonTrajectory {
     public double getTrajectoryLength() {
         double distance = 0;
 
-        // Subtract two so we dont throw out of bounds excpetion
+        // Subtract two, so we don't throw out of bounds exception
         for (int i = 0; i < trajectoryList.size() - 2; i++) {
             Pose2d currentPosition = trajectoryList.get(i).position;
             Pose2d nextPosition = trajectoryList.get(i + 1).position;
@@ -143,7 +143,7 @@ public class TalonTrajectory {
 
         double distance = 0;
 
-        // Subtract two so we dont throw out of bounds excpetion
+        // Subtract two, so we don't throw out of bounds exception
         for (int i = index; i < trajectoryList.size() - 2; i++) {
             Pose2d currentPosition = trajectoryList.get(i).position;
             Pose2d nextPosition = trajectoryList.get(i + 1).position;
@@ -170,14 +170,14 @@ public class TalonTrajectory {
             // trajectoryList.subList(getNodeIndexFromTime(time), this.trajectoryList.size()
             // - 1);
 
-            List<TrajectoryNode> shortenedList = new ArrayList<TrajectoryNode>();
+            List<TrajectoryNode> shortenedList = new ArrayList<>();
 
             shortenedList.add(getNodeFromTime(time));
             shortenedList.addAll(trajectoryList.subList(getNodeIndexFromTime(time), this.trajectoryList.size() - 1));
 
             double distance = 0;
 
-            // Subtract two so we dont throw out of bounds excpetion
+            // Subtract two, so we don't throw out of bounds exception
             for (int i = 0; i < shortenedList.size() - 2; i++) {
                 Pose2d currentPosition = shortenedList.get(i).position;
                 Pose2d nextPosition = shortenedList.get(i + 1).position;
@@ -196,7 +196,7 @@ public class TalonTrajectory {
      * Sort the trajectory list by time, only needed if random points are inserted
      */
     public void sortTrajectoryList() {
-        trajectoryList.sort((firstNode, secondNode) -> firstNode.time < secondNode.time ? -1 : 1);
+        trajectoryList.sort((firstNode, secondNode) -> firstNode.time < secondNode.time ? -1 : firstNode.time > secondNode.time ? 1 : 0);
     }
 
     /**

@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
  * memory and speed purposes
  */
 public class BoundRobotPositionMap extends UnboundRobotPositionMap {
-    private int mapSize;
+    private final int mapSize;
 
     /**
      * Create a position map object with a max number of entries

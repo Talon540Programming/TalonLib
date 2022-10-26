@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 
 public class TalonFX_DifferentialMotorGroup extends MotorControllerGroup {
-    private TalonFXSensorCollection sensorGroup;
+    private final TalonFXSensorCollection sensorGroup;
 
     public TalonFX_DifferentialMotorGroup(WPI_TalonFX leader, WPI_TalonFX follower) {
         super(leader, follower);

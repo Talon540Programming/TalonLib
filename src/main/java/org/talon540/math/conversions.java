@@ -1,9 +1,9 @@
 package org.talon540.math;
 
-public abstract class conversions {
+public final class conversions {
 
     /**
-     * Return the velocity of a wheel from it's RPM
+     * Return the velocity of a wheel from its RPM
      * 
      * @param RPM    RPM of the wheel
      * @param radius radius of the rotating object (unit used is the unit returned)
@@ -11,7 +11,7 @@ public abstract class conversions {
      *         radius
      */
     public static double RPMtoLinearVelocity(double RPM, double radius) {
-        return RPMtoAngularVelocty(RPM) * radius;
+        return RPMMtoAngularVelocity(RPM) * radius;
     }
 
     /**
@@ -20,7 +20,7 @@ public abstract class conversions {
      * @param RPM
      * @return Angular velocity in {@code rad/s}
      */
-    public static double RPMtoAngularVelocty(double RPM) {
+    public static double RPMMtoAngularVelocity(double RPM) {
         return RPM * Math.PI / 30.0;
     }
 
@@ -82,7 +82,7 @@ public abstract class conversions {
      * @return angular velocity of the rotating item in {@code rad/s}
      */
     public static double Falcon500VelocityToAngularVelocity(double FXVel, double gearRatio) {
-        return RPMtoAngularVelocty(Falcon500VelocityToRPM(FXVel)) / gearRatio;
+        return RPMMtoAngularVelocity(Falcon500VelocityToRPM(FXVel)) / gearRatio;
     }
 
     /**
@@ -101,8 +101,8 @@ public abstract class conversions {
     /**
      * Convert the velocity reported by the {@code TalonFX} integrated sensor to the
      * linear velocity of something connected to it
-     * 
-     * Note: this method assumes a gear ratio of 1 (i.e nothing between the two)
+     * <p>
+     * Note: this method assumes a gear ratio of 1 (i.e. nothing between the two)
      * @param FXVel  the velocity reported by the motor in encoder
      *               {@code ticks / 100ms}
      * @param radius radius of the item attached to motor
@@ -115,8 +115,8 @@ public abstract class conversions {
     /**
      * Convert the linear velocity of something connected to a {@code TalonFX} to a
      * CTRE velocity
-     * 
-     * Note: this method assumes a gear ratio of 1 (i.e nothing between the two)
+     * <p>
+     * Note: this method assumes a gear ratio of 1 (i.e. nothing between the two)
      * @param linearVelocity linear velocity in the same unit as radius
      * @param radius         linear velocity in the same unit as radius
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
@@ -128,8 +128,8 @@ public abstract class conversions {
     /**
      * Convert the velocity reported by the {@code TalonFX} integrated sensor to the
      * angular velocity of something connected to it
-     * 
-     * Note:  this method assumes a gear ratio of 1 (i.e nothing between the two)
+     * <p>
+     * Note:  this method assumes a gear ratio of 1 (i.e. nothing between the two)
      * @param FXVel the velocity reported by the motor in encoder
      *              {@code ticks / 100ms}
      * @return angular velocity of the rotating item in {@code rad/s}
@@ -141,8 +141,8 @@ public abstract class conversions {
     /**
      * Convert the angular velocity of something connected to a {@code TalonFX} to a
      * CTRE velocity
-     * 
-     * Note:  this method assumes a gear ratio of 1 (i.e nothing between the two)
+     * <p>
+     * Note:  this method assumes a gear ratio of 1 (i.e. nothing between the two)
      * @param angularVelocity angular velocity of the rotating object in
      *                        {@code rad/s}
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
@@ -152,7 +152,7 @@ public abstract class conversions {
     }
 
     /**
-     * Conver linear velocity to angular velocity
+     * Convert linear velocity to angular velocity
      * 
      * @return angular velocity in {@code rad/s}
      */
@@ -181,7 +181,7 @@ public abstract class conversions {
     }
 
     /**
-     * Convert RPM to CTRE velocity useable by a Falon500
+     * Convert RPM to CTRE velocity usable by a Falcon500
      * 
      * @param RPM
      * @return CTRE velocity in {@code ticks / 100ms}
