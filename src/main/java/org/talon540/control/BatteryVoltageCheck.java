@@ -15,6 +15,10 @@ public class BatteryVoltageCheck extends Button {
      */
     public BatteryVoltageCheck(double minVoltage) {this.min = MathUtil.clamp(minVoltage, 0, 12);}
 
+    public BatteryVoltageCheck() {
+        this(11);
+    }
+
     @Override
     public boolean get() {
         return RobotController.getBatteryVoltage() < min;
