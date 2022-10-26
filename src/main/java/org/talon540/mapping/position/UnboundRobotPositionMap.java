@@ -64,7 +64,7 @@ public class UnboundRobotPositionMap implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("count", () -> map.size(), null);
+        builder.addDoubleProperty("count", map::size, null);
         builder.addStringProperty("cPosition", () -> getLatestPosition().toString(), null);
         builder.addDoubleProperty("cTimestamp", () -> {
             try {

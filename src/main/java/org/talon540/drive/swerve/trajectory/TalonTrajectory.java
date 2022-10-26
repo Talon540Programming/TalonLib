@@ -196,7 +196,7 @@ public class TalonTrajectory {
      * Sort the trajectory list by time, only needed if random points are inserted
      */
     public void sortTrajectoryList() {
-        trajectoryList.sort((firstNode, secondNode) -> firstNode.time < secondNode.time ? -1 : 1);
+        trajectoryList.sort((firstNode, secondNode) -> firstNode.time < secondNode.time ? -1 : firstNode.time > secondNode.time ? 1 : 0);
     }
 
     /**
