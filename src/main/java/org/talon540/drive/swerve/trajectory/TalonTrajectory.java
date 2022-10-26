@@ -46,7 +46,7 @@ public class TalonTrajectory {
     }
 
     /**
-     * Add an array of datapoints to the trajectory
+     * Add an array of data-points to the trajectory
      * 
      * @param points { time, posX, posY, posRotRad, velX, velY, velRotRadPerS }
      */
@@ -102,8 +102,8 @@ public class TalonTrajectory {
      * Return the remaining time from the provided time
      * 
      * @param time
-     * @param estimated if true, substracts the provided time, else conduct a binary
-     *                  search to find the correct node and substract that time
+     * @param estimated if true, subtracts the provided time, else conduct a binary
+     *                  search to find the correct node and subtract that time
      * @return remaining runtime
      */
     public double getTrajectoryTime(double time, boolean estimated) {
@@ -116,7 +116,7 @@ public class TalonTrajectory {
     public double getTrajectoryLength() {
         double distance = 0;
 
-        // Subtract two so we dont throw out of bounds excpetion
+        // Subtract two, so we don't throw out of bounds exception
         for (int i = 0; i < trajectoryList.size() - 2; i++) {
             Pose2d currentPosition = trajectoryList.get(i).position;
             Pose2d nextPosition = trajectoryList.get(i + 1).position;
@@ -143,7 +143,7 @@ public class TalonTrajectory {
 
         double distance = 0;
 
-        // Subtract two so we dont throw out of bounds excpetion
+        // Subtract two, so we don't throw out of bounds exception
         for (int i = index; i < trajectoryList.size() - 2; i++) {
             Pose2d currentPosition = trajectoryList.get(i).position;
             Pose2d nextPosition = trajectoryList.get(i + 1).position;
@@ -177,7 +177,7 @@ public class TalonTrajectory {
 
             double distance = 0;
 
-            // Subtract two so we dont throw out of bounds excpetion
+            // Subtract two, so we don't throw out of bounds exception
             for (int i = 0; i < shortenedList.size() - 2; i++) {
                 Pose2d currentPosition = shortenedList.get(i).position;
                 Pose2d nextPosition = shortenedList.get(i + 1).position;

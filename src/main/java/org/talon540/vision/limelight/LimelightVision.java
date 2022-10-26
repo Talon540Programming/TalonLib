@@ -22,19 +22,19 @@ public class LimelightVision extends SubsystemBase {
     public boolean targetViewed;
 
     /**
-     * Horizontal offset from the crosshair
+     * Horizontal offset from the cross-hair
      */
     public double offsetX;
     /**
-     * Vertical offset from the crosshair
+     * Vertical offset from the cross-hair
      */
     public double offsetY;
     /**
-     * Horizontal offset from the crosshair. Doesnt record 0 values in case the target is lost from view
+     * Horizontal offset from the cross-hair. Doesn't record 0 values in case the target is lost from view
      */
     public double nonZeroX;
     /**
-     * Vertical offset from the crosshair. Doesnt record 0 values in case the target is lost from view
+     * Vertical offset from the cross-hair. Doesn't record 0 values in case the target is lost from view
      */
     public double nonZeroY;
     /**
@@ -48,7 +48,7 @@ public class LimelightVision extends SubsystemBase {
     /**
      * Latency of the calculations of the computer vision processing
      */
-    public double piplineLatencyMS;
+    public double pipelineLatencyMS;
     /**
      * Timestamp of the last time the state was updated.
      * Accounts for pipeline latency
@@ -95,7 +95,7 @@ public class LimelightVision extends SubsystemBase {
             this.targetSkew = event.value.getDouble();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("tl").addListener(event -> {
-            this.piplineLatencyMS = event.value.getDouble();
+            this.pipelineLatencyMS = event.value.getDouble();
         }, EntryListenerFlags.kUpdate);
         limelightTable.getEntry("NZtx").addListener(event -> {
             this.nonZeroX = event.value.getDouble();
@@ -119,14 +119,14 @@ public class LimelightVision extends SubsystemBase {
 
     @Override
     public void periodic() {
-        this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.piplineLatencyMS / 1000.0) + 0.011;
+        this.visionStateTimestamp = Timer.getFPGATimestamp() - (this.pipelineLatencyMS / 1000.0) + 0.011;
     }
 
     /**
      * Get distance from a specified target's base. Follows
      * https://docs.limelightvision.io/en/latest/cs_estimating_distance.html
      * 
-     * @param targetHeight height of the retroreflector in meters. Already offsets
+     * @param targetHeight height of the retro reflector in meters. Already offsets
      *                     for mount height
      * @return distance from the base of the target in {@code meters}. Returns
      *         {@link Double#NaN} if target is not found or value is unrealistic
@@ -143,7 +143,7 @@ public class LimelightVision extends SubsystemBase {
      * Get distance from a specified target (Hypotenuse). Follows
      * https://docs.limelightvision.io/en/latest/cs_estimating_distance.html
      * 
-     * @param targetHeight height of the retroreflector in meters. Already offsets
+     * @param targetHeight height of the retro reflector in meters. Already offsets
      *                     for mount height
      * @return distance from the target in {@code meters}. Returns
      *         {@link Double#NaN} if target is not found or value is unrealistic
@@ -160,13 +160,13 @@ public class LimelightVision extends SubsystemBase {
     /**
      * Set the limelight's pipeline
      * 
-     * @param piplineID pipline id within [0,9]
+     * @param pipelineID pipeline id within [0,9]
      */
-    public void setPipeline(int piplineID) {
-        if (!(0 <= piplineID && piplineID <= 9))
+    public void setPipeline(int pipelineID) {
+        if (!(0 <= pipelineID && pipelineID <= 9))
             throw new IllegalArgumentException("Pipeline must be within 0-9");
 
-        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("pipeline").setNumber(piplineID);
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("pipeline").setNumber(pipelineID);
     }
 
     /**
@@ -249,7 +249,7 @@ public class LimelightVision extends SubsystemBase {
         builder.addDoubleProperty("tY", () -> this.offsetY, null);
         builder.addDoubleProperty("NZtX", () -> this.nonZeroX, null);
         builder.addDoubleProperty("NZtY", () -> this.nonZeroY, null);
-        builder.addDoubleProperty("pLatency", () -> this.piplineLatencyMS, null);
+        builder.addDoubleProperty("pLatency", () -> this.pipelineLatencyMS, null);
         builder.addDoubleProperty("sTimestamp", () -> this.visionStateTimestamp, null);
         builder.addDoubleProperty("pipeId", this::getPipeline, null);
         builder.addStringProperty("LED Mode", () -> this.getLEDState().toString(), (targetMode) -> {

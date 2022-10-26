@@ -10,7 +10,7 @@ public class Vector2d {
     }
 
     /**
-     * Contruct a new vector by adding a vector to the current vector
+     * Construct a new vector by adding a vector to the current vector
      * 
      * @param vector
      */
@@ -21,18 +21,18 @@ public class Vector2d {
     }
 
     /**
-     * Contruct a new vector by subtracting a vector to the current vector
+     * Construct a new vector by subtracting a vector to the current vector
      * 
      * @param vector
      */
-    public Vector2d substractVector(Vector2d vector) {
+    public Vector2d subtractVector(Vector2d vector) {
         return new Vector2d(
                 vecX - vector.vecX,
                 vecY - vector.vecY);
     }
 
     /**
-     * Contruct a new vector by multiplying the current vector by a scale value
+     * Construct a new vector by multiplying the current vector by a scale value
      * 
      * @param scale
      */

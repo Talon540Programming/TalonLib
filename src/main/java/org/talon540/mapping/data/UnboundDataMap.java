@@ -6,7 +6,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnboudDataMap implements Sendable {
+public class UnboundDataMap implements Sendable {
     protected List<Double> nodeList = new ArrayList<Double>();
 
     /**
@@ -59,7 +59,7 @@ public class UnboudDataMap implements Sendable {
     }
 
     /**
-     * Get the number of datapoints in the dataset
+     * Get the number of data-points in the dataset
      */
     public int getNodeCount() {
         return nodeList.size();
