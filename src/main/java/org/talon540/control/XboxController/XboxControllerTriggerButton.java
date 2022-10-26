@@ -2,7 +2,6 @@ package org.talon540.control.XboxController;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
-import org.talon540.control.XboxController.XboxControllerBinds.Triggers;
 
 
 public class XboxControllerTriggerButton extends Button {
@@ -43,6 +42,11 @@ public class XboxControllerTriggerButton extends Button {
             default:
                 return false;
         }
+    }
+
+    public enum Triggers {
+        LEFT_TRIGGER,
+        RIGHT_TRIGGER
     }
 
 }

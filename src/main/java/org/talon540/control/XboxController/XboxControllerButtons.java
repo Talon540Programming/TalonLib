@@ -3,7 +3,8 @@ package org.talon540.control.XboxController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.talon540.control.XboxController.XboxControllerBinds.DPAD;
+import org.talon540.control.XboxController.XboxControllerDPADButton.DPAD;
+import org.talon540.control.XboxController.XboxControllerTriggerButton.Triggers;
 
 
 public class XboxControllerButtons {
@@ -40,8 +41,8 @@ public class XboxControllerButtons {
         BACK = new JoystickButton(controller, XboxController.Button.kBack.value);
         START = new JoystickButton(controller, XboxController.Button.kStart.value);
 
-        LEFT_TRIGGER = new XboxControllerTriggerButton(controller, XboxControllerBinds.Triggers.LEFT_TRIGGER);
-        RIGHT_TRIGGER = new XboxControllerTriggerButton(controller, XboxControllerBinds.Triggers.RIGHT_TRIGGER);
+        LEFT_TRIGGER = new XboxControllerTriggerButton(controller, Triggers.LEFT_TRIGGER);
+        RIGHT_TRIGGER = new XboxControllerTriggerButton(controller, Triggers.RIGHT_TRIGGER);
 
         DPAD_NORTH = new XboxControllerDPADButton(controller, DPAD.NORTH);
         DPAD_NORTHEAST = new XboxControllerDPADButton(controller, DPAD.NORTHEAST);
