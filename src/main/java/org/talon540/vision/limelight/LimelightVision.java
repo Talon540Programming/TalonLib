@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.talon540.vision.VisionLEDStates;
 
 
 /**
@@ -164,21 +165,21 @@ public class LimelightVision extends SubsystemBase {
      * This function sets the LEDS to off
      */
     public void disableLEDS() {
-        this.setLEDState(LimelightLEDStates.OFF);
+        this.setLEDState(VisionLEDStates.OFF);
     }
 
     /**
      * This function sets the LEDS to on
      */
     public void enableLEDS() {
-        this.setLEDState(LimelightLEDStates.ON);
+        this.setLEDState(VisionLEDStates.ON);
     }
 
     /**
      * This function sets the LEDS to blink
      */
     public void blinkLEDS() {
-        this.setLEDState(LimelightLEDStates.BLINK);
+        this.setLEDState(VisionLEDStates.BLINK);
     }
 
     /**
@@ -186,7 +187,7 @@ public class LimelightVision extends SubsystemBase {
      *
      * @param dLedStates The state of the LEDS.
      */
-    public void setLEDState(LimelightLEDStates dLedStates) {
+    public void setLEDState(VisionLEDStates dLedStates) {
         NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ledMode");
         switch (dLedStates) {
             case OFF:
@@ -208,19 +209,19 @@ public class LimelightVision extends SubsystemBase {
         }
     }
 
-    public LimelightLEDStates getLEDState() {
+    public VisionLEDStates getLEDState() {
         NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ledMode");
 
         switch (ledEntry.getNumber(0).intValue()) {
             default:
             case 0:
-                return LimelightLEDStates.DEFAULT;
+                return VisionLEDStates.DEFAULT;
             case 1:
-                return LimelightLEDStates.OFF;
+                return VisionLEDStates.OFF;
             case 2:
-                return LimelightLEDStates.BLINK;
+                return VisionLEDStates.BLINK;
             case 3:
-                return LimelightLEDStates.ON;
+                return VisionLEDStates.ON;
         }
     }
 
@@ -244,16 +245,16 @@ public class LimelightVision extends SubsystemBase {
         builder.addStringProperty("LED Mode", () -> this.getLEDState().toString(), (targetMode) -> {
             switch (targetMode.toLowerCase()) {
                 case "on":
-                    setLEDState(LimelightLEDStates.ON);
+                    setLEDState(VisionLEDStates.ON);
                     break;
                 case "off":
-                    setLEDState(LimelightLEDStates.OFF);
+                    setLEDState(VisionLEDStates.OFF);
                     break;
                 case "blink":
-                    setLEDState(LimelightLEDStates.BLINK);
+                    setLEDState(VisionLEDStates.BLINK);
                     break;
                 default:
-                    setLEDState(LimelightLEDStates.DEFAULT);
+                    setLEDState(VisionLEDStates.DEFAULT);
                     break;
             }
         });
