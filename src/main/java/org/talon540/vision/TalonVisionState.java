@@ -1,5 +1,6 @@
 package org.talon540.vision;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -102,6 +103,15 @@ public class TalonVisionState {
     }
 
     /**
+     * Get yaw as a form of a {@link Rotation2d} object
+     *
+     * @return yaw as {@link Rotation2d}. Will return {@code null} if the vision system doesn't support it
+     */
+    public Rotation2d getYawRotation2d() {
+        return yaw == null ? null : Rotation2d.fromDegrees(-yaw);
+    }
+
+    /**
      * Get target pitch. Will return {@code null} if the vision system doesn't support it
      *
      * @return target pitch
@@ -111,12 +121,30 @@ public class TalonVisionState {
     }
 
     /**
+     * Get pitch as a form of a {@link Rotation2d} object
+     *
+     * @return pitch as {@link Rotation2d}. Will return {@code null} if the vision system doesn't support it
+     */
+    public Rotation2d getPitchRotation2d() {
+        return pitch == null ? null : Rotation2d.fromDegrees(pitch);
+    }
+
+    /**
      * Get target skew. Will return {@code null} if the vision system doesn't support it
      *
      * @return target skew
      */
     public Double getSkew() {
         return skew;
+    }
+
+    /**
+     * Get skew as a form of a {@link Rotation2d} object
+     *
+     * @return skew as {@link Rotation2d}. Will return {@code null} if the vision system doesn't support it
+     */
+    public Rotation2d getSkewRotation2d() {
+        return skew == null ? null : Rotation2d.fromDegrees(skew);
     }
 
     /**
