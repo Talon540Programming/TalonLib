@@ -8,27 +8,26 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.talon540.vision.TalonVisionState;
 import org.talon540.vision.TalonVisionSystem;
+import org.talon540.vision.VisionCameraTransformation;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
 
 
 public class PhotonVision implements TalonVisionSystem {
     private final PhotonCamera camera;
-    private final double mountAngle, mountHeight;
+    private final VisionCameraTransformation cameraPlacement;
 
     /**
      * Construct a photon vision system with custom values
      *
      * @param cameraName name of the camera sub-table
-     * @param mountAngle mount angle of the camera in degrees
-     * @param mountHeight mount height of the center of the camera's lens from the floor in meters
+     * @param cameraPlacement camera placement relative to the robot
      * @param camMode camera mode to use
      * @param pipeline pipeline to set processing for
      */
-    public PhotonVision(String cameraName, double mountHeight, double mountAngle, CAMMode camMode, int pipeline) {
+    public PhotonVision(String cameraName, VisionCameraTransformation cameraPlacement, CAMMode camMode, int pipeline) {
         this.camera = new PhotonCamera(cameraName);
-        this.mountHeight = mountHeight;
-        this.mountAngle = mountAngle;
+        this.cameraPlacement = cameraPlacement;
 
         setPipelineIndex(pipeline);
         setCamMode(camMode);
@@ -39,11 +38,11 @@ public class PhotonVision implements TalonVisionSystem {
      * Construct a photon vision system with default pipeline and using the camera as a vision processor
      *
      * @param cameraName name of the camera sub-table
-     * @param mountAngle mount angle of the camera in degrees
-     * @param mountHeight mount height of the center of the camera's lens from the floor in meters
+     * @param cameraPlacement camera placement relative to the robot
+
      */
-    public PhotonVision(String cameraName, double mountHeight, double mountAngle) {
-        this(cameraName, mountHeight, mountAngle, CAMMode.PROCESSING, 0);
+    public PhotonVision(String cameraName, VisionCameraTransformation cameraPlacement) {
+        this(cameraName, cameraPlacement, CAMMode.PROCESSING, 0);
     }
 
     @Override
@@ -109,16 +108,16 @@ public class PhotonVision implements TalonVisionSystem {
     public Double getDistanceFromTarget(double targetHeight) {
         if (!targetViewed())
             return null;
-        double deltaAngle = Math.toRadians(this.mountAngle + this.getVisionState().getOffsetY());
-        return (targetHeight - this.mountHeight) / Math.sin(deltaAngle);
+        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getOffsetY());
+        return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.sin(deltaAngle);
     }
 
     @Override
     public Double getDistanceFromTargetBase(double targetHeight) {
         if (!targetViewed())
             return null;
-        double deltaAngle = Math.toRadians(this.mountAngle + this.getVisionState().getOffsetY());
-        return (targetHeight - this.mountHeight) / Math.tan(deltaAngle);
+        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getOffsetY());
+        return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
     }
 
     @Override

@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import org.talon540.vision.TalonVisionState;
 import org.talon540.vision.TalonVisionSystem;
+import org.talon540.vision.VisionCameraTransformation;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
 
@@ -15,20 +16,18 @@ import org.talon540.vision.VisionFlags.LEDStates;
  * An object used to get data and manipulate the state of a limelight camera
  */
 public class LimelightVision implements TalonVisionSystem {
-    private final double mountAngle, mountHeight;
+
+    private final VisionCameraTransformation cameraPlacement;
 
     /**
      * Construct a limelight object
      *
-     * @param mountAngle mount angle of the limelight in degrees
-     * @param mountHeight mount height of the center of the limelight's lens from the floor in meters
+     * @param cameraPlacement camera placement relative to the robot
      * @param camMode camera mode to use
      * @param pipeline pipeline to set processing for
      */
-    public LimelightVision(double mountAngle, double mountHeight, CAMMode camMode, int pipeline) {
-        this.mountAngle = mountAngle;
-        this.mountHeight = mountHeight;
-
+    public LimelightVision(VisionCameraTransformation cameraPlacement, CAMMode camMode, int pipeline) {
+        this.cameraPlacement = cameraPlacement;
 
         setPipelineIndex(pipeline);
         setCamMode(camMode);
@@ -37,11 +36,10 @@ public class LimelightVision implements TalonVisionSystem {
     /**
      * Create a limelight object with the LEDs and Pipeline set to default
      *
-     * @param mountAngle mount angle of the limelight in degrees
-     * @param mountHeight mount height of the center of the limelight's lens from the floor in meters
+     * @param cameraPlacement camera placement relative to the robot
      */
-    public LimelightVision(double mountAngle, double mountHeight) {
-        this(mountAngle, mountHeight, CAMMode.PROCESSING, 0);
+    public LimelightVision(VisionCameraTransformation cameraPlacement) {
+        this(cameraPlacement, CAMMode.PROCESSING, 0);
     }
 
     @Override
@@ -140,16 +138,16 @@ public class LimelightVision implements TalonVisionSystem {
     public Double getDistanceFromTarget(double targetHeight) {
         if (!targetViewed())
             return null;
-        double deltaAngle = Math.toRadians(this.mountAngle + this.getVisionState().getOffsetY());
-        return (targetHeight - this.mountHeight) / Math.sin(deltaAngle);
+        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getOffsetY());
+        return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.sin(deltaAngle);
     }
 
     @Override
     public Double getDistanceFromTargetBase(double targetHeight) {
         if (!targetViewed())
             return null;
-        double deltaAngle = Math.toRadians(this.mountAngle + this.getVisionState().getOffsetY());
-        return (targetHeight - this.mountHeight) / Math.tan(deltaAngle);
+        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getOffsetY());
+        return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
     }
 
     @Override
