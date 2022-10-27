@@ -95,6 +95,15 @@ public interface TalonVisionSystem extends Sendable {
      */
     default boolean targetViewed() {return getVisionState() != null;}
 
+    /**
+     * Get distance from a specified target (Hypotenuse). Follows
+     * <a href="https://docs.limelightvision.io/en/latest/cs_estimating_distance.html">...</a>
+     *
+     * @param targetHeight height of the retro reflector in meters. Already offsets for mount height
+     * @return distance from the target in {@code meters}. Returns {@code null} if target is not found or value is
+     * unrealistic
+     */
+    Double getDistanceFromTarget(double targetHeight);
 
     /**
      * Get distance from a specified target's base. Follows
@@ -106,20 +115,5 @@ public interface TalonVisionSystem extends Sendable {
      * @implNote Returns null if target is not in view
      */
     Double getDistanceFromTargetBase(double targetHeight);
-
-    /**
-     * Get distance from a specified target (Hypotenuse). Follows
-     * <a href="https://docs.limelightvision.io/en/latest/cs_estimating_distance.html">...</a>
-     *
-     * @param targetHeight height of the retro reflector in meters. Already offsets for mount height
-     * @return distance from the target in {@code meters}. Returns {@code null} if target is not found or value is
-     * unrealistic
-     */
-    Double getDistanceFromTarget(double targetHeight);
-
-    @Override
-    default void initSendable(SendableBuilder builder) {
-
-    }
 
 }
