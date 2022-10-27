@@ -1,22 +1,42 @@
 package org.talon540.vision;
 
 import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
 
 
+/**
+ * Interface representing a vision system capable of tracking targets using computer vision to produce a VisionState
+ */
 public interface TalonVisionSystem extends Sendable {
     /**
-     * Set the state of the LEDs of the vision system
+     * @return current mode of the LEDs
+     */
+    LEDStates getLEDMode();
+
+    /**
+     * Set the mode of the LEDs of the vision system
      *
      * @param state target state of the camera
      */
-    void setLEDState(LEDStates state);
+    void setLEDMode(LEDStates state);
 
-    /**
-     * @return Get the current state of the leds
-     */
-    LEDStates getLEDState();
+    default void setLEDMode(String mode) {
+        switch (mode.toLowerCase()) {
+            case "1":
+            case "on":
+                enableLEDS();
+            case "2":
+            case "blink":
+                blinkLEDS();
+            default:
+            case "0":
+            case "off":
+                disableLEDS();
+
+        }
+    }
 
     /**
      * Get the current index of the pipeline
@@ -34,43 +54,22 @@ public interface TalonVisionSystem extends Sendable {
      * Enables vision system LEDs
      */
     default void enableLEDS() {
-        setLEDState(LEDStates.ON);
+        setLEDMode(LEDStates.ON);
     }
 
     /**
      * Disable vision system LEDs
      */
     default void disableLEDS() {
-        setLEDState(LEDStates.OFF);
+        setLEDMode(LEDStates.OFF);
     }
 
     /**
      * Blinks vision system LEDs
      */
     default void blinkLEDS() {
-        setLEDState(LEDStates.BLINK);
+        setLEDMode(LEDStates.BLINK);
     }
-
-    default void setLEDState(String mode) {
-        switch (mode.toLowerCase()) {
-            case "1":
-            case "on":
-                enableLEDS();
-            case "2":
-            case "blink":
-                blinkLEDS();
-            default:
-            case "0":
-            case "off":
-                disableLEDS();
-
-        }
-    }
-
-    /**
-     * Set the camera mode of the vision system
-     */
-    void setCamMode(CAMMode targetMode);
 
     /**
      * Get the current camera mode of the vision system
@@ -78,6 +77,11 @@ public interface TalonVisionSystem extends Sendable {
      * @return current camera mode
      */
     CAMMode getCamMode();
+
+    /**
+     * Set the camera mode of the vision system
+     */
+    void setCamMode(CAMMode targetMode);
 
     /**
      * Get the current vision state data. Returns {@code null} if it doesn't exist
@@ -112,5 +116,10 @@ public interface TalonVisionSystem extends Sendable {
      * unrealistic
      */
     Double getDistanceFromTarget(double targetHeight);
+
+    @Override
+    default void initSendable(SendableBuilder builder) {
+
+    }
 
 }

@@ -69,7 +69,7 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
     @Override
-    public void setLEDState(LEDStates state) {
+    public void setLEDMode(LEDStates state) {
         switch (state) {
             case ON:
                 camera.setLED(VisionLEDMode.kOn);
@@ -87,7 +87,7 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
     @Override
-    public LEDStates getLEDState() {
+    public LEDStates getLEDMode() {
         switch (camera.getLEDMode()) {
             case kOn:
                 return LEDStates.ON;
@@ -134,6 +134,6 @@ public class PhotonVision implements TalonVisionSystem {
                 this::getPipelineIndex,
                 (index) -> setPipelineIndex(MathUtil.clamp((int) index, 0, 9))
         );
-        builder.addStringProperty("LEDMode", () -> getLEDState().toString(), this::setLEDState);
+        builder.addStringProperty("LEDMode", () -> getLEDMode().toString(), this::setLEDMode);
     }
 }

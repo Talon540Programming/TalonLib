@@ -107,7 +107,7 @@ public class LimelightVision implements TalonVisionSystem {
     }
 
     @Override
-    public void setLEDState(LEDStates state) {
+    public void setLEDMode(LEDStates state) {
         NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode");
         switch (state) {
             case OFF:
@@ -130,7 +130,7 @@ public class LimelightVision implements TalonVisionSystem {
     }
 
     @Override
-    public LEDStates getLEDState() {
+    public LEDStates getLEDMode() {
         NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode");
 
         switch (ledEntry.getNumber(0).intValue()) {
@@ -165,6 +165,6 @@ public class LimelightVision implements TalonVisionSystem {
                 this::getPipelineIndex,
                 (index) -> setPipelineIndex(MathUtil.clamp((int) index, 0, 9))
         );
-        builder.addStringProperty("LEDMode", () -> getLEDState().toString(), this::setLEDState);
+        builder.addStringProperty("LEDMode", () -> getLEDMode().toString(), this::setLEDMode);
     }
 }
