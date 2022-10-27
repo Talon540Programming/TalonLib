@@ -3,6 +3,7 @@ package org.talon540.drive.swerve.trajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -190,7 +191,7 @@ public class TalonTrajectory {
      * Sort the trajectory list by time, only needed if random points are inserted
      */
     public void sortTrajectoryList() {
-        trajectoryList.sort((firstNode, secondNode) -> firstNode.time < secondNode.time ? -1 : firstNode.time > secondNode.time ? 1 : 0);
+        trajectoryList.sort(Comparator.comparingDouble(firstNode -> firstNode.time));
     }
 
     /**
