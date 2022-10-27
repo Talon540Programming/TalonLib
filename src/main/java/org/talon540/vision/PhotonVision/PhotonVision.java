@@ -17,7 +17,7 @@ public class PhotonVision implements TalonVisionSystem {
     /**
      * Construct a photon vision system with custom values
      *
-     * @param cameraName name of the camera subtable
+     * @param cameraName name of the camera sub-table
      * @param mountAngle mount angle of the camera in degrees
      * @param mountHeight mount height of the center of the camera's lens from the floor in meters
      * @param camMode camera mode to use
@@ -33,9 +33,9 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
     /**
-     * Construct a photon vision system with default pipeline and using the camera as a vision processesor
+     * Construct a photon vision system with default pipeline and using the camera as a vision processor
      *
-     * @param cameraName name of the camera subtable
+     * @param cameraName name of the camera sub-table
      * @param mountAngle mount angle of the camera in degrees
      * @param mountHeight mount height of the center of the camera's lens from the floor in meters
      */

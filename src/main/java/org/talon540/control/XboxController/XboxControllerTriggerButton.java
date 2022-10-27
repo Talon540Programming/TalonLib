@@ -13,23 +13,23 @@ public class XboxControllerTriggerButton extends Button {
      * Create a button from the trigger of an XboxController
      *
      * @param controller the xbox controller
-     * @param trigger the selected trigger {@link XboxControllerBinds}
+     * @param targetTrigger the selected trigger {@link Triggers}
      * @param activateThreshold threshold which will activate the button
      */
-    public XboxControllerTriggerButton(XboxController controller, Triggers trigger, double activateThreshold) {
+    public XboxControllerTriggerButton(XboxController controller, Triggers targetTrigger, double activateThreshold) {
         this.controller = controller;
-        this.selectedTrigger = trigger;
+        this.selectedTrigger = targetTrigger;
         this.activateThreshold = activateThreshold;
     }
 
     /**
-     * Create a trigger button with the default threshold to activate (0.4)
+     * Create a trigger button with the default threshold to activate (0.4 / 40%)
      *
      * @param controller the xbox controller
-     * @param leftTrigger the selected trigger {@link XboxControllerBinds}
+     * @param targetTrigger the selected trigger {@link Triggers}
      */
-    public XboxControllerTriggerButton(XboxController controller, Triggers leftTrigger) {
-        this(controller, leftTrigger, 0.4);
+    public XboxControllerTriggerButton(XboxController controller, Triggers targetTrigger) {
+        this(controller, targetTrigger, 0.4);
     }
 
     @Override
