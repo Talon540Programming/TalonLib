@@ -1,12 +1,30 @@
 package org.talon540.math;
 
 public class Vector2d {
-    public final double vecX;
-    public final double vecY;
+    private final Double vecX;
+    private final Double vecY;
 
-    public Vector2d(double vecX, double vecY) {
+    public Vector2d(Double vecX, Double vecY) {
         this.vecX = vecX;
         this.vecY = vecY;
+    }
+
+    /**
+     * Get X value from the vector
+     *
+     * @return x val
+     */
+    public double getX() {
+        return vecX;
+    }
+
+    /**
+     * Get Y value from the vector
+     *
+     * @return y val
+     */
+    public double getY() {
+        return vecY;
     }
 
     /**

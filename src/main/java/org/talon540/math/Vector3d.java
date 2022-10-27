@@ -6,9 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 
 public class Vector3d {
-    public final double vecY;
-    public final double vecX;
-    public final double vecZ;
+    private final double vecY, vecX, vecZ;
 
     public Vector3d(double velX, double velY, double velRot) {
         this.vecX = velX;
@@ -49,5 +47,32 @@ public class Vector3d {
      */
     public static Vector3d fromPose2d(Pose2d pose) {
         return new Vector3d(pose.getX(), pose.getY(), pose.getRotation().getRadians());
+    }
+
+    /**
+     * Get X value from the vector
+     *
+     * @return x val
+     */
+    public double getX() {
+        return vecX;
+    }
+
+    /**
+     * Get Y value from the vector
+     *
+     * @return y val
+     */
+    public double getY() {
+        return vecY;
+    }
+
+    /**
+     * Get z value from the vector
+     *
+     * @return z val
+     */
+    public double getZ() {
+        return vecZ;
     }
 }
