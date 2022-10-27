@@ -1,5 +1,6 @@
 package org.talon540.vision.PhotonVision;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
@@ -118,6 +119,21 @@ public class PhotonVision implements TalonVisionSystem {
 
     @Override
     public void initSendable(SendableBuilder builder) {
+        builder.addBooleanProperty("tViewed", this::targetViewed, null);
+        builder.addDoubleProperty("tOffsetX", () -> getVisionState().getOffsetX(), null);
+        builder.addDoubleProperty("tOffsetY", () -> getVisionState().getOffsetY(), null);
+        builder.addDoubleProperty("tYaw", () -> getVisionState().getYaw(), null);
+        builder.addDoubleProperty("tPitch", () -> getVisionState().getPitch(), null);
+        builder.addDoubleProperty("tSkew", () -> getVisionState().getSkew(), null);
+        builder.addDoubleProperty("tArea", () -> getVisionState().getArea(), null);
+        builder.addDoubleProperty("tError", () -> getVisionState().getError(), null);
+        builder.addDoubleProperty("pLatency", () -> getVisionState().getPipelineLatency(), null);
+        builder.addDoubleProperty("tTimestamp", () -> getVisionState().getStateTimestamp(), null);
 
+        builder.addDoubleProperty("pipeline",
+                this::getPipelineIndex,
+                (index) -> setPipelineIndex(MathUtil.clamp((int) index, 0, 9))
+        );
+        builder.addStringProperty("LEDMode", () -> getLEDState().toString(), this::setLEDState);
     }
 }

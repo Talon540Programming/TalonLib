@@ -51,6 +51,22 @@ public interface TalonVisionSystem extends Sendable {
         setLEDState(LEDStates.BLINK);
     }
 
+    default void setLEDState(String mode) {
+        switch (mode.toLowerCase()) {
+            case "1":
+            case "on":
+                enableLEDS();
+            case "2":
+            case "blink":
+                blinkLEDS();
+            default:
+            case "0":
+            case "off":
+                disableLEDS();
+
+        }
+    }
+
     /**
      * Set the camera mode of the vision system
      */

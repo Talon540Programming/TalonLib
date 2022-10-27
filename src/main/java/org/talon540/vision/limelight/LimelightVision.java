@@ -1,5 +1,6 @@
 package org.talon540.vision.Limelight;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -50,8 +51,7 @@ public class LimelightVision implements TalonVisionSystem {
         if (limelightTable.getEntry("tv").getDouble(0) == 0)
             return null;
 
-        return new TalonVisionState(
-                limelightTable.getEntry("tx").getDouble(0),
+        return new TalonVisionState(limelightTable.getEntry("tx").getDouble(0),
                 limelightTable.getEntry("ty").getDouble(0),
                 null,
                 null,
@@ -153,6 +153,18 @@ public class LimelightVision implements TalonVisionSystem {
 
     @Override
     public void initSendable(SendableBuilder builder) {
+        builder.addBooleanProperty("tViewed", this::targetViewed, null);
+        builder.addDoubleProperty("tOffsetX", () -> getVisionState().getOffsetX(), null);
+        builder.addDoubleProperty("tOffsetY", () -> getVisionState().getOffsetY(), null);
+        builder.addDoubleProperty("tSkew", () -> getVisionState().getSkew(), null);
+        builder.addDoubleProperty("tArea", () -> getVisionState().getArea(), null);
+        builder.addDoubleProperty("pLatency", () -> getVisionState().getPipelineLatency(), null);
+        builder.addDoubleProperty("tTimestamp", () -> getVisionState().getStateTimestamp(), null);
 
+        builder.addDoubleProperty("pipeline",
+                this::getPipelineIndex,
+                (index) -> setPipelineIndex(MathUtil.clamp((int) index, 0, 9))
+        );
+        builder.addStringProperty("LEDMode", () -> getLEDState().toString(), this::setLEDState);
     }
 }
