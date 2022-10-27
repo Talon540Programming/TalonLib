@@ -1,9 +1,8 @@
 package org.talon540.vision;
 
+import edu.wpi.first.util.sendable.Sendable;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
-
-import edu.wpi.first.util.sendable.Sendable;
 
 
 public interface TalonVisionSystem extends Sendable {
@@ -59,6 +58,7 @@ public interface TalonVisionSystem extends Sendable {
 
     /**
      * Get the current camera mode of the vision system
+     *
      * @return current camera mode
      */
     CAMMode getCamMode();

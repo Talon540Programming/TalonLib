@@ -29,7 +29,7 @@ public class VisionFlags {
          * Use the vision system for vision processing
          */
         PROCESSING(0),
-        
+
         /**
          * Unknown current camera mode
          */
@@ -37,7 +37,7 @@ public class VisionFlags {
 
         public final int val;
 
-        private CAMMode(int val) {
+        CAMMode(int val) {
             this.val = val;
         }
     }
