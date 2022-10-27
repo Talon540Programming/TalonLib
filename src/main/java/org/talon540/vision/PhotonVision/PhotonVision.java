@@ -1,6 +1,8 @@
 package org.talon540.vision.PhotonVision;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
@@ -12,7 +14,7 @@ import org.talon540.vision.VisionFlags.LEDStates;
 
 public class PhotonVision implements TalonVisionSystem {
     private final PhotonCamera camera;
-    private final double mountAngleDeg, mountHeight;
+    private final double mountAngle, mountHeight;
 
     /**
      * Construct a photon vision system with custom values
@@ -26,10 +28,11 @@ public class PhotonVision implements TalonVisionSystem {
     public PhotonVision(String cameraName, double mountHeight, double mountAngle, CAMMode camMode, int pipeline) {
         this.camera = new PhotonCamera(cameraName);
         this.mountHeight = mountHeight;
-        this.mountAngleDeg = mountAngle;
+        this.mountAngle = mountAngle;
 
         setPipelineIndex(pipeline);
         setCamMode(camMode);
+
     }
 
     /**
@@ -44,28 +47,18 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
     @Override
-    public TalonVisionState getVisionState() {
-        return TalonVisionState.fromPhotonStream(camera.getLatestResult());
-    }
-
-    @Override
-    public void setCamMode(CAMMode targetMode) {
-        camera.setDriverMode(targetMode == CAMMode.DRIVER);
-    }
-
-    @Override
-    public CAMMode getCamMode() {
-        return camera.getDriverMode() ? CAMMode.DRIVER : CAMMode.PROCESSING;
-    }
-
-    @Override
-    public void setPipelineIndex(int index) {
-        camera.setPipelineIndex(index);
-    }
-
-    @Override
-    public int getPipelineIndex() {
-        return camera.getPipelineIndex();
+    public LEDStates getLEDMode() {
+        switch (camera.getLEDMode()) {
+            case kOn:
+                return LEDStates.ON;
+            case kOff:
+                return LEDStates.OFF;
+            case kBlink:
+                return LEDStates.BLINK;
+            default:
+            case kDefault:
+                return LEDStates.DEFAULT;
+        }
     }
 
     @Override
@@ -87,25 +80,36 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
     @Override
-    public LEDStates getLEDMode() {
-        switch (camera.getLEDMode()) {
-            case kOn:
-                return LEDStates.ON;
-            case kOff:
-                return LEDStates.OFF;
-            case kBlink:
-                return LEDStates.BLINK;
-            default:
-            case kDefault:
-                return LEDStates.DEFAULT;
-        }
+    public int getPipelineIndex() {
+        return camera.getPipelineIndex();
     }
 
+    @Override
+    public void setPipelineIndex(int index) {
+        camera.setPipelineIndex(index);
+    }
+
+    @Override
+    public CAMMode getCamMode() {
+        return camera.getDriverMode() ? CAMMode.DRIVER : CAMMode.PROCESSING;
+    }
+
+    @Override
+    public void setCamMode(CAMMode targetMode) {
+        camera.setDriverMode(targetMode == CAMMode.DRIVER);
+    }
+
+    @Override
+    public TalonVisionState getVisionState() {
+        return TalonVisionState.fromPhotonStream(camera.getLatestResult());
+    }
+
+    // UTILS
     @Override
     public Double getDistanceFromTarget(double targetHeight) {
         if (!targetViewed())
             return null;
-        double deltaAngle = Math.toRadians(this.mountAngleDeg + this.getVisionState().getOffsetY());
+        double deltaAngle = Math.toRadians(this.mountAngle + this.getVisionState().getOffsetY());
         return (targetHeight - this.mountHeight) / Math.sin(deltaAngle);
     }
 
@@ -113,7 +117,7 @@ public class PhotonVision implements TalonVisionSystem {
     public Double getDistanceFromTargetBase(double targetHeight) {
         if (!targetViewed())
             return null;
-        double deltaAngle = Math.toRadians(this.mountAngleDeg + this.getVisionState().getOffsetY());
+        double deltaAngle = Math.toRadians(this.mountAngle + this.getVisionState().getOffsetY());
         return (targetHeight - this.mountHeight) / Math.tan(deltaAngle);
     }
 
@@ -136,4 +140,20 @@ public class PhotonVision implements TalonVisionSystem {
         );
         builder.addStringProperty("LEDMode", () -> getLEDMode().toString(), this::setLEDMode);
     }
+
+    /**
+     * Estimate the {@link Translation2d} of the target relative to the camera.
+     *
+     * @param targetHeight height of target in meters
+     * @return {@link Translation2d} between the robot and target
+     * @author PhotonUtils v2023.1.1-beta-3
+     */
+    public Translation2d getTargetTranslation(double targetHeight) {
+        if (!targetViewed())
+            return null;
+        Rotation2d yaw = getVisionState().getYawRotation2d();
+        double targetDistanceMeters = getDistanceFromTargetBase(targetHeight);
+        return new Translation2d(yaw.getCos() * targetDistanceMeters, yaw.getSin() * targetDistanceMeters);
+    }
+
 }
