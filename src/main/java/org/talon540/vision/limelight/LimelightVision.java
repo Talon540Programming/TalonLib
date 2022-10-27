@@ -45,65 +45,20 @@ public class LimelightVision implements TalonVisionSystem {
     }
 
     @Override
-    public TalonVisionState getVisionState() {
-        NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("pipeline");
+    public LEDStates getLEDMode() {
+        NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode");
 
-        if (limelightTable.getEntry("tv").getDouble(0) == 0)
-            return null;
-
-        return new TalonVisionState(limelightTable.getEntry("tx").getDouble(0),
-                limelightTable.getEntry("ty").getDouble(0),
-                null,
-                null,
-                limelightTable.getEntry("ts").getDouble(0),
-                limelightTable.getEntry("ta").getDouble(0),
-                null,
-                limelightTable.getEntry("tl").getDouble(0)
-        );
-    }
-
-    @Override
-    public void setCamMode(CAMMode targetMode) {
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(targetMode.val);
-    }
-
-    @Override
-    public CAMMode getCamMode() {
-        switch (NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").getNumber(-1).intValue()) {
-            case 0:
-                return CAMMode.PROCESSING;
-            case 1:
-                return CAMMode.DRIVER;
+        switch (ledEntry.getNumber(0).intValue()) {
             default:
-            case -1:
-                return CAMMode.INVALID;
-
+            case 0:
+                return LEDStates.DEFAULT;
+            case 1:
+                return LEDStates.OFF;
+            case 2:
+                return LEDStates.BLINK;
+            case 3:
+                return LEDStates.ON;
         }
-
-    }
-
-    @Override
-    public Double getDistanceFromTarget(double targetHeight) {
-        if (!targetViewed())
-            return null;
-        double deltaAngle = Math.toRadians(this.mountAngle + getVisionState().getOffsetY());
-        return (targetHeight - this.mountHeight) / Math.sin(deltaAngle);
-    }
-
-    @Override
-    public Double getDistanceFromTargetBase(double targetHeight) {
-        if (!targetViewed())
-            return null;
-        double deltaAngle = Math.toRadians(this.mountAngle + getVisionState().getOffsetY());
-        return (targetHeight - this.mountHeight) / Math.tan(deltaAngle);
-    }
-
-    @Override
-    public void setPipelineIndex(int index) {
-        if (!(0 <= index && index <= 9))
-            throw new IllegalArgumentException("Pipeline must be within 0-9");
-
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(index);
     }
 
     @Override
@@ -130,25 +85,71 @@ public class LimelightVision implements TalonVisionSystem {
     }
 
     @Override
-    public LEDStates getLEDMode() {
-        NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode");
-
-        switch (ledEntry.getNumber(0).intValue()) {
-            default:
-            case 0:
-                return LEDStates.DEFAULT;
-            case 1:
-                return LEDStates.OFF;
-            case 2:
-                return LEDStates.BLINK;
-            case 3:
-                return LEDStates.ON;
-        }
+    public int getPipelineIndex() {
+        return (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("getpipe").getDouble(0);
     }
 
     @Override
-    public int getPipelineIndex() {
-        return (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("getpipe").getDouble(0);
+    public void setPipelineIndex(int index) {
+        if (!(0 <= index && index <= 9))
+            throw new IllegalArgumentException("Pipeline must be within 0-9");
+
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(index);
+    }
+
+    @Override
+    public CAMMode getCamMode() {
+        switch (NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").getNumber(-1).intValue()) {
+            case 0:
+                return CAMMode.PROCESSING;
+            case 1:
+                return CAMMode.DRIVER;
+            default:
+            case -1:
+                return CAMMode.INVALID;
+
+        }
+
+    }
+
+    @Override
+    public void setCamMode(CAMMode targetMode) {
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(targetMode.val);
+    }
+
+    @Override
+    public TalonVisionState getVisionState() {
+        NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("pipeline");
+
+        if (limelightTable.getEntry("tv").getDouble(0) == 0)
+            return null;
+
+        return new TalonVisionState(limelightTable.getEntry("tx").getDouble(0),
+                limelightTable.getEntry("ty").getDouble(0),
+                null,
+                null,
+                limelightTable.getEntry("ts").getDouble(0),
+                limelightTable.getEntry("ta").getDouble(0),
+                null,
+                limelightTable.getEntry("tl").getDouble(0)
+        );
+    }
+
+    //    Utils
+    @Override
+    public Double getDistanceFromTarget(double targetHeight) {
+        if (!targetViewed())
+            return null;
+        double deltaAngle = Math.toRadians(this.mountAngle + this.getVisionState().getOffsetY());
+        return (targetHeight - this.mountHeight) / Math.sin(deltaAngle);
+    }
+
+    @Override
+    public Double getDistanceFromTargetBase(double targetHeight) {
+        if (!targetViewed())
+            return null;
+        double deltaAngle = Math.toRadians(this.mountAngle + this.getVisionState().getOffsetY());
+        return (targetHeight - this.mountHeight) / Math.tan(deltaAngle);
     }
 
     @Override
@@ -167,4 +168,5 @@ public class LimelightVision implements TalonVisionSystem {
         );
         builder.addStringProperty("LEDMode", () -> getLEDMode().toString(), this::setLEDMode);
     }
+
 }
