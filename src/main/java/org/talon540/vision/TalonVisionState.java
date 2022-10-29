@@ -39,8 +39,8 @@ public class TalonVisionState {
         this.skew = skew;
         this.area = area;
         this.error = error;
-        this.pipelineLatency = pipelineLatency;
-        this.stateTimestamp = Timer.getFPGATimestamp() - (this.pipelineLatency / 1000.0) + 0.011;
+        this.pipelineLatency = pipelineLatency / 1000;
+        this.stateTimestamp = Timer.getFPGATimestamp() - (this.pipelineLatency) + 0.011;
 
         this.offsets = new Vector2d(offsetX, offsetY);
     }
