@@ -77,9 +77,19 @@ public class UnboundDataMap implements Sendable {
         nodeList.clear();
     }
 
+    /**
+     * Check if a values lies outside 2.5 standard deviations of the mean or is an outlier of the dataset
+     *
+     * @param val value to check
+     * @return whether value is an outlier
+     */
+    public boolean isOutlier(double val) {
+        return val > 2.5 * getStandardDeviation();
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("Node Count", nodeList::size, null);
+        builder.addDoubleProperty("Node Count", this::getNodeCount, null);
         builder.addDoubleProperty("Average", this::getAverage, null);
         builder.addDoubleProperty("Variance", this::getVariance, null);
         builder.addDoubleProperty("Standard Deviance", this::getStandardDeviation, null);
