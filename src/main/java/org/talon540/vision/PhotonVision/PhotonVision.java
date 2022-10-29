@@ -39,7 +39,6 @@ public class PhotonVision implements TalonVisionSystem {
      *
      * @param cameraName name of the camera sub-table
      * @param cameraPlacement camera placement relative to the robot
-
      */
     public PhotonVision(String cameraName, VisionCameraTransformation cameraPlacement) {
         this(cameraName, cameraPlacement, CAMMode.PROCESSING, 0);
@@ -108,7 +107,7 @@ public class PhotonVision implements TalonVisionSystem {
     public Double getDistanceFromTarget(double targetHeight) {
         if (!targetViewed())
             return null;
-        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getOffsetY());
+        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.sin(deltaAngle);
     }
 
@@ -116,15 +115,13 @@ public class PhotonVision implements TalonVisionSystem {
     public Double getDistanceFromTargetBase(double targetHeight) {
         if (!targetViewed())
             return null;
-        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getOffsetY());
+        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addBooleanProperty("tViewed", this::targetViewed, null);
-        builder.addDoubleProperty("tOffsetX", () -> getVisionState().getOffsetX(), null);
-        builder.addDoubleProperty("tOffsetY", () -> getVisionState().getOffsetY(), null);
         builder.addDoubleProperty("tYaw", () -> getVisionState().getYaw(), null);
         builder.addDoubleProperty("tPitch", () -> getVisionState().getPitch(), null);
         builder.addDoubleProperty("tSkew", () -> getVisionState().getSkew(), null);

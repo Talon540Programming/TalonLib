@@ -15,24 +15,15 @@ public class TalonVisionState {
     /**
      * Create a TalonVisionState from data
      *
-     * @param offsetX horizontal offset from target
-     * @param offsetY vertical offset from target
-     * @param yaw yaw of target, set {@code null} if vision system doesn't support it
-     * @param pitch pitch of target, set {@code null} if vision system doesn't support it
+     * @param yaw (horizontal offset from target) of target, set {@code null} if vision system doesn't support it
+     * @param pitch (vertical offset from target) pitch of target, set {@code null} if vision system doesn't support it
      * @param skew skew of target, set {@code null} if vision system doesn't support it
      * @param area area of target, set {@code null} if vision system doesn't support it
      * @param error error of target, set {@code null} if vision system doesn't support it
      * @param pipelineLatency latency of the pipeline (time taken to run calculations)
      */
     public TalonVisionState(
-            double offsetX,
-            double offsetY,
-            Double yaw,
-            Double pitch,
-            Double skew,
-            Double area,
-            Double error,
-            double pipelineLatency
+            double yaw, double pitch, Double skew, Double area, Double error, double pipelineLatency
     ) {
         this.yaw = yaw;
         this.pitch = pitch;
@@ -42,7 +33,7 @@ public class TalonVisionState {
         this.pipelineLatency = pipelineLatency / 1000;
         this.stateTimestamp = Timer.getFPGATimestamp() - (this.pipelineLatency) + 0.011;
 
-        this.offsets = new Vector2d(offsetX, offsetY);
+        this.offsets = new Vector2d(yaw, pitch);
     }
 
     /**
@@ -66,8 +57,6 @@ public class TalonVisionState {
      */
     public static TalonVisionState fromPhotonTarget(PhotonTrackedTarget target, double pipelineLatency) {
         return new TalonVisionState(
-                target.getCameraToTarget().getX(),
-                target.getCameraToTarget().getY(),
                 target.getYaw(),
                 target.getPitch(),
                 target.getSkew(),
@@ -94,7 +83,7 @@ public class TalonVisionState {
     }
 
     /**
-     * Get target yaw. Will return {@code null} if the vision system doesn't support it
+     * Get target yaw.
      *
      * @return target Yaw
      */
@@ -105,14 +94,14 @@ public class TalonVisionState {
     /**
      * Get yaw as a form of a {@link Rotation2d} object
      *
-     * @return yaw as {@link Rotation2d}. Will return {@code null} if the vision system doesn't support it
+     * @return yaw as {@link Rotation2d}.
      */
     public Rotation2d getYawRotation2d() {
         return yaw == null ? null : Rotation2d.fromDegrees(-yaw);
     }
 
     /**
-     * Get target pitch. Will return {@code null} if the vision system doesn't support it
+     * Get target pitch.
      *
      * @return target pitch
      */
@@ -148,7 +137,7 @@ public class TalonVisionState {
     }
 
     /**
-     * Get target area. Will return {@code null} if the vision system doesn't support it
+     * Get target area [0, 100]. Will return {@code null} if the vision system doesn't support it
      *
      * @return target area
      */
@@ -173,24 +162,6 @@ public class TalonVisionState {
      */
     public Vector2d getOffsets() {
         return offsets;
-    }
-
-    /**
-     * Target horizontal offset
-     *
-     * @return horizontal offset
-     */
-    public double getOffsetX() {
-        return offsets.getX();
-    }
-
-    /**
-     * Target vertical offset
-     *
-     * @return vertical offset
-     */
-    public double getOffsetY() {
-        return offsets.getY();
     }
 
 }
