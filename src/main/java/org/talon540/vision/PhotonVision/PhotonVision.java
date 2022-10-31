@@ -140,7 +140,7 @@ public class PhotonVision implements TalonVisionSystem {
         double distanceFromTarget = getDistanceFromTargetBase(targetHeight);
         double theta = Math.PI - Math.atan(deltaX / deltaY) - getVisionState().getYaw();
 
-        return (Math.pow(distanceFromTarget, 2) + Math.pow(Math.hypot(deltaX, deltaY),2) - (2 * distanceFromTarget * Math.hypot(deltaX, deltaY) * Math.cos(theta)));
+        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(Math.hypot(deltaX, deltaY),2) - (2 * distanceFromTarget * Math.hypot(deltaX, deltaY) * Math.cos(theta)));
     }
 
     @Override
