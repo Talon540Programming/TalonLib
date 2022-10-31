@@ -1,10 +1,9 @@
 package org.talon540.math;
 
 public class Vector2d {
-    private final Double vecX;
-    private final Double vecY;
+    private final double vecX, vecY;
 
-    public Vector2d(Double vecX, Double vecY) {
+    public Vector2d(double vecX, double vecY) {
         this.vecX = vecX;
         this.vecY = vecY;
     }
