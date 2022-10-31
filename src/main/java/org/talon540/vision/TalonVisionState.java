@@ -87,7 +87,7 @@ public class TalonVisionState {
      *
      * @return target Yaw
      */
-    public Double getYaw() {
+    public double getYaw() {
         return yaw;
     }
 
@@ -105,7 +105,7 @@ public class TalonVisionState {
      *
      * @return target pitch
      */
-    public Double getPitch() {
+    public double getPitch() {
         return pitch;
     }
 
