@@ -119,5 +119,5 @@ public interface TalonVisionSystem extends Sendable {
 
     Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight);
 
-    Double getDistanceFromTargetFromRobotCenter(double targetHeight);
+//    Double getDistanceFromTargetFromRobotCenter(double targetHeight);
 }

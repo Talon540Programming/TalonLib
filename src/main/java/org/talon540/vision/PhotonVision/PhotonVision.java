@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
+import org.talon540.math.Vector2d;
 import org.talon540.vision.TalonVisionState;
 import org.talon540.vision.TalonVisionSystem;
 import org.talon540.vision.VisionCameraMountConfig;
@@ -120,14 +121,26 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
 
-    @Override
-    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
-        return null;
-    }
+//    @Override
+//    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
+//        return null;
+//    }
 
     @Override
     public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
-        return null;
+        // Use Law of cosines to find distance from center of the robot. See
+        // https://cdn.discordapp.com/attachments/984927421864230952/1036488516273709066/1B0C2322-C6AC-4462-B279-BCD37B02B453.jpg
+
+        Vector2d cameraRelativePosition = cameraPlacement.getRobotRelativePosition();
+        if(!targetViewed() || cameraRelativePosition == null) return null;
+
+        double deltaX = Math.abs(cameraRelativePosition.getX());
+        double deltaY = Math.abs(cameraRelativePosition.getY());
+
+        double distanceFromTarget = getDistanceFromTargetBase(targetHeight);
+        double theta = Math.PI - Math.atan(deltaX / deltaY) - getVisionState().getYaw();
+
+        return (Math.pow(distanceFromTarget, 2) + Math.pow(Math.hypot(deltaX, deltaY),2) - (2 * distanceFromTarget * Math.hypot(deltaX, deltaY) * Math.cos(theta)));
     }
 
     @Override
