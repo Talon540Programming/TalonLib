@@ -121,26 +121,63 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
 
-//    @Override
-//    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
-//        return null;
-//    }
+    //    @Override
+    //    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
+    //        return null;
+    //    }
 
-    @Override
     public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
         // Use Law of cosines to find distance from center of the robot. See
         // https://cdn.discordapp.com/attachments/984927421864230952/1036488516273709066/1B0C2322-C6AC-4462-B279-BCD37B02B453.jpg
 
         Vector2d cameraRelativePosition = cameraPlacement.getRobotRelativePosition();
-        if(!targetViewed() || cameraRelativePosition == null) return null;
+        if (!targetViewed() || cameraRelativePosition == null)
+            return null;
 
-        double deltaX = Math.abs(cameraRelativePosition.getX());
-        double deltaY = Math.abs(cameraRelativePosition.getY());
+        double deltaX = cameraRelativePosition.getX();
+        double deltaY = cameraRelativePosition.getY();
+        double targetCameraOffset = getVisionState().getYaw();
 
         double distanceFromTarget = getDistanceFromTargetBase(targetHeight);
-        double theta = Math.PI - Math.atan(deltaX / deltaY) - getVisionState().getYaw();
 
-        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(Math.hypot(deltaX, deltaY),2) - (2 * distanceFromTarget * Math.hypot(deltaX, deltaY) * Math.cos(theta)));
+        double theta;
+
+        if (deltaX > 0) {
+            if (deltaY > 0) {
+                // first quadrant
+                theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) + targetCameraOffset;
+            } else if (deltaY < 0) {
+                // fourth quadrant
+                theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) + targetCameraOffset;
+            } else {
+                // Vertically centered but horizontal offset
+                theta = (Math.PI / 2) - targetCameraOffset;
+
+            }
+        } else if (deltaX < 0) {
+            if (deltaY > 0) {
+                // second quadrant
+                theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) - targetCameraOffset;
+            } else if (deltaY < 0) {
+                // third quadrant
+                theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) - targetCameraOffset;
+            } else {
+                // Vertically centered but horizontal offset
+                theta = (Math.PI / 2) + targetCameraOffset;
+            }
+        } else {
+            if (Math.abs(deltaY) < 5E-3) {
+                // horizontally and vertical centered
+                return distanceFromTarget;
+            } else {
+                // horizontally centered but vertical offset
+                return distanceFromTarget - deltaY;
+            }
+        }
+
+        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(Math.hypot(deltaX, deltaY),
+                2
+        ) - (2 * distanceFromTarget * Math.hypot(deltaX, deltaY) * Math.cos(theta)));
     }
 
     @Override
