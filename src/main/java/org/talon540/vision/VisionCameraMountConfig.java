@@ -1,23 +1,24 @@
 package org.talon540.vision;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import org.talon540.math.Vector2d;
 
 
 public class VisionCameraMountConfig {
     private final double mountHeightMeters;
     private final double mountAngleDegrees, mountAngleRadians;
-    private final Translation2d robotRelativePosition;
+    private final Vector2d robotRelativePosition;
 
     /**
      * Create an object used to tell the position of the camera on the robot
      *
      * @param mountHeightMeters height of the camera off the floor in meters
      * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-     * @param robotRelativePosition camera's position relative to the center of the robot. See {@link Translation2d} for
-     * specifics
+     * @param robotRelativePosition camera's position relative to the center of the robot.
+     * (Pos X = right, Pos y = forward)
      */
     public VisionCameraMountConfig(
-            double mountHeightMeters, double mountAngleDegrees, Translation2d robotRelativePosition
+            double mountHeightMeters, double mountAngleDegrees, Vector2d robotRelativePosition
     ) {
         this.mountHeightMeters = mountHeightMeters;
         this.mountAngleDegrees = mountAngleDegrees;
@@ -26,8 +27,7 @@ public class VisionCameraMountConfig {
     }
 
     /**
-     * Create an object used to tell the position of the camera on the robot. Follows conventional mathematical axis,
-     * see {@link Translation2d}
+     * Create an object used to tell the position of the camera on the robot.
      *
      * @param mountHeightMeters height of the camera off the floor in meters
      * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
@@ -40,8 +40,8 @@ public class VisionCameraMountConfig {
     ) {
         this(mountHeightMeters,
                 mountAngleDegrees,
-                robotPositionX == null || robotPositionY == null ? null : new Translation2d(robotPositionY,
-                        -robotPositionX
+                robotPositionX == null || robotPositionY == null ? null : new Vector2d(robotPositionX,
+                        robotPositionY
                 )
         );
     }
@@ -90,7 +90,7 @@ public class VisionCameraMountConfig {
      *
      * @return relative position of the camera
      */
-    public Translation2d getRobotRelativePosition() {
+    public Vector2d getRobotRelativePosition() {
         return robotRelativePosition;
     }
 
