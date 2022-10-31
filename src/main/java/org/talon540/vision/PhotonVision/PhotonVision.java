@@ -8,14 +8,14 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.talon540.vision.TalonVisionState;
 import org.talon540.vision.TalonVisionSystem;
-import org.talon540.vision.VisionCameraTransformation;
+import org.talon540.vision.VisionCameraMountConfig;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
 
 
 public class PhotonVision implements TalonVisionSystem {
     private final PhotonCamera camera;
-    private final VisionCameraTransformation cameraPlacement;
+    private final VisionCameraMountConfig cameraPlacement;
 
     /**
      * Construct a photon vision system with custom values
@@ -25,7 +25,7 @@ public class PhotonVision implements TalonVisionSystem {
      * @param camMode camera mode to use
      * @param pipeline pipeline to set processing for
      */
-    public PhotonVision(String cameraName, VisionCameraTransformation cameraPlacement, CAMMode camMode, int pipeline) {
+    public PhotonVision(String cameraName, VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
         this.camera = new PhotonCamera(cameraName);
         this.cameraPlacement = cameraPlacement;
 
@@ -40,7 +40,7 @@ public class PhotonVision implements TalonVisionSystem {
      * @param cameraName name of the camera sub-table
      * @param cameraPlacement camera placement relative to the robot
      */
-    public PhotonVision(String cameraName, VisionCameraTransformation cameraPlacement) {
+    public PhotonVision(String cameraName, VisionCameraMountConfig cameraPlacement) {
         this(cameraName, cameraPlacement, CAMMode.PROCESSING, 0);
     }
 
@@ -117,6 +117,17 @@ public class PhotonVision implements TalonVisionSystem {
             return null;
         double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
+    }
+
+
+    @Override
+    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
+        return null;
+    }
+
+    @Override
+    public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
+        return null;
     }
 
     @Override

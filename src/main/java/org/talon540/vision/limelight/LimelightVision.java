@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import org.talon540.vision.TalonVisionState;
 import org.talon540.vision.TalonVisionSystem;
-import org.talon540.vision.VisionCameraTransformation;
+import org.talon540.vision.VisionCameraMountConfig;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
 
@@ -17,7 +17,7 @@ import org.talon540.vision.VisionFlags.LEDStates;
  */
 public class LimelightVision implements TalonVisionSystem {
 
-    private final VisionCameraTransformation cameraPlacement;
+    private final VisionCameraMountConfig cameraPlacement;
 
     /**
      * Construct a limelight object
@@ -26,7 +26,7 @@ public class LimelightVision implements TalonVisionSystem {
      * @param camMode camera mode to use
      * @param pipeline pipeline to set processing for
      */
-    public LimelightVision(VisionCameraTransformation cameraPlacement, CAMMode camMode, int pipeline) {
+    public LimelightVision(VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
         this.cameraPlacement = cameraPlacement;
 
         setPipelineIndex(pipeline);
@@ -38,7 +38,7 @@ public class LimelightVision implements TalonVisionSystem {
      *
      * @param cameraPlacement camera placement relative to the robot
      */
-    public LimelightVision(VisionCameraTransformation cameraPlacement) {
+    public LimelightVision(VisionCameraMountConfig cameraPlacement) {
         this(cameraPlacement, CAMMode.PROCESSING, 0);
     }
 
@@ -146,6 +146,16 @@ public class LimelightVision implements TalonVisionSystem {
             return null;
         double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
+    }
+
+    @Override
+    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
+        return null;
+    }
+
+    @Override
+    public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
+        return null;
     }
 
     @Override

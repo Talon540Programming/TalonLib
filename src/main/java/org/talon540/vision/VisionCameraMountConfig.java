@@ -3,7 +3,7 @@ package org.talon540.vision;
 import edu.wpi.first.math.geometry.Translation2d;
 
 
-public class VisionCameraTransformation {
+public class VisionCameraMountConfig {
     private final double mountHeightMeters;
     private final double mountAngleDegrees, mountAngleRadians;
     private final Translation2d robotRelativePosition;
@@ -13,10 +13,10 @@ public class VisionCameraTransformation {
      *
      * @param mountHeightMeters height of the camera off the floor in meters
      * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-     * @param robotRelativePosition {@link Translation2d} of the camera's position relative to the center of the robot
-     * (0, 0)
+     * @param robotRelativePosition camera's position relative to the center of the robot. See {@link Translation2d} for
+     * specifics
      */
-    public VisionCameraTransformation(
+    public VisionCameraMountConfig(
             double mountHeightMeters, double mountAngleDegrees, Translation2d robotRelativePosition
     ) {
         this.mountHeightMeters = mountHeightMeters;
@@ -26,22 +26,22 @@ public class VisionCameraTransformation {
     }
 
     /**
-     * Create an object used to tell the position of the camera on the robot
+     * Create an object used to tell the position of the camera on the robot. Follows conventional mathematical axis,
+     * see {@link Translation2d}
      *
      * @param mountHeightMeters height of the camera off the floor in meters
      * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-     * @param robotPositionX double robotPositionX, side to side offset (x-axis); center of the robot is (0,0)
-     * @param robotPositionY forward or reverse offset (y-axis); center of the robot is (0,0)
+     * @param robotPositionX double robotPositionX, side to side offset (x-axis); center of the robot is (0,0) right is
+     * positive
+     * @param robotPositionY forward or reverse offset (y-axis); center of the robot is (0,0), forward is positive
      */
-    public VisionCameraTransformation(
+    public VisionCameraMountConfig(
             double mountHeightMeters, double mountAngleDegrees, Double robotPositionX, Double robotPositionY
     ) {
-        this(
-                mountHeightMeters,
+        this(mountHeightMeters,
                 mountAngleDegrees,
-                robotPositionX == null || robotPositionY == null ? null : new Translation2d(
-                        robotPositionX,
-                        robotPositionY
+                robotPositionX == null || robotPositionY == null ? null : new Translation2d(robotPositionY,
+                        -robotPositionX
                 )
         );
     }
@@ -54,7 +54,7 @@ public class VisionCameraTransformation {
      * @implNote This will cause methods dealing with positioning to return {@code null} because the position of the
      * camera is undefined
      */
-    public VisionCameraTransformation(double mountHeightMeters, double mountAngleDegrees) {
+    public VisionCameraMountConfig(double mountHeightMeters, double mountAngleDegrees) {
         this(mountHeightMeters, mountAngleDegrees, null);
     }
 

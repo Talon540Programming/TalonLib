@@ -1,7 +1,6 @@
 package org.talon540.vision;
 
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
 
@@ -95,6 +94,8 @@ public interface TalonVisionSystem extends Sendable {
      */
     default boolean targetViewed() {return getVisionState() != null;}
 
+    //    Utils
+
     /**
      * Get distance from a specified target (Hypotenuse). Follows
      * <a href="https://docs.limelightvision.io/en/latest/cs_estimating_distance.html">...</a>
@@ -116,4 +117,7 @@ public interface TalonVisionSystem extends Sendable {
      */
     Double getDistanceFromTargetBase(double targetHeight);
 
+    Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight);
+
+    Double getDistanceFromTargetFromRobotCenter(double targetHeight);
 }
