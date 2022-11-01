@@ -166,8 +166,8 @@ public class LimelightVision implements TalonVisionSystem {
 
         double deltaX = cameraRelativePosition.getX();
         double deltaY = cameraRelativePosition.getY();
-        double targetCameraOffset = getVisionState().getYaw();
 
+        double targetCameraOffset = Math.toRadians(getVisionState().getYaw());
         double distanceFromTarget = getDistanceFromTargetBase(targetHeight);
 
         double theta;
