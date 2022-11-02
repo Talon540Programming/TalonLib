@@ -12,7 +12,6 @@ import org.talon540.vision.VisionCameraMountConfig;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
 
-
 /**
  * An object used to get data and manipulate the state of a limelight camera
  */
@@ -172,7 +171,7 @@ public class LimelightVision implements TalonVisionSystem {
 
         double theta;
 
-        if (deltaX > 0) {
+        if (deltaX > 5E-3) {
             if (deltaY > 0) {
                 // first quadrant
                 theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) + targetCameraOffset;
@@ -184,7 +183,7 @@ public class LimelightVision implements TalonVisionSystem {
                 theta = (Math.PI / 2) - targetCameraOffset;
 
             }
-        } else if (deltaX < 0) {
+        } else if (deltaX < -5E-3) {
             if (deltaY > 0) {
                 // second quadrant
                 theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) - targetCameraOffset;

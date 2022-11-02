@@ -110,6 +110,8 @@ public class PhotonVision implements TalonVisionSystem {
             return null;
         double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.sin(deltaAngle);
+
+//        return Math.hypot(getDistanceFromTargetBase(targetHeight), targetHeight);
     }
 
     @Override
@@ -129,7 +131,6 @@ public class PhotonVision implements TalonVisionSystem {
     @Override
     public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
         // Use Law of cosines to find distance from center of the robot. See
-        // https://cdn.discordapp.com/attachments/984927421864230952/1036488516273709066/1B0C2322-C6AC-4462-B279-BCD37B02B453.jpg
 
         Vector2d cameraRelativePosition = cameraPlacement.getRobotRelativePosition();
         if (!targetViewed() || cameraRelativePosition == null)
@@ -143,7 +144,7 @@ public class PhotonVision implements TalonVisionSystem {
 
         double theta;
 
-        if (deltaX > 0) {
+        if (deltaX > 5E-3) {
             if (deltaY > 0) {
                 // first quadrant
                 theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) + targetCameraOffset;
@@ -155,7 +156,7 @@ public class PhotonVision implements TalonVisionSystem {
                 theta = (Math.PI / 2) - targetCameraOffset;
 
             }
-        } else if (deltaX < 0) {
+        } else if (deltaX < -5E-3) {
             if (deltaY > 0) {
                 // second quadrant
                 theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) - targetCameraOffset;
