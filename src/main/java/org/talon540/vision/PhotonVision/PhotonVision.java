@@ -111,7 +111,7 @@ public class PhotonVision implements TalonVisionSystem {
         double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.sin(deltaAngle);
 
-//        return Math.hypot(getDistanceFromTargetBase(targetHeight), targetHeight);
+        //        return Math.hypot(getDistanceFromTargetBase(targetHeight), targetHeight);
     }
 
     @Override
@@ -145,10 +145,10 @@ public class PhotonVision implements TalonVisionSystem {
         double theta;
 
         if (deltaX > 5E-3) {
-            if (deltaY > 0) {
+            if (deltaY > 5E-3) {
                 // first quadrant
                 theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) + targetCameraOffset;
-            } else if (deltaY < 0) {
+            } else if (deltaY < -5E-3) {
                 // fourth quadrant
                 theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) + targetCameraOffset;
             } else {
@@ -157,10 +157,10 @@ public class PhotonVision implements TalonVisionSystem {
 
             }
         } else if (deltaX < -5E-3) {
-            if (deltaY > 0) {
+            if (deltaY > 5E-3) {
                 // second quadrant
                 theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) - targetCameraOffset;
-            } else if (deltaY < 0) {
+            } else if (deltaY < -5E-3) {
                 // third quadrant
                 theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) - targetCameraOffset;
             } else {
@@ -177,12 +177,10 @@ public class PhotonVision implements TalonVisionSystem {
             }
         }
 
-        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(Math.hypot(deltaX, deltaY),
-                2
-        ) - (2 * distanceFromTarget * Math.hypot(
-                deltaX,
-                deltaY
-        ) * Math.cos(theta)));
+        double includedSideLength = Math.hypot(deltaX, deltaY);
+
+        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(includedSideLength,
+                2) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
     }
 
     @Override
