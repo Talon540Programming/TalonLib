@@ -1,6 +1,5 @@
 package org.talon540.vision;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import org.talon540.math.Vector2d;
 
 
@@ -14,8 +13,8 @@ public class VisionCameraMountConfig {
      *
      * @param mountHeightMeters height of the camera off the floor in meters
      * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-     * @param robotRelativePosition camera's position relative to the center of the robot.
-     * (Pos X = right, Pos y = forward)
+     * @param robotRelativePosition camera's position relative to the center of the robot. (Pos X = right, Pos y =
+     * forward)
      */
     public VisionCameraMountConfig(
             double mountHeightMeters, double mountAngleDegrees, Vector2d robotRelativePosition
@@ -40,9 +39,7 @@ public class VisionCameraMountConfig {
     ) {
         this(mountHeightMeters,
                 mountAngleDegrees,
-                robotPositionX == null || robotPositionY == null ? null : new Vector2d(robotPositionX,
-                        robotPositionY
-                )
+                robotPositionX == null || robotPositionY == null ? null : new Vector2d(robotPositionX, robotPositionY)
         );
     }
 
