@@ -1,5 +1,7 @@
 package org.talon540.math;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 public class Vector2d {
     private final double vecX, vecY;
 
@@ -45,6 +47,16 @@ public class Vector2d {
      */
     public Vector2d multiplyVectorByScale(double scale) {
         return new Vector2d(vecX * scale, vecY * scale);
+    }
+
+    /**
+     * Get the Translation from the origin of the plane in terms of a {@link Translation2d} Mathematical equivalent of
+     * spinning the robot 90 degrees clockwise about the origin (facing y-axis to facing x-axis)
+     *
+     * @return {@link Translation2d} in traditional mathematical terms
+     */
+    public Translation2d getTranslationFromOrigin() {
+        return new Translation2d(vecY, -vecX);
     }
 
 }
