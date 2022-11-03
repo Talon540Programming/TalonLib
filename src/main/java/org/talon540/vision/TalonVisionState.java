@@ -56,6 +56,9 @@ public class TalonVisionState {
      * @return Talon Vision State from Photon Target
      */
     public static TalonVisionState fromPhotonTarget(PhotonTrackedTarget target, double pipelineLatency) {
+        if (target == null)
+            return null;
+
         return new TalonVisionState(
                 target.getYaw(),
                 target.getPitch(),
