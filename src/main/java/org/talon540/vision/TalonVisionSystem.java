@@ -113,7 +113,7 @@ public interface TalonVisionSystem extends Sendable {
      * @param targetHeight height of the retro reflector in meters. Already offsets for mount height
      * @return distance from the base of the target in {@code meters}. Returns {@code null} if target is not found or
      * value is unrealistic
-     * @implNote Returns null if target is not in view
+//     * @implNote Returns null if target is not in view
      */
     Double getDistanceFromTargetBase(double targetHeight);
 

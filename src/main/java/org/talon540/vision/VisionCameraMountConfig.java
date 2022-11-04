@@ -48,8 +48,8 @@ public class VisionCameraMountConfig {
      *
      * @param mountHeightMeters height of the camera off the floor in meters
      * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-     * @implNote This will cause methods dealing with positioning to return {@code null} because the position of the
-     * camera is undefined
+//     * @implNote This will cause methods dealing with positioning to return {@code null} because the position of the
+//     * camera is undefined
      */
     public VisionCameraMountConfig(double mountHeightMeters, double mountAngleDegrees) {
         this(mountHeightMeters, mountAngleDegrees, null);

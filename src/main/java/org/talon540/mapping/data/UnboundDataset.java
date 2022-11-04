@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class UnboundDataMap implements Sendable {
+public class UnboundDataset implements Sendable {
     protected final List<Double> nodeList = new ArrayList<>();
 
     /**
@@ -23,37 +23,19 @@ public class UnboundDataMap implements Sendable {
      * Get average of the dataset
      */
     public double getAverage() {
-        if (nodeList.size() == 0)
-            return 0;
+        if (nodeList.size() == 0) return 0;
 
-
-        try {
-            return nodeList.stream().mapToDouble(a -> a).average().orElse(0);
-        } catch (Exception e) {
-            double sum = 0;
-            for (int i = 0; i < nodeList.size() - 1; i++) {
-                sum += nodeList.get(i);
-            }
-
-            return sum / nodeList.size();
-        }
+        return nodeList.stream().mapToDouble(a -> a).average().orElse(0);
     }
 
     /**
      * Get variance of dataset
      */
     public double getVariance() {
-        if (nodeList.size() == 0)
-            return 0;
+        if (nodeList.size() == 0) return 0;
 
         double mean = getAverage();
-
-        double sum = 0;
-        for (int i = 0; i < nodeList.size() - 1; i++) {
-            sum += (Math.pow(nodeList.get(i) - mean, 2));
-        }
-
-        return sum / (nodeList.size() - 1);
+        return nodeList.stream().mapToDouble(a -> Math.pow(a - mean, 2)).sum() / (nodeList.size() - 1);
     }
 
     /**
@@ -66,14 +48,14 @@ public class UnboundDataMap implements Sendable {
     /**
      * Get the number of data-points in the dataset
      */
-    public int getNodeCount() {
+    public int getDatasetSize() {
         return nodeList.size();
     }
 
     /**
      * Reset the dataset
      */
-    public void clearList() {
+    public void clearDataset() {
         nodeList.clear();
     }
 
@@ -89,7 +71,7 @@ public class UnboundDataMap implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("Node Count", this::getNodeCount, null);
+        builder.addDoubleProperty("Node Count", this::getDatasetSize, null);
         builder.addDoubleProperty("Average", this::getAverage, null);
         builder.addDoubleProperty("Variance", this::getVariance, null);
         builder.addDoubleProperty("Standard Deviance", this::getStandardDeviation, null);

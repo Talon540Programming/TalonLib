@@ -57,12 +57,8 @@ dependencies {
 }
 
 java {
-    withJavadocJar()
+//    withJavadocJar()
     withSourcesJar()
-}
-
-jar {
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
 publishing {
@@ -81,8 +77,8 @@ publishing {
     }
 }
 
-javadoc {
-    if (JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
-}
+//javadoc {
+//    if (JavaVersion.current().isJava9Compatible()) {
+//        options.addBooleanOption('html5', true)
+//    }
+//}

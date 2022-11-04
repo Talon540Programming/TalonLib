@@ -1,9 +1,9 @@
 package org.talon540.mapping.data;
 
-public class BoundDataMap extends UnboundDataMap {
+public class BoundDataset extends UnboundDataset {
     private final int limit;
 
-    public BoundDataMap(int limit) {
+    public BoundDataset(int limit) {
         this.limit = limit;
     }
 
