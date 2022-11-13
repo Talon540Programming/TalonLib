@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.talon540.control.XboxController.XboxControllerDPADButton.DPAD;
 import org.talon540.control.XboxController.XboxControllerTriggerButton.Triggers;
 
-
 public class XboxControllerButtons {
     public final JoystickButton LEFT_BUMPER;
     public final JoystickButton RIGHT_BUMPER;

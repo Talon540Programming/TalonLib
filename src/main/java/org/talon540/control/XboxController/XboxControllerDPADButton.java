@@ -3,7 +3,6 @@ package org.talon540.control.XboxController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
 
-
 public class XboxControllerDPADButton extends Button {
     private final XboxController controller;
     private final DPAD selectedButton;

@@ -3,7 +3,6 @@ package org.talon540.control.AttackJoystick;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-
 public class AttackJoystickButtons {
     public final JoystickButton TRIGGER, TOP_MIDDLE, TOP_BOTTOM, TOP_LEFT, TOP_RIGHT, LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM, BOTTOM_LEFT, BOTTOM_RIGHT;
 

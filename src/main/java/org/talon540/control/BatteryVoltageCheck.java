@@ -3,7 +3,6 @@ package org.talon540.control;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.button.Button;
 
-
 public class BatteryVoltageCheck extends Button {
     private final double min;
 
