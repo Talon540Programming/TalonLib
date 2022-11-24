@@ -39,7 +39,11 @@ public class LimelightVision implements TalonVisionSystem {
      * @param cameraPlacement camera placement relative to the robot
      */
     public LimelightVision(VisionCameraMountConfig cameraPlacement) {
-        this(cameraPlacement, CAMMode.PROCESSING, 0);
+        this(
+                cameraPlacement,
+                CAMMode.PROCESSING,
+                0
+        );
     }
 
     @Override
@@ -122,7 +126,8 @@ public class LimelightVision implements TalonVisionSystem {
         if (limelightTable.getEntry("tv").getDouble(0) == 0)
             return null;
 
-        return new TalonVisionState(limelightTable.getEntry("tx").getDouble(0),
+        return new TalonVisionState(
+                limelightTable.getEntry("tx").getDouble(0),
                 limelightTable.getEntry("ty").getDouble(0),
                 limelightTable.getEntry("ts").getDouble(0),
                 limelightTable.getEntry("ta").getDouble(0),
@@ -148,14 +153,8 @@ public class LimelightVision implements TalonVisionSystem {
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
     }
 
-    //    @Override
-    //    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
-    //
-    //        return null;
-    //    }
-
     @Override
-    public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
+    public Double getDistanceToTargetBaseFromRobotCenter(double targetHeight) {
         // Use Law of cosines to find distance from center of the robot. See
 
         Vector2d cameraRelativePosition = cameraPlacement.getRobotRelativePosition();
@@ -203,28 +202,72 @@ public class LimelightVision implements TalonVisionSystem {
             }
         }
 
-        double includedSideLength = Math.hypot(deltaX, deltaY);
+        double includedSideLength = Math.hypot(
+                deltaX,
+                deltaY
+        );
 
-        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(includedSideLength,
+        return Math.sqrt(Math.pow(
+                distanceFromTarget,
+                2
+        ) + Math.pow(
+                includedSideLength,
                 2
         ) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addBooleanProperty("tViewed", this::targetViewed, null);
-        builder.addDoubleProperty("tYaw", () -> getVisionState().getYaw(), null);
-        builder.addDoubleProperty("tPitch", () -> getVisionState().getPitch(), null);
-        builder.addDoubleProperty("tSkew", () -> getVisionState().getSkew(), null);
-        builder.addDoubleProperty("tArea", () -> getVisionState().getArea(), null);
-        builder.addDoubleProperty("pLatency", () -> getVisionState().getPipelineLatency(), null);
-        builder.addDoubleProperty("tTimestamp", () -> getVisionState().getStateTimestamp(), null);
-
-        builder.addDoubleProperty("pipeline",
-                this::getPipelineIndex,
-                (index) -> setPipelineIndex(MathUtil.clamp((int) index, 0, 9))
+        builder.addBooleanProperty(
+                "tViewed",
+                this::targetViewed,
+                null
         );
-        builder.addStringProperty("LEDMode", () -> getLEDMode().toString(), this::setLEDMode);
+        builder.addDoubleProperty(
+                "tYaw",
+                () -> getVisionState().getYaw(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tPitch",
+                () -> getVisionState().getPitch(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tSkew",
+                () -> getVisionState().getSkew(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tArea",
+                () -> getVisionState().getArea(),
+                null
+        );
+        builder.addDoubleProperty(
+                "pLatency",
+                () -> getVisionState().getPipelineLatency(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tTimestamp",
+                () -> getVisionState().getStateTimestamp(),
+                null
+        );
+
+        builder.addDoubleProperty(
+                "pipeline",
+                this::getPipelineIndex,
+                (index) -> setPipelineIndex(MathUtil.clamp(
+                        (int) index,
+                        0,
+                        9
+                ))
+        );
+        builder.addStringProperty(
+                "LEDMode",
+                () -> getLEDMode().toString(),
+                this::setLEDMode
+        );
     }
 
 }
