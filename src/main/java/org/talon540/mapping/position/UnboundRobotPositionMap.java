@@ -4,12 +4,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
+import java.util.Map;
 import java.util.TreeMap;
 
-
 /**
- * An object used in the logging and retrieving of the Robot's position on the
- * field in the form of a {@link Pose2d} object
+ * An object used in the logging and retrieving of the Robot's position on the field in the form of a {@link Pose2d}
+ * object
  */
 public class UnboundRobotPositionMap implements Sendable {
     protected final TreeMap<Double, Pose2d> map = new TreeMap<>();
@@ -17,30 +17,29 @@ public class UnboundRobotPositionMap implements Sendable {
     /**
      * Add a position to the position map
      *
-     * @param position position of the robot in the form of a Pose2d object
+     * @param position position of the robot in the form of a {@link Pose2d} object
      * @param timestamp timestamp key
      */
-    public void addPositionToMap(Pose2d position, double timestamp) {
-        this.map.put(timestamp, position);
+    public void addPose(Pose2d position, double timestamp) {
+        this.map.put(
+                timestamp,
+                position
+        );
     }
 
     /**
-     * Get the last entered position in the position map
+     * Get the last entered position in the position map. Returns null if the map is empty
      */
-    public Pose2d getLatestPosition() {
-        // return this.map.lastEntry().getValue();
+    public Pose2d getLatestPose() {
+        Map.Entry<Double, Pose2d> pos = this.map.lastEntry();
 
-        try {
-            return this.map.lastEntry().getValue();
-        } catch (Exception e) {
-            return new Pose2d();
-        }
+        return pos != null ? pos.getValue() : null;
     }
 
     /**
-     * Get the estimated position of the robot at a specific time. If the time
-     * provided is between two different positions, it will interpolate the
-     * difference between the two timeslots and return the estimated position
+     * Get the estimated position of the robot at a specific timestamp. If the timestamp requested is between two
+     * different positions, it will interpolate the difference between the two positions and return the estimated
+     * position using {@link Pose2d#interpolate(Pose2d, double)}
      *
      * @param timestamp timestamp to reference
      * @return robot's position on the field
@@ -57,19 +56,27 @@ public class UnboundRobotPositionMap implements Sendable {
         double lowerKeyBound = this.map.floorKey(timestamp);
         double ceilingKeyBound = this.map.ceilingKey(timestamp);
 
-        return this.map.get(lowerKeyBound).interpolate(this.map.get(ceilingKeyBound), (timestamp - lowerKeyBound) / ((ceilingKeyBound - lowerKeyBound)));
+        return this.map.get(lowerKeyBound).interpolate(
+                this.map.get(ceilingKeyBound),
+                (timestamp - lowerKeyBound) / ((ceilingKeyBound - lowerKeyBound))
+        );
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("count", map::size, null);
-        builder.addStringProperty("cPosition", () -> getLatestPosition().toString(), null);
-        builder.addDoubleProperty("cTimestamp", () -> {
-            try {
-                return map.firstKey();
-            } catch (Exception e) {
-                return 0;
-            }
-        }, null);
+        builder.addStringProperty(
+                "Current Pose",
+                () -> {
+                    Pose2d currentPose = getLatestPose();
+                    return currentPose != null ? currentPose.toString() : "N/A";
+                },
+                null
+        );
+
+        builder.addDoubleProperty(
+                "Size",
+                map::size,
+                null
+        );
     }
 }
