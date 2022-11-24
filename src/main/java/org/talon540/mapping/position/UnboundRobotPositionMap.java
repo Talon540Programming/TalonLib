@@ -7,7 +7,6 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import java.util.Map;
 import java.util.TreeMap;
 
-
 /**
  * An object used in the logging and retrieving of the Robot's position on the field in the form of a {@link Pose2d}
  * object
