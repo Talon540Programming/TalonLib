@@ -4,8 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 
 
 /**
- * Create a type of {@link UnboundRobotPositionMap} which has a specific limit on the number of entries that can be made
- * into the map. This is usually for memory and speed purposes
+ * Create a type of {@link UnboundRobotPositionMap} which has a specific limit
+ * on the number of entries that can be made into the map. This is usually for
+ * memory and speed purposes
  */
 public class BoundRobotPositionMap extends UnboundRobotPositionMap {
     private final int mapSize;
@@ -20,11 +21,8 @@ public class BoundRobotPositionMap extends UnboundRobotPositionMap {
     }
 
     @Override
-    public void addPose(Pose2d position, double timestamp) {
-        super.map.put(
-                timestamp,
-                position
-        );
+    public void addPositionToMap(Pose2d position, double timestamp) {
+        super.map.put(timestamp, position);
         if (super.map.size() > this.mapSize)
             super.map.remove(super.map.firstKey());
     }
