@@ -1,4 +1,4 @@
-package org.talon540.vision;
+package org.talon540.sensors.vision;
 
 import edu.wpi.first.wpilibj.Timer;
 import org.jetbrains.annotations.NotNull;

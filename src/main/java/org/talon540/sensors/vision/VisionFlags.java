@@ -1,4 +1,4 @@
-package org.talon540.vision;
+package org.talon540.sensors.vision;
 
 public class VisionFlags {
     public enum LEDStates {

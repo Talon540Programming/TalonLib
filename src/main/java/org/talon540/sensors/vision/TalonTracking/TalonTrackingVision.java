@@ -1,4 +1,4 @@
-package org.talon540.vision.TalonTracking;
+package org.talon540.sensors.vision.TalonTracking;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -19,11 +19,20 @@ public class TalonTrackingVision extends SubsystemBase {
 
         NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("robot_ready").setBoolean(true);
 
-        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("tx").addListener(event -> this.tx = event.value.getDouble(), EntryListenerFlags.kUpdate);
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("tx").addListener(
+                event -> this.tx = event.value.getDouble(),
+                EntryListenerFlags.kUpdate
+        );
 
-        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ty").addListener(event -> this.ty = event.value.getDouble(), EntryListenerFlags.kUpdate);
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ty").addListener(
+                event -> this.ty = event.value.getDouble(),
+                EntryListenerFlags.kUpdate
+        );
 
-        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ta").addListener(event -> this.ta = event.value.getDouble(), EntryListenerFlags.kUpdate);
+        NetworkTableInstance.getDefault().getTable(this.tableName).getEntry("ta").addListener(
+                event -> this.ta = event.value.getDouble(),
+                EntryListenerFlags.kUpdate
+        );
     }
 
     /**
@@ -49,9 +58,21 @@ public class TalonTrackingVision extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("gamePieceX", () -> this.tx, null);
-        builder.addDoubleProperty("gamePieceY", () -> this.ty, null);
-        builder.addDoubleProperty("gamePieceA", () -> this.ta, null);
+        builder.addDoubleProperty(
+                "gamePieceX",
+                () -> this.tx,
+                null
+        );
+        builder.addDoubleProperty(
+                "gamePieceY",
+                () -> this.ty,
+                null
+        );
+        builder.addDoubleProperty(
+                "gamePieceA",
+                () -> this.ta,
+                null
+        );
 
     }
 }

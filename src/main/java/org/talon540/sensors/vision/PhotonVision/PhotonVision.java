@@ -1,46 +1,47 @@
-package org.talon540.vision.Limelight;
+package org.talon540.sensors.vision.PhotonVision;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 import org.talon540.math.Vector2d;
-import org.talon540.vision.TalonVisionState;
-import org.talon540.vision.TalonVisionSystem;
-import org.talon540.vision.VisionCameraMountConfig;
-import org.talon540.vision.VisionFlags.CAMMode;
-import org.talon540.vision.VisionFlags.LEDStates;
+import org.talon540.sensors.vision.TalonVisionState;
+import org.talon540.sensors.vision.TalonVisionSystem;
+import org.talon540.sensors.vision.VisionCameraMountConfig;
+import org.talon540.sensors.vision.VisionFlags.CAMMode;
+import org.talon540.sensors.vision.VisionFlags.LEDStates;
 
-/**
- * An object used to get data and manipulate the state of a limelight camera
- */
-public class LimelightVision implements TalonVisionSystem {
 
+public class PhotonVision implements TalonVisionSystem {
+    private final PhotonCamera camera;
     private final VisionCameraMountConfig cameraPlacement;
-    private final NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
     /**
-     * Construct a limelight object
+     * Construct a photon vision system with custom values
      *
+     * @param cameraName name of the camera sub-table
      * @param cameraPlacement camera placement relative to the robot
      * @param camMode camera mode to use
      * @param pipeline pipeline to set processing for
      */
-    public LimelightVision(VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
+    public PhotonVision(String cameraName, VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
+        this.camera = new PhotonCamera(cameraName);
         this.cameraPlacement = cameraPlacement;
 
         setPipelineIndex(pipeline);
         setCamMode(camMode);
+
     }
 
     /**
-     * Create a limelight object with the LEDs and Pipeline set to default
+     * Construct a photon vision system with default pipeline and using the camera as a vision processor
      *
+     * @param cameraName name of the camera sub-table
      * @param cameraPlacement camera placement relative to the robot
      */
-    public LimelightVision(VisionCameraMountConfig cameraPlacement) {
+    public PhotonVision(String cameraName, VisionCameraMountConfig cameraPlacement) {
         this(
+                cameraName,
                 cameraPlacement,
                 CAMMode.PROCESSING,
                 0
@@ -49,102 +50,76 @@ public class LimelightVision implements TalonVisionSystem {
 
     @Override
     public LEDStates getLEDMode() {
-        switch ((int) limelightTable.getEntry("ledMode").getDouble(0)) {
-            default:
-            case 0:
-                return LEDStates.DEFAULT;
-            case 1:
-                return LEDStates.OFF;
-            case 2:
-                return LEDStates.BLINK;
-            case 3:
+        switch (camera.getLEDMode()) {
+            case kOn:
                 return LEDStates.ON;
+            case kOff:
+                return LEDStates.OFF;
+            case kBlink:
+                return LEDStates.BLINK;
+            default:
+            case kDefault:
+                return LEDStates.DEFAULT;
         }
     }
 
     @Override
     public void setLEDMode(LEDStates state) {
-        NetworkTableEntry ledEntry = limelightTable.getEntry("ledMode");
         switch (state) {
-            case OFF:
-                ledEntry.setNumber(1);
-                break;
-
-            case BLINK:
-                ledEntry.setNumber(2);
-                break;
-
             case ON:
-                ledEntry.setNumber(3);
+                camera.setLED(VisionLEDMode.kOn);
                 break;
-
+            case OFF:
+                camera.setLED(VisionLEDMode.kOff);
+                break;
+            case BLINK:
+                camera.setLED(VisionLEDMode.kBlink);
+                break;
             case DEFAULT:
-            default:
-                ledEntry.setNumber(0);
-
+                camera.setLED(VisionLEDMode.kDefault);
+                break;
         }
     }
 
     @Override
     public int getPipelineIndex() {
-        return (int) limelightTable.getEntry("getpipe").getDouble(0);
+        return camera.getPipelineIndex();
     }
 
     @Override
     public void setPipelineIndex(int index) {
-        if (!(0 <= index && index <= 9))
-            throw new IllegalArgumentException("Pipeline must be within 0-9");
-
-        limelightTable.getEntry("pipeline").setNumber(index);
+        camera.setPipelineIndex(index);
     }
 
     @Override
     public CAMMode getCamMode() {
-        switch ((int) limelightTable.getEntry("camMode").getDouble(-1)) {
-            case 0:
-                return CAMMode.PROCESSING;
-            case 1:
-                return CAMMode.DRIVER;
-            default:
-            case -1:
-                return CAMMode.INVALID;
-
-        }
-
+        return camera.getDriverMode() ? CAMMode.DRIVER : CAMMode.PROCESSING;
     }
 
     @Override
     public void setCamMode(CAMMode targetMode) {
-        limelightTable.getEntry("camMode").setNumber(targetMode.val);
+        camera.setDriverMode(targetMode == CAMMode.DRIVER);
     }
 
     @Override
     public boolean targetViewed() {
-        return limelightTable.getEntry("tv").getDouble(0) != 0;
+        return camera.getLatestResult().hasTargets();
     }
 
     @Override
     public TalonVisionState getVisionState() {
-        if (!targetViewed())
-            return null;
-
-        return new TalonVisionState(
-                limelightTable.getEntry("tx").getDouble(0),
-                limelightTable.getEntry("ty").getDouble(0),
-                limelightTable.getEntry("ts").getDouble(0),
-                limelightTable.getEntry("ta").getDouble(0),
-                null,
-                limelightTable.getEntry("tl").getDouble(0)
-        );
+        return TalonVisionState.fromPhotonStream(camera.getLatestResult());
     }
 
-    //    Utils
+    // UTILS
     @Override
     public Double getDistanceFromTarget(double targetHeight) {
         if (!targetViewed())
             return null;
         double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.sin(deltaAngle);
+
+        //        return Math.hypot(getDistanceFromTargetBase(targetHeight), targetHeight);
     }
 
     @Override
@@ -154,6 +129,7 @@ public class LimelightVision implements TalonVisionSystem {
         double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
     }
+
 
     @Override
     public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
@@ -246,6 +222,11 @@ public class LimelightVision implements TalonVisionSystem {
                 null
         );
         builder.addDoubleProperty(
+                "error",
+                () -> targetViewed() ? getVisionState().getError() : 0,
+                null
+        );
+        builder.addDoubleProperty(
                 "latency",
                 () -> targetViewed() ? getVisionState().getPipelineLatency() : 0,
                 null
@@ -271,5 +252,4 @@ public class LimelightVision implements TalonVisionSystem {
                 this::setLEDMode
         );
     }
-
 }

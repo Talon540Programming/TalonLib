@@ -1,4 +1,4 @@
-package org.talon540.vision;
+package org.talon540.sensors.vision;
 
 import org.jetbrains.annotations.NotNull;
 import org.talon540.math.Vector2d;

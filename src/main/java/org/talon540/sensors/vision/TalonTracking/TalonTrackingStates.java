@@ -1,4 +1,4 @@
-package org.talon540.vision.TalonTracking;
+package org.talon540.sensors.vision.TalonTracking;
 
 public enum TalonTrackingStates {
     /**

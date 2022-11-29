@@ -1,9 +1,9 @@
-package org.talon540.vision;
+package org.talon540.sensors.vision;
 
 import edu.wpi.first.util.sendable.Sendable;
 import org.jetbrains.annotations.NotNull;
-import org.talon540.vision.VisionFlags.CAMMode;
-import org.talon540.vision.VisionFlags.LEDStates;
+import org.talon540.sensors.vision.VisionFlags.CAMMode;
+import org.talon540.sensors.vision.VisionFlags.LEDStates;
 
 
 /**
