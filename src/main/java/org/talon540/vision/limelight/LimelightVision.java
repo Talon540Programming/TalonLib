@@ -212,45 +212,47 @@ public class LimelightVision implements TalonVisionSystem {
         return Math.sqrt(Math.pow(
                 distanceFromTarget,
                 2
-        ) + Math.pow(includedSideLength,
-                2) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
+        ) + Math.pow(
+                includedSideLength,
+                2
+        ) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addBooleanProperty(
-                "tViewed",
+                "viewed",
                 this::targetViewed,
                 null
         );
         builder.addDoubleProperty(
-                "tYaw",
-                () -> getVisionState().getYaw(),
+                "yaw",
+                () -> targetViewed() ? getVisionState().getYaw() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tPitch",
-                () -> getVisionState().getPitch(),
+                "pitch",
+                () -> targetViewed() ? getVisionState().getPitch() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tSkew",
-                () -> getVisionState().getSkew(),
+                "skew",
+                () -> targetViewed() ? getVisionState().getSkew() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tArea",
-                () -> getVisionState().getArea(),
+                "area",
+                () -> targetViewed() ? getVisionState().getArea() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "pLatency",
-                () -> getVisionState().getPipelineLatency(),
+                "latency",
+                () -> targetViewed() ? getVisionState().getPipelineLatency() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tTimestamp",
-                () -> getVisionState().getStateTimestamp(),
+                "timestamp",
+                () -> targetViewed() ? getVisionState().getStateTimestamp() : 0,
                 null
         );
 

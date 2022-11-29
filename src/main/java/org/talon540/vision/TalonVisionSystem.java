@@ -1,6 +1,7 @@
 package org.talon540.vision;
 
 import edu.wpi.first.util.sendable.Sendable;
+import org.jetbrains.annotations.NotNull;
 import org.talon540.vision.VisionFlags.CAMMode;
 import org.talon540.vision.VisionFlags.LEDStates;
 
@@ -21,7 +22,7 @@ public interface TalonVisionSystem extends Sendable {
      */
     void setLEDMode(LEDStates state);
 
-    default void setLEDMode(String mode) {
+    default void setLEDMode(@NotNull String mode) {
         switch (mode.toLowerCase()) {
             case "1":
             case "on":

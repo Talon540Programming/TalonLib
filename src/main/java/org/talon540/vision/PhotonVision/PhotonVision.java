@@ -1,8 +1,6 @@
 package org.talon540.vision.PhotonVision;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
@@ -199,50 +197,51 @@ public class PhotonVision implements TalonVisionSystem {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addBooleanProperty(
-                "tViewed",
+                "viewed",
                 this::targetViewed,
                 null
         );
         builder.addDoubleProperty(
-                "tYaw",
-                () -> getVisionState().getYaw(),
+                "yaw",
+                () -> targetViewed() ? getVisionState().getYaw() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tPitch",
-                () -> getVisionState().getPitch(),
+                "pitch",
+                () -> targetViewed() ? getVisionState().getPitch() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tSkew",
-                () -> getVisionState().getSkew(),
+                "skew",
+                () -> targetViewed() ? getVisionState().getSkew() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tArea",
-                () -> getVisionState().getArea(),
+                "area",
+                () -> targetViewed() ? getVisionState().getArea() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tError",
-                () -> getVisionState().getError(),
+                "error",
+                () -> targetViewed() ? getVisionState().getError() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "pLatency",
-                () -> getVisionState().getPipelineLatency(),
+                "latency",
+                () -> targetViewed() ? getVisionState().getPipelineLatency() : 0,
                 null
         );
         builder.addDoubleProperty(
-                "tTimestamp",
-                () -> getVisionState().getStateTimestamp(),
+                "timestamp",
+                () -> targetViewed() ? getVisionState().getStateTimestamp() : 0,
                 null
         );
 
         builder.addDoubleProperty(
                 "pipeline",
                 this::getPipelineIndex,
-                (index) -> setPipelineIndex(MathUtil.clamp((int) index,
+                (index) -> setPipelineIndex(MathUtil.clamp(
+                        (int) index,
                         0,
                         9
                 ))
@@ -253,23 +252,4 @@ public class PhotonVision implements TalonVisionSystem {
                 this::setLEDMode
         );
     }
-
-    /**
-     * Estimate the {@link Translation2d} of the target relative to the camera.
-     *
-     * @param targetHeight height of target in meters
-     * @return {@link Translation2d} between the robot and target
-     * @author PhotonUtils v2023.1.1-beta-3
-     */
-    public Translation2d getTargetTranslation(double targetHeight) {
-        if (!targetViewed())
-            return null;
-        Rotation2d yaw = getVisionState().getYawRotation2d();
-        double targetDistanceMeters = getDistanceFromTargetBase(targetHeight);
-        return new Translation2d(
-                yaw.getCos() * targetDistanceMeters,
-                yaw.getSin() * targetDistanceMeters
-        );
-    }
-
 }
