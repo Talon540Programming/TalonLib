@@ -42,4 +42,19 @@ public class VisionFlags {
         }
     }
 
+    public enum TargetAmbiguity {
+        /**
+         * A target was found and is likely valid
+         */
+        SAFE,
+        /**
+         * A target was found but may be ambiguous
+         */
+        UNSAFE,
+        /**
+         * The vision system doesn't support target ambiguity
+         */
+        INVALID
+    }
+
 }

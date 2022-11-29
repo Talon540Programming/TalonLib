@@ -1,22 +1,19 @@
 package org.talon540.vision;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
+import org.jetbrains.annotations.NotNull;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.talon540.math.Vector2d;
-
 
 public class TalonVisionState {
-    private final double pipelineLatency, stateTimestamp;
-    private final Double yaw, pitch, skew, area, error;
-    private final Vector2d offsets;
+    private final double yaw, pitch, pipelineLatency, stateTimestamp;
+    private final Double skew, area, error;
 
     /**
      * Create a TalonVisionState from data
      *
-     * @param yaw (horizontal offset from target) of target, set {@code null} if vision system doesn't support it
-     * @param pitch (vertical offset from target) pitch of target, set {@code null} if vision system doesn't support it
+     * @param yaw (horizontal offset from target) of target
+     * @param pitch (vertical offset from target) pitch of target
      * @param skew skew of target, set {@code null} if vision system doesn't support it
      * @param area area of target, set {@code null} if vision system doesn't support it
      * @param error error of target, set {@code null} if vision system doesn't support it
@@ -31,43 +28,9 @@ public class TalonVisionState {
         this.area = area;
         this.error = error;
         this.pipelineLatency = pipelineLatency / 1000;
-        this.stateTimestamp = Timer.getFPGATimestamp() - (this.pipelineLatency) + 0.011;
-
-        this.offsets = new Vector2d(yaw, pitch);
+        this.stateTimestamp = Timer.getFPGATimestamp() - this.pipelineLatency + 0.011;
     }
 
-    /**
-     * Create a vision state from the latest data steam from a PhotonCamera
-     *
-     * @param stream photon camera results
-     * @return TalonVisionState
-     */
-    public static TalonVisionState fromPhotonStream(PhotonPipelineResult stream) {
-        if (!stream.hasTargets())
-            return null;
-        return fromPhotonTarget(stream.getBestTarget(), stream.getLatencyMillis());
-    }
-
-    /**
-     * Create a vision state from a PhotonCamera Target
-     *
-     * @param target target from PhotonCamera
-     * @param pipelineLatency latency of the pipeline
-     * @return Talon Vision State from Photon Target
-     */
-    public static TalonVisionState fromPhotonTarget(PhotonTrackedTarget target, double pipelineLatency) {
-        if (target == null)
-            return null;
-
-        return new TalonVisionState(
-                target.getYaw(),
-                target.getPitch(),
-                target.getSkew(),
-                target.getArea(),
-                target.getPoseAmbiguity(),
-                pipelineLatency
-        );
-    }
 
     /**
      * Get latency from the pipeline (the time required to do calculations
@@ -95,15 +58,6 @@ public class TalonVisionState {
     }
 
     /**
-     * Get yaw as a form of a {@link Rotation2d} object
-     *
-     * @return yaw as {@link Rotation2d}.
-     */
-    public Rotation2d getYawRotation2d() {
-        return yaw == null ? null : Rotation2d.fromDegrees(-yaw);
-    }
-
-    /**
      * Get target pitch.
      *
      * @return target pitch
@@ -113,30 +67,12 @@ public class TalonVisionState {
     }
 
     /**
-     * Get pitch as a form of a {@link Rotation2d} object
-     *
-     * @return pitch as {@link Rotation2d}. Will return {@code null} if the vision system doesn't support it
-     */
-    public Rotation2d getPitchRotation2d() {
-        return pitch == null ? null : Rotation2d.fromDegrees(pitch);
-    }
-
-    /**
      * Get target skew. Will return {@code null} if the vision system doesn't support it
      *
      * @return target skew
      */
     public Double getSkew() {
         return skew;
-    }
-
-    /**
-     * Get skew as a form of a {@link Rotation2d} object
-     *
-     * @return skew as {@link Rotation2d}. Will return {@code null} if the vision system doesn't support it
-     */
-    public Rotation2d getSkewRotation2d() {
-        return skew == null ? null : Rotation2d.fromDegrees(skew);
     }
 
     /**
@@ -159,12 +95,46 @@ public class TalonVisionState {
     }
 
     /**
-     * Get the offsets from the target from the vision system
+     * Return the ambiguity of the target of the current state
      *
-     * @return target Offsets
+     * @return target ambiguity
      */
-    public Vector2d getOffsets() {
-        return offsets;
+    public VisionFlags.TargetAmbiguity getTargetAmbiguity() {
+        return error == null ? VisionFlags.TargetAmbiguity.INVALID : error == -1 ? VisionFlags.TargetAmbiguity.INVALID : error <= 0.2 ? VisionFlags.TargetAmbiguity.SAFE : VisionFlags.TargetAmbiguity.UNSAFE;
+    }
+
+    /**
+     * Create a vision state from the latest data steam from a PhotonCamera
+     *
+     * @param stream photon camera results
+     * @return TalonVisionState
+     */
+    public static TalonVisionState fromPhotonStream(@NotNull PhotonPipelineResult stream) {
+        return !stream.hasTargets() ? null : fromPhotonTarget(
+                stream.getBestTarget(),
+                stream.getLatencyMillis()
+        );
+    }
+
+    /**
+     * Create a vision state from a PhotonCamera Target
+     *
+     * @param target target from PhotonCamera
+     * @param pipelineLatency latency of the pipeline
+     * @return Talon Vision State from Photon Target
+     */
+    public static TalonVisionState fromPhotonTarget(PhotonTrackedTarget target, double pipelineLatency) {
+        if (target == null)
+            return null;
+
+        return new TalonVisionState(
+                target.getYaw(),
+                target.getPitch(),
+                target.getSkew(),
+                target.getArea(),
+                target.getPoseAmbiguity(),
+                pipelineLatency
+        );
     }
 
 }
