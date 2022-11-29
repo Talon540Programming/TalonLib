@@ -1,7 +1,7 @@
 package org.talon540.vision;
 
+import org.jetbrains.annotations.NotNull;
 import org.talon540.math.Vector2d;
-
 
 public class VisionCameraMountConfig {
     private final double mountHeightMeters;
@@ -16,8 +16,8 @@ public class VisionCameraMountConfig {
      * @param robotRelativePosition camera's position relative to the center of the robot. (Pos X = right, Pos y =
      * forward)
      */
-    public VisionCameraMountConfig(
-            double mountHeightMeters, double mountAngleDegrees, Vector2d robotRelativePosition
+    private VisionCameraMountConfig(
+            double mountHeightMeters, double mountAngleDegrees, @NotNull Vector2d robotRelativePosition
     ) {
         this.mountHeightMeters = mountHeightMeters;
         this.mountAngleDegrees = mountAngleDegrees;
@@ -35,24 +35,34 @@ public class VisionCameraMountConfig {
      * @param robotPositionY forward or reverse offset (y-axis); center of the robot is (0,0), forward is positive
      */
     public VisionCameraMountConfig(
-            double mountHeightMeters, double mountAngleDegrees, Double robotPositionX, Double robotPositionY
+            double mountHeightMeters, double mountAngleDegrees, double robotPositionX, double robotPositionY
     ) {
-        this(mountHeightMeters,
+        this(
+                mountHeightMeters,
                 mountAngleDegrees,
-                robotPositionX == null || robotPositionY == null ? null : new Vector2d(robotPositionX, robotPositionY)
+                new Vector2d(
+                        robotPositionX,
+                        robotPositionY
+                )
         );
     }
 
     /**
-     * Create a camera position with no defined camera position.
+     * Create a camera position with no defined camera position. Assumes the camera is mounted in the center of the
+     * robot (0, 0)
      *
      * @param mountHeightMeters height of the camera off the floor in meters
      * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-//     * @implNote This will cause methods dealing with positioning to return {@code null} because the position of the
-//     * camera is undefined
      */
     public VisionCameraMountConfig(double mountHeightMeters, double mountAngleDegrees) {
-        this(mountHeightMeters, mountAngleDegrees, null);
+        this(
+                mountHeightMeters,
+                mountAngleDegrees,
+                new Vector2d(
+                        0,
+                        0
+                )
+        );
     }
 
     /**

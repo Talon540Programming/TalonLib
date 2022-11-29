@@ -53,6 +53,7 @@ dependencies {
     // PhotonVision
     implementation 'org.photonvision:PhotonLib-java:v2023.1.1-beta-3'
     implementation 'org.photonvision:PhotonTargeting-java:v2023.1.1-beta-3'
+    implementation 'org.jetbrains:annotations:20.1.0'
 
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
