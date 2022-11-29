@@ -42,7 +42,12 @@ public class PhotonVision implements TalonVisionSystem {
      * @param cameraPlacement camera placement relative to the robot
      */
     public PhotonVision(String cameraName, VisionCameraMountConfig cameraPlacement) {
-        this(cameraName, cameraPlacement, CAMMode.PROCESSING, 0);
+        this(
+                cameraName,
+                cameraPlacement,
+                CAMMode.PROCESSING,
+                0
+        );
     }
 
     @Override
@@ -99,6 +104,11 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
     @Override
+    public boolean targetViewed() {
+        return camera.getLatestResult().hasTargets();
+    }
+
+    @Override
     public TalonVisionState getVisionState() {
         return TalonVisionState.fromPhotonStream(camera.getLatestResult());
     }
@@ -122,11 +132,6 @@ public class PhotonVision implements TalonVisionSystem {
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
     }
 
-
-    //    @Override
-    //    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
-    //        return null;
-    //    }
 
     @Override
     public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
@@ -177,28 +182,76 @@ public class PhotonVision implements TalonVisionSystem {
             }
         }
 
-        double includedSideLength = Math.hypot(deltaX, deltaY);
+        double includedSideLength = Math.hypot(
+                deltaX,
+                deltaY
+        );
 
-        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(includedSideLength,
-                2) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
+        return Math.sqrt(Math.pow(
+                distanceFromTarget,
+                2
+        ) + Math.pow(
+                includedSideLength,
+                2
+        ) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addBooleanProperty("tViewed", this::targetViewed, null);
-        builder.addDoubleProperty("tYaw", () -> getVisionState().getYaw(), null);
-        builder.addDoubleProperty("tPitch", () -> getVisionState().getPitch(), null);
-        builder.addDoubleProperty("tSkew", () -> getVisionState().getSkew(), null);
-        builder.addDoubleProperty("tArea", () -> getVisionState().getArea(), null);
-        builder.addDoubleProperty("tError", () -> getVisionState().getError(), null);
-        builder.addDoubleProperty("pLatency", () -> getVisionState().getPipelineLatency(), null);
-        builder.addDoubleProperty("tTimestamp", () -> getVisionState().getStateTimestamp(), null);
-
-        builder.addDoubleProperty("pipeline",
-                this::getPipelineIndex,
-                (index) -> setPipelineIndex(MathUtil.clamp((int) index, 0, 9))
+        builder.addBooleanProperty(
+                "tViewed",
+                this::targetViewed,
+                null
         );
-        builder.addStringProperty("LEDMode", () -> getLEDMode().toString(), this::setLEDMode);
+        builder.addDoubleProperty(
+                "tYaw",
+                () -> getVisionState().getYaw(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tPitch",
+                () -> getVisionState().getPitch(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tSkew",
+                () -> getVisionState().getSkew(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tArea",
+                () -> getVisionState().getArea(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tError",
+                () -> getVisionState().getError(),
+                null
+        );
+        builder.addDoubleProperty(
+                "pLatency",
+                () -> getVisionState().getPipelineLatency(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tTimestamp",
+                () -> getVisionState().getStateTimestamp(),
+                null
+        );
+
+        builder.addDoubleProperty(
+                "pipeline",
+                this::getPipelineIndex,
+                (index) -> setPipelineIndex(MathUtil.clamp((int) index,
+                        0,
+                        9
+                ))
+        );
+        builder.addStringProperty(
+                "LEDMode",
+                () -> getLEDMode().toString(),
+                this::setLEDMode
+        );
     }
 
     /**
@@ -213,7 +266,10 @@ public class PhotonVision implements TalonVisionSystem {
             return null;
         Rotation2d yaw = getVisionState().getYawRotation2d();
         double targetDistanceMeters = getDistanceFromTargetBase(targetHeight);
-        return new Translation2d(yaw.getCos() * targetDistanceMeters, yaw.getSin() * targetDistanceMeters);
+        return new Translation2d(
+                yaw.getCos() * targetDistanceMeters,
+                yaw.getSin() * targetDistanceMeters
+        );
     }
 
 }

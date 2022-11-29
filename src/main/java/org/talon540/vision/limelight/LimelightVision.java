@@ -18,6 +18,7 @@ import org.talon540.vision.VisionFlags.LEDStates;
 public class LimelightVision implements TalonVisionSystem {
 
     private final VisionCameraMountConfig cameraPlacement;
+    private final NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
     /**
      * Construct a limelight object
@@ -39,14 +40,16 @@ public class LimelightVision implements TalonVisionSystem {
      * @param cameraPlacement camera placement relative to the robot
      */
     public LimelightVision(VisionCameraMountConfig cameraPlacement) {
-        this(cameraPlacement, CAMMode.PROCESSING, 0);
+        this(
+                cameraPlacement,
+                CAMMode.PROCESSING,
+                0
+        );
     }
 
     @Override
     public LEDStates getLEDMode() {
-        NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode");
-
-        switch (ledEntry.getNumber(0).intValue()) {
+        switch ((int) limelightTable.getEntry("ledMode").getDouble(0)) {
             default:
             case 0:
                 return LEDStates.DEFAULT;
@@ -61,30 +64,30 @@ public class LimelightVision implements TalonVisionSystem {
 
     @Override
     public void setLEDMode(LEDStates state) {
-        NetworkTableEntry ledEntry = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode");
+        NetworkTableEntry ledEntry = limelightTable.getEntry("ledMode");
         switch (state) {
             case OFF:
-                ledEntry.setNumber(1); // light off
+                ledEntry.setNumber(1);
                 break;
 
             case BLINK:
-                ledEntry.setNumber(2); // light blinking
+                ledEntry.setNumber(2);
                 break;
 
             case ON:
-                ledEntry.setNumber(3); // light on
+                ledEntry.setNumber(3);
                 break;
 
             case DEFAULT:
             default:
-                ledEntry.setNumber(0); // as per pipeline mode (usually on)
+                ledEntry.setNumber(0);
 
         }
     }
 
     @Override
     public int getPipelineIndex() {
-        return (int) NetworkTableInstance.getDefault().getTable("limelight").getEntry("getpipe").getDouble(0);
+        return (int) limelightTable.getEntry("getpipe").getDouble(0);
     }
 
     @Override
@@ -92,12 +95,12 @@ public class LimelightVision implements TalonVisionSystem {
         if (!(0 <= index && index <= 9))
             throw new IllegalArgumentException("Pipeline must be within 0-9");
 
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(index);
+        limelightTable.getEntry("pipeline").setNumber(index);
     }
 
     @Override
     public CAMMode getCamMode() {
-        switch (NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").getNumber(-1).intValue()) {
+        switch ((int) limelightTable.getEntry("camMode").getDouble(-1)) {
             case 0:
                 return CAMMode.PROCESSING;
             case 1:
@@ -112,17 +115,21 @@ public class LimelightVision implements TalonVisionSystem {
 
     @Override
     public void setCamMode(CAMMode targetMode) {
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(targetMode.val);
+        limelightTable.getEntry("camMode").setNumber(targetMode.val);
+    }
+
+    @Override
+    public boolean targetViewed() {
+        return limelightTable.getEntry("tv").getDouble(0) != 0;
     }
 
     @Override
     public TalonVisionState getVisionState() {
-        NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("pipeline");
-
-        if (limelightTable.getEntry("tv").getDouble(0) == 0)
+        if (!targetViewed())
             return null;
 
-        return new TalonVisionState(limelightTable.getEntry("tx").getDouble(0),
+        return new TalonVisionState(
+                limelightTable.getEntry("tx").getDouble(0),
                 limelightTable.getEntry("ty").getDouble(0),
                 limelightTable.getEntry("ts").getDouble(0),
                 limelightTable.getEntry("ta").getDouble(0),
@@ -147,12 +154,6 @@ public class LimelightVision implements TalonVisionSystem {
         double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
         return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
     }
-
-    //    @Override
-    //    public Double getDistanceFromTargetFromRobotCenter(double targetHeight) {
-    //
-    //        return null;
-    //    }
 
     @Override
     public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
@@ -203,28 +204,70 @@ public class LimelightVision implements TalonVisionSystem {
             }
         }
 
-        double includedSideLength = Math.hypot(deltaX, deltaY);
+        double includedSideLength = Math.hypot(
+                deltaX,
+                deltaY
+        );
 
-        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(includedSideLength,
+        return Math.sqrt(Math.pow(
+                distanceFromTarget,
                 2
-        ) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
+        ) + Math.pow(includedSideLength,
+                2) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addBooleanProperty("tViewed", this::targetViewed, null);
-        builder.addDoubleProperty("tYaw", () -> getVisionState().getYaw(), null);
-        builder.addDoubleProperty("tPitch", () -> getVisionState().getPitch(), null);
-        builder.addDoubleProperty("tSkew", () -> getVisionState().getSkew(), null);
-        builder.addDoubleProperty("tArea", () -> getVisionState().getArea(), null);
-        builder.addDoubleProperty("pLatency", () -> getVisionState().getPipelineLatency(), null);
-        builder.addDoubleProperty("tTimestamp", () -> getVisionState().getStateTimestamp(), null);
-
-        builder.addDoubleProperty("pipeline",
-                this::getPipelineIndex,
-                (index) -> setPipelineIndex(MathUtil.clamp((int) index, 0, 9))
+        builder.addBooleanProperty(
+                "tViewed",
+                this::targetViewed,
+                null
         );
-        builder.addStringProperty("LEDMode", () -> getLEDMode().toString(), this::setLEDMode);
+        builder.addDoubleProperty(
+                "tYaw",
+                () -> getVisionState().getYaw(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tPitch",
+                () -> getVisionState().getPitch(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tSkew",
+                () -> getVisionState().getSkew(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tArea",
+                () -> getVisionState().getArea(),
+                null
+        );
+        builder.addDoubleProperty(
+                "pLatency",
+                () -> getVisionState().getPipelineLatency(),
+                null
+        );
+        builder.addDoubleProperty(
+                "tTimestamp",
+                () -> getVisionState().getStateTimestamp(),
+                null
+        );
+
+        builder.addDoubleProperty(
+                "pipeline",
+                this::getPipelineIndex,
+                (index) -> setPipelineIndex(MathUtil.clamp(
+                        (int) index,
+                        0,
+                        9
+                ))
+        );
+        builder.addStringProperty(
+                "LEDMode",
+                () -> getLEDMode().toString(),
+                this::setLEDMode
+        );
     }
 
 }
