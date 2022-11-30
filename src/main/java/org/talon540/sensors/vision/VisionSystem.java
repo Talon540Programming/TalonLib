@@ -8,7 +8,7 @@ import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
 
 public abstract class VisionSystem implements Sendable {
-    protected VisionCameraMountConfig mountConfig;
+    protected final VisionCameraMountConfig mountConfig;
 
     protected VisionSystem(VisionCameraMountConfig mountConfig) {
         this.mountConfig = mountConfig;

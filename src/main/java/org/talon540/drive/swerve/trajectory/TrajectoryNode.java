@@ -7,8 +7,7 @@ import org.talon540.math.Vector3d;
 
 
 /**
- * Represents a point on a trajectory path with a robot's position and speed at
- * that point on the trajectory
+ * Represents a point on a trajectory path with a robot's position and speed at that point on the trajectory
  */
 public class TrajectoryNode {
     public final double time;
@@ -18,7 +17,7 @@ public class TrajectoryNode {
     /**
      * @param time time-point of this point in the trajectory in seconds
      * @param position {@link Pose2d} of the robot's position at this point
-     * @param velocity {@link} Vector3d} of the robot's velocity at that time
+     * @param velocity {@link Vector3d} of the robot's velocity at that time
      */
     public TrajectoryNode(double time, Pose2d position, Vector3d velocity) {
         this.time = time;
@@ -27,8 +26,7 @@ public class TrajectoryNode {
     }
 
     /**
-     * @param time time-point of this point in the trajectory in
-     * {@code seconds}
+     * @param time time-point of this point in the trajectory in {@code seconds}
      * @param posX horizontal position {@code meters}
      * @param posY vertical position {@code meters}
      * @param posDirection facing direction in {@code radians}
@@ -36,32 +34,59 @@ public class TrajectoryNode {
      * @param velY forward velocity in {@code m/s}
      * @param velRotation rotational velocity in {@code rad/s}
      */
-    public TrajectoryNode(double time, double posX, double posY, double posDirection, double velX, double velY, double velRotation) {
-        this(time, new Pose2d(new Translation2d(posX, posY), new Rotation2d(posDirection)), new Vector3d(velX, velY, velRotation));
+    public TrajectoryNode(
+            double time,
+            double posX,
+            double posY,
+            double posDirection,
+            double velX,
+            double velY,
+            double velRotation
+    ) {
+        this(
+                time,
+                new Pose2d(
+                        new Translation2d(
+                                posX,
+                                posY
+                        ),
+                        new Rotation2d(posDirection)
+                ),
+                new Vector3d(velX,
+                        velY,
+                        velRotation
+                )
+        );
     }
 
     /**
      * Create a Trajectory node from its data, mostly used for reading from a file
      *
-     * @param data Note:  must be of len 7, even if a datapoint is 0 (which it shouldn't be)
-     * add a zero for blank spaces or an exception is thrown
+     * @param data Note:  must be of len 7, even if a datapoint is 0 (which it shouldn't be) add a zero for blank spaces
+     * or an exception is thrown
      */
     public static TrajectoryNode fromData(double... data) {
         if (data.length != 7) {
             throw new IllegalArgumentException();
         }
 
-        return new TrajectoryNode(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+        return new TrajectoryNode(
+                data[0],
+                data[1],
+                data[2],
+                data[3],
+                data[4],
+                data[5],
+                data[6]
+        );
     }
 
     /**
      * Interpolate a Trajectory Node from the current node and a ceiling node
      *
      * @param ceilingNode Ceiling node
-     * @param pos where the requested node is between the current node and
-     * higher node within [0, 1]
-     * @return interpolated {@link TrajectoryNode}
-     * Note:  assumes this node is the floor node
+     * @param pos where the requested node is between the current node and higher node within [0, 1]
+     * @return interpolated {@link TrajectoryNode} Note:  assumes this node is the floor node
      */
     public TrajectoryNode interpolateNode(TrajectoryNode ceilingNode, double pos) {
         // Uses formula:
@@ -75,7 +100,11 @@ public class TrajectoryNode {
         // // idk if this works
         Vector3d interpolatedVector3d = ((ceilingNode.velocity.subtractVector(velocity)).multiplyVectorByScale(pos)).addVector(velocity);
 
-        return new TrajectoryNode(interpolatedTime, interpolatedPose2d, interpolatedVector3d);
+        return new TrajectoryNode(
+                interpolatedTime,
+                interpolatedPose2d,
+                interpolatedVector3d
+        );
     }
 
 }
