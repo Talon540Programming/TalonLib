@@ -3,6 +3,7 @@ package org.talon540.sensors.vision.Limelight;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import org.jetbrains.annotations.NotNull;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
@@ -22,7 +23,7 @@ public class LimelightVision extends VisionSystem {
      * @param camMode camera mode to use
      * @param pipeline pipeline to set processing for
      */
-    public LimelightVision(VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
+    public LimelightVision(@NotNull VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
         super(cameraPlacement);
 
         setCamMode(camMode);
@@ -34,7 +35,7 @@ public class LimelightVision extends VisionSystem {
      *
      * @param cameraPlacement camera placement relative to the robot
      */
-    public LimelightVision(VisionCameraMountConfig cameraPlacement) {
+    public LimelightVision(@NotNull VisionCameraMountConfig cameraPlacement) {
         this(
                 cameraPlacement,
                 CAMMode.PROCESSING,

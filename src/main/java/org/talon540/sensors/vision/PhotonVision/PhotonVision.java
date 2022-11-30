@@ -1,5 +1,6 @@
 package org.talon540.sensors.vision.PhotonVision;
 
+import org.jetbrains.annotations.NotNull;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
@@ -20,7 +21,9 @@ public class PhotonVision extends VisionSystem {
      * @param camMode camera mode to use
      * @param pipeline pipeline to set processing for
      */
-    public PhotonVision(String cameraName, VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
+    public PhotonVision(
+            @NotNull String cameraName, @NotNull VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline
+    ) {
         super(cameraPlacement);
         this.camera = new PhotonCamera(cameraName);
 
@@ -35,7 +38,9 @@ public class PhotonVision extends VisionSystem {
      * @param cameraName name of the camera sub-table
      * @param cameraPlacement camera placement relative to the robot
      */
-    public PhotonVision(String cameraName, VisionCameraMountConfig cameraPlacement) {
+    public PhotonVision(
+            @NotNull String cameraName, @NotNull VisionCameraMountConfig cameraPlacement
+    ) {
         this(
                 cameraName,
                 cameraPlacement,

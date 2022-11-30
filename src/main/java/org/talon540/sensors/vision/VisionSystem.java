@@ -3,6 +3,7 @@ package org.talon540.sensors.vision;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.talon540.math.Vector2d;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
@@ -10,7 +11,7 @@ import org.talon540.sensors.vision.VisionFlags.LEDStates;
 public abstract class VisionSystem implements Sendable {
     protected final VisionCameraMountConfig mountConfig;
 
-    protected VisionSystem(VisionCameraMountConfig mountConfig) {
+    protected VisionSystem(@NotNull VisionCameraMountConfig mountConfig) {
         this.mountConfig = mountConfig;
     }
 
