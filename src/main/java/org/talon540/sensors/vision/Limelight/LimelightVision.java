@@ -1,23 +1,18 @@
 package org.talon540.sensors.vision.Limelight;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import org.talon540.math.Vector2d;
-import org.talon540.sensors.vision.TalonVisionSystem;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
 import org.talon540.sensors.vision.VisionState;
+import org.talon540.sensors.vision.VisionSystem;
 
 /**
  * An object used to get data and manipulate the state of a limelight camera
  */
-public class LimelightVision implements TalonVisionSystem {
-
-    private final VisionCameraMountConfig cameraPlacement;
+public class LimelightVision extends VisionSystem {
     private final NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
     /**
@@ -28,10 +23,10 @@ public class LimelightVision implements TalonVisionSystem {
      * @param pipeline pipeline to set processing for
      */
     public LimelightVision(VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
-        this.cameraPlacement = cameraPlacement;
+        super(cameraPlacement);
 
-        setPipelineIndex(pipeline);
         setCamMode(camMode);
+        setPipelineIndex(pipeline);
     }
 
     /**
@@ -137,139 +132,4 @@ public class LimelightVision implements TalonVisionSystem {
                 limelightTable.getEntry("tl").getDouble(0)
         );
     }
-
-    //    Utils
-    @Override
-    public Double getDistanceFromTarget(double targetHeight) {
-        if (!targetViewed())
-            return null;
-        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
-        return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.sin(deltaAngle);
-    }
-
-    @Override
-    public Double getDistanceFromTargetBase(double targetHeight) {
-        if (!targetViewed())
-            return null;
-        double deltaAngle = Math.toRadians(this.cameraPlacement.getMountAngleDegrees() + this.getVisionState().getPitch());
-        return (targetHeight - this.cameraPlacement.getMountHeightMeters()) / Math.tan(deltaAngle);
-    }
-
-    @Override
-    public Double getDistanceFromTargetBaseFromRobotCenter(double targetHeight) {
-        // Use Law of cosines to find distance from center of the robot. See
-
-        Vector2d cameraRelativePosition = cameraPlacement.getRobotRelativePosition();
-        if (!targetViewed() || cameraRelativePosition == null)
-            return null;
-
-        double deltaX = cameraRelativePosition.getX();
-        double deltaY = cameraRelativePosition.getY();
-
-        double targetCameraOffset = Math.toRadians(getVisionState().getYaw());
-        double distanceFromTarget = getDistanceFromTargetBase(targetHeight);
-
-        double theta;
-
-        if (deltaX > 5E-3) {
-            if (deltaY > 5E-3) {
-                // first quadrant
-                theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) + targetCameraOffset;
-            } else if (deltaY < -5E-3) {
-                // fourth quadrant
-                theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) + targetCameraOffset;
-            } else {
-                // Vertically centered but horizontal offset
-                theta = (Math.PI / 2) - targetCameraOffset;
-
-            }
-        } else if (deltaX < -5E-3) {
-            if (deltaY > 5E-3) {
-                // second quadrant
-                theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) - targetCameraOffset;
-            } else if (deltaY < -5E-3) {
-                // third quadrant
-                theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) - targetCameraOffset;
-            } else {
-                // Vertically centered but horizontal offset
-                theta = (Math.PI / 2) + targetCameraOffset;
-            }
-        } else {
-            if (Math.abs(deltaY) < 5E-3) {
-                // horizontally and vertical centered
-                return distanceFromTarget;
-            } else {
-                // horizontally centered but vertical offset
-                return distanceFromTarget - deltaY;
-            }
-        }
-
-        double includedSideLength = Math.hypot(
-                deltaX,
-                deltaY
-        );
-
-        return Math.sqrt(Math.pow(
-                distanceFromTarget,
-                2
-        ) + Math.pow(
-                includedSideLength,
-                2
-        ) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
-    }
-
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.addBooleanProperty(
-                "viewed",
-                this::targetViewed,
-                null
-        );
-        builder.addDoubleProperty(
-                "yaw",
-                () -> targetViewed() ? getVisionState().getYaw() : 0,
-                null
-        );
-        builder.addDoubleProperty(
-                "pitch",
-                () -> targetViewed() ? getVisionState().getPitch() : 0,
-                null
-        );
-        builder.addDoubleProperty(
-                "skew",
-                () -> targetViewed() ? getVisionState().getSkew() : 0,
-                null
-        );
-        builder.addDoubleProperty(
-                "area",
-                () -> targetViewed() ? getVisionState().getArea() : 0,
-                null
-        );
-        builder.addDoubleProperty(
-                "latency",
-                () -> targetViewed() ? getVisionState().getPipelineLatency() : 0,
-                null
-        );
-        builder.addDoubleProperty(
-                "timestamp",
-                () -> targetViewed() ? getVisionState().getStateTimestamp() : 0,
-                null
-        );
-
-        builder.addDoubleProperty(
-                "pipeline",
-                this::getPipelineIndex,
-                (index) -> setPipelineIndex(MathUtil.clamp(
-                        (int) index,
-                        0,
-                        9
-                ))
-        );
-        builder.addStringProperty(
-                "LEDMode",
-                () -> getLEDMode().toString(),
-                this::setLEDMode
-        );
-    }
-
 }

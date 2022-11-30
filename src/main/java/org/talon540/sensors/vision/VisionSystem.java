@@ -3,6 +3,7 @@ package org.talon540.sensors.vision;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import org.talon540.math.Vector2d;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
 
@@ -26,16 +27,17 @@ public abstract class VisionSystem implements Sendable {
     public abstract void setPipelineIndex(int index);
 
     /**
+     * @return current mode of the LEDs
+     */
+    public abstract LEDStates getLEDMode();
+
+    /**
      * Set the mode of the LEDs of the vision system
      *
      * @param state target state of the camera
      */
     public abstract void setLEDMode(LEDStates state);
 
-    /**
-     * @return current mode of the LEDs
-     */
-    public abstract LEDStates getLEDMode();
 
     /**
      * Enables vision system LEDs
@@ -82,6 +84,102 @@ public abstract class VisionSystem implements Sendable {
      * unrealistic
      */
     public abstract VisionState getVisionState();
+
+    // Calculations
+
+    /**
+     * Get distance from a specified target (Hypotenuse). Follows
+     * <a href="https://docs.limelightvision.io/en/latest/cs_estimating_distance.html">...</a>
+     *
+     * @param targetHeightMeters height of the retro reflector in meters. Already offsets for mount height
+     * @return distance from the target in {@code meters}. Returns {@code null} if target is not found or value is
+     * unrealistic
+     */
+    public Double getDistanceFromTarget(double targetHeightMeters) {
+        if (!targetViewed())
+            return null;
+        double deltaAngle = Math.toRadians(this.mountConfig.getMountAngleDegrees() + this.getVisionState().getPitch());
+        return (targetHeightMeters - this.mountConfig.getMountHeightMeters()) / Math.sin(deltaAngle);
+    }
+
+    /**
+     * Get distance from a specified target's base. Follows
+     * <a href="https://docs.limelightvision.io/en/latest/cs_estimating_distance.html">...</a>
+     *
+     * @param targetHeightMeters height of the retro reflector in meters. Already offsets for mount height
+     * @return distance from the base of the target in {@code meters}. Returns {@code null} if target is not found or
+     * value is unrealistic
+     */
+    public Double getDistanceFromTargetBase(double targetHeightMeters) {
+        if (!targetViewed())
+            return null;
+        double deltaAngle = Math.toRadians(this.mountConfig.getMountAngleDegrees() + this.getVisionState().getPitch());
+        return (targetHeightMeters - this.mountConfig.getMountHeightMeters()) / Math.tan(deltaAngle);
+    }
+
+    /**
+     * Get the distance from the center of the robot to the base of a target
+     *
+     * @param targetHeightMeters height of the retro reflector in meters. Already offsets for mount height
+     * @return distance from the base of the target in {@code meters} from the center of the robot. Returns {@code null}
+     * if target is not found or value is unrealistic
+     */
+    public Double getDistanceToTargetBaseFromRobotCenter(double targetHeightMeters) {
+        if (!targetViewed())
+            return null;
+
+        Vector2d cameraPosition = mountConfig.getRobotRelativePosition();
+
+        double deltaX = cameraPosition.getX();
+        double deltaY = cameraPosition.getY();
+
+        double targetCameraOffset = Math.toRadians(getVisionState().getYaw());
+        double distanceFromTarget = getDistanceFromTargetBase(targetHeightMeters);
+
+        // Included angle between the robot's center and the target
+        double theta;
+
+        if (deltaX > 5E-3) {
+            if (deltaY > 5E-3) {
+                // first quadrant
+                theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) + targetCameraOffset;
+            } else if (deltaY < -5E-3) {
+                // fourth quadrant
+                theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) + targetCameraOffset;
+            } else {
+                // Vertically centered but horizontal offset
+                theta = (Math.PI / 2) - targetCameraOffset;
+            }
+        } else if (deltaX < -5E-3) {
+            if (deltaY > 5E-3) {
+                // second quadrant
+                theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) - targetCameraOffset;
+            } else if (deltaY < -5E-3) {
+                // third quadrant
+                theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) - targetCameraOffset;
+            } else {
+                // Vertically centered but horizontal offset
+                theta = (Math.PI / 2) + targetCameraOffset;
+            }
+        } else {
+            if (Math.abs(deltaY) < 5E-3) {
+                // horizontally and vertical centered
+                return distanceFromTarget;
+            } else {
+                // horizontally centered but vertical offset
+                return distanceFromTarget - deltaY;
+            }
+        }
+
+        double includedSideLength = Math.hypot(
+                deltaX,
+                deltaY
+        );
+
+        // @formatter:off
+        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(includedSideLength,2) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
+        // @formatter:on
+    }
 
     @Override
     public void initSendable(SendableBuilder builder) {
