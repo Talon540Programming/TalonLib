@@ -6,11 +6,11 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import org.talon540.math.Vector2d;
-import org.talon540.sensors.vision.TalonVisionState;
 import org.talon540.sensors.vision.TalonVisionSystem;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
+import org.talon540.sensors.vision.VisionState;
 
 /**
  * An object used to get data and manipulate the state of a limelight camera
@@ -124,11 +124,11 @@ public class LimelightVision implements TalonVisionSystem {
     }
 
     @Override
-    public TalonVisionState getVisionState() {
+    public VisionState getVisionState() {
         if (!targetViewed())
             return null;
 
-        return new TalonVisionState(
+        return new VisionState(
                 limelightTable.getEntry("tx").getDouble(0),
                 limelightTable.getEntry("ty").getDouble(0),
                 limelightTable.getEntry("ts").getDouble(0),

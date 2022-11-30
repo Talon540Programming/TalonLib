@@ -87,7 +87,7 @@ public interface TalonVisionSystem extends Sendable {
      * Get the current vision state data. Returns {@code null} if it doesn't exist because the target isn't found or
      * unrealistic
      */
-    TalonVisionState getVisionState();
+    VisionState getVisionState();
 
     /**
      * Whether the vision system target is currently viewed

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class TalonVisionState {
+public class VisionState {
     private final double yaw, pitch, pipelineLatency, stateTimestamp;
     private final Double skew, area, error;
 
@@ -19,7 +19,7 @@ public class TalonVisionState {
      * @param error error of target, set {@code null} if vision system doesn't support it
      * @param pipelineLatency latency of the pipeline (time taken to run calculations)
      */
-    public TalonVisionState(
+    public VisionState(
             double yaw, double pitch, Double skew, Double area, Double error, double pipelineLatency
     ) {
         this.yaw = yaw;
@@ -109,7 +109,7 @@ public class TalonVisionState {
      * @param stream photon camera results
      * @return TalonVisionState
      */
-    public static TalonVisionState fromPhotonStream(@NotNull PhotonPipelineResult stream) {
+    public static VisionState fromPhotonStream(@NotNull PhotonPipelineResult stream) {
         return !stream.hasTargets() ? null : fromPhotonTarget(
                 stream.getBestTarget(),
                 stream.getLatencyMillis()
@@ -123,11 +123,11 @@ public class TalonVisionState {
      * @param pipelineLatency latency of the pipeline
      * @return Talon Vision State from Photon Target
      */
-    public static TalonVisionState fromPhotonTarget(PhotonTrackedTarget target, double pipelineLatency) {
+    public static VisionState fromPhotonTarget(PhotonTrackedTarget target, double pipelineLatency) {
         if (target == null)
             return null;
 
-        return new TalonVisionState(
+        return new VisionState(
                 target.getYaw(),
                 target.getPitch(),
                 target.getSkew(),
@@ -136,5 +136,4 @@ public class TalonVisionState {
                 pipelineLatency
         );
     }
-
 }

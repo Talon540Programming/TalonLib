@@ -5,11 +5,11 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.talon540.math.Vector2d;
-import org.talon540.sensors.vision.TalonVisionState;
 import org.talon540.sensors.vision.TalonVisionSystem;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
+import org.talon540.sensors.vision.VisionState;
 
 
 public class PhotonVision implements TalonVisionSystem {
@@ -107,8 +107,8 @@ public class PhotonVision implements TalonVisionSystem {
     }
 
     @Override
-    public TalonVisionState getVisionState() {
-        return TalonVisionState.fromPhotonStream(camera.getLatestResult());
+    public VisionState getVisionState() {
+        return VisionState.fromPhotonStream(camera.getLatestResult());
     }
 
     // UTILS
