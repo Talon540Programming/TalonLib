@@ -133,51 +133,28 @@ public abstract class VisionSystem implements Sendable {
         double deltaX = cameraPosition.getX();
         double deltaY = cameraPosition.getY();
 
-        double targetCameraOffset = Math.toRadians(getVisionState().getYaw());
-        double distanceFromTarget = getDistanceFromTargetBase(targetHeightMeters);
+        double targetCameraOffsetRadians = Math.toRadians(getVisionState().getYaw());
+        double distanceFromTargetMeters = getDistanceFromTargetBase(targetHeightMeters);
 
         // Included angle between the robot's center and the target
         double theta;
 
-        if (deltaX > 5E-3) {
-            if (deltaY > 5E-3) {
-                // first quadrant
-                theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) + targetCameraOffset;
-            } else if (deltaY < -5E-3) {
-                // fourth quadrant
-                theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) + targetCameraOffset;
-            } else {
-                // Vertically centered but horizontal offset
-                theta = (Math.PI / 2) - targetCameraOffset;
-            }
-        } else if (deltaX < -5E-3) {
-            if (deltaY > 5E-3) {
-                // second quadrant
-                theta = Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY)) - targetCameraOffset;
-            } else if (deltaY < -5E-3) {
-                // third quadrant
-                theta = (Math.PI / 2) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) - targetCameraOffset;
-            } else {
-                // Vertically centered but horizontal offset
-                theta = (Math.PI / 2) + targetCameraOffset;
-            }
-        } else {
-            if (Math.abs(deltaY) < 5E-3) {
-                // horizontally and vertical centered
-                return distanceFromTarget;
-            } else {
-                // horizontally centered but vertical offset
-                return distanceFromTarget - deltaY;
-            }
+        // @formatter:off
+
+        if (deltaX == 0) {
+            return deltaY == 0 ? distanceFromTargetMeters : distanceFromTargetMeters - deltaY;
+        } else if (deltaY == 0) {
+            theta = (Math.PI / 2.0) + Math.copySign(targetCameraOffsetRadians, deltaX);
+
+            return Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(deltaX, 2) - (2 * distanceFromTargetMeters * Math.abs(deltaX) * Math.cos(theta)));
         }
 
-        double includedSideLength = Math.hypot(
-                deltaX,
-                deltaY
-        );
+        theta = Math.copySign(targetCameraOffsetRadians, deltaX);
+        theta += deltaY < 0 ? (Math.PI / 2.0) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) : Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY));
 
-        // @formatter:off
-        return Math.sqrt(Math.pow(distanceFromTarget, 2) + Math.pow(includedSideLength,2) - (2 * distanceFromTarget * includedSideLength * Math.cos(theta)));
+        double includedSideLength = Math.hypot(deltaX,  deltaY);
+
+        return Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(includedSideLength, 2) - (2 * distanceFromTargetMeters * includedSideLength * Math.cos(theta)));
         // @formatter:on
     }
 
