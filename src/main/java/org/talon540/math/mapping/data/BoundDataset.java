@@ -1,4 +1,4 @@
-package org.talon540.mapping.data;
+package org.talon540.math.mapping.data;
 
 public class BoundDataset extends UnboundDataset {
     private final int limit;

@@ -1,4 +1,4 @@
-package org.talon540.mapping.data;
+package org.talon540.math.mapping.data;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -23,7 +23,8 @@ public class UnboundDataset implements Sendable {
      * Get average of the dataset
      */
     public double getAverage() {
-        if (nodeList.size() == 0) return 0;
+        if (nodeList.size() == 0)
+            return 0;
 
         return nodeList.stream().mapToDouble(a -> a).average().orElse(0);
     }
@@ -32,10 +33,14 @@ public class UnboundDataset implements Sendable {
      * Get variance of dataset
      */
     public double getVariance() {
-        if (nodeList.size() == 0) return 0;
+        if (nodeList.size() == 0)
+            return 0;
 
         double mean = getAverage();
-        return nodeList.stream().mapToDouble(a -> Math.pow(a - mean, 2)).sum() / (nodeList.size() - 1);
+        return nodeList.stream().mapToDouble(a -> Math.pow(
+                a - mean,
+                2
+        )).sum() / (nodeList.size() - 1);
     }
 
     /**
@@ -71,9 +76,25 @@ public class UnboundDataset implements Sendable {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("Node Count", this::getDatasetSize, null);
-        builder.addDoubleProperty("Average", this::getAverage, null);
-        builder.addDoubleProperty("Variance", this::getVariance, null);
-        builder.addDoubleProperty("Standard Deviance", this::getStandardDeviation, null);
+        builder.addDoubleProperty(
+                "Node Count",
+                this::getDatasetSize,
+                null
+        );
+        builder.addDoubleProperty(
+                "Average",
+                this::getAverage,
+                null
+        );
+        builder.addDoubleProperty(
+                "Variance",
+                this::getVariance,
+                null
+        );
+        builder.addDoubleProperty(
+                "Standard Deviance",
+                this::getStandardDeviation,
+                null
+        );
     }
 }

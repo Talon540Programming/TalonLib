@@ -1,4 +1,4 @@
-package org.talon540.mapping.position;
+package org.talon540.math.mapping.position;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.sendable.Sendable;
