@@ -1,6 +1,5 @@
 package org.talon540.sensors.vision;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +37,6 @@ public abstract class VisionSystem implements Sendable {
      * @param state target state of the camera
      */
     public abstract void setLEDMode(LEDStates state);
-
 
     /**
      * Enables vision system LEDs
@@ -143,17 +141,16 @@ public abstract class VisionSystem implements Sendable {
         // @formatter:off
 
         if (deltaX == 0) {
-            return deltaY == 0 ? distanceFromTargetMeters : distanceFromTargetMeters - deltaY;
+            return distanceFromTargetMeters - deltaY;
         } else if (deltaY == 0) {
             theta = (Math.PI / 2.0) + Math.copySign(targetCameraOffsetRadians, deltaX);
-
             return Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(deltaX, 2) - (2 * distanceFromTargetMeters * Math.abs(deltaX) * Math.cos(theta)));
         }
 
         theta = Math.copySign(targetCameraOffsetRadians, deltaX);
         theta += deltaY < 0 ? (Math.PI / 2.0) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) : Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY));
 
-        double includedSideLength = Math.hypot(deltaX,  deltaY);
+        double includedSideLength = Math.hypot(deltaX, deltaY);
 
         return Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(includedSideLength, 2) - (2 * distanceFromTargetMeters * includedSideLength * Math.cos(theta)));
         // @formatter:on
@@ -204,11 +201,7 @@ public abstract class VisionSystem implements Sendable {
         builder.addDoubleProperty(
                 "pipeline",
                 this::getPipelineIndex,
-                (index) -> setPipelineIndex(MathUtil.clamp(
-                        (int) index,
-                        0,
-                        9
-                ))
+                null
         );
         builder.addStringProperty(
                 "LEDMode",
