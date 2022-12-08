@@ -136,18 +136,17 @@ public abstract class VisionSystem implements Sendable {
         double distanceFromTargetMeters = getDistanceFromTargetBase(targetHeightMeters);
 
         // Included angle between the robot's center and the target
-        double theta;
+        double theta = Math.signum(deltaX) * targetCameraOffsetRadians;
 
         // @formatter:off
 
         if (deltaX == 0) {
-            return distanceFromTargetMeters - deltaY;
+            return distanceFromTargetMeters + deltaY;
         } else if (deltaY == 0) {
-            theta = (Math.PI / 2.0) + Math.copySign(targetCameraOffsetRadians, deltaX);
+            theta += (Math.PI / 2.0);
             return Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(deltaX, 2) - (2 * distanceFromTargetMeters * Math.abs(deltaX) * Math.cos(theta)));
         }
 
-        theta = Math.copySign(targetCameraOffsetRadians, deltaX);
         theta += deltaY < 0 ? (Math.PI / 2.0) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) : Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY));
 
         double includedSideLength = Math.hypot(deltaX, deltaY);
