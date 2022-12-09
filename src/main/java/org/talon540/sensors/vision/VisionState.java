@@ -31,13 +31,14 @@ public class VisionState {
         this.stateTimestamp = Timer.getFPGATimestamp() - this.pipelineLatency + 0.011;
     }
 
-
     /**
      * Get latency from the pipeline (the time required to do calculations
      *
      * @return pipeline calculation time/latency
      */
-    public double getPipelineLatency() {return pipelineLatency;}
+    public double getPipelineLatency() {
+        return pipelineLatency;
+    }
 
     /**
      * Get the timestamp of the time of calculation of the current state
@@ -49,7 +50,7 @@ public class VisionState {
     }
 
     /**
-     * Get target yaw.
+     * Get target yaw in degrees. Equivalent to tx
      *
      * @return target Yaw
      */
@@ -58,7 +59,7 @@ public class VisionState {
     }
 
     /**
-     * Get target pitch.
+     * Get target pitch in degrees. Equivalent to ty
      *
      * @return target pitch
      */
@@ -100,7 +101,7 @@ public class VisionState {
      * @return target ambiguity
      */
     public VisionFlags.TargetAmbiguity getTargetAmbiguity() {
-        return error == null ? VisionFlags.TargetAmbiguity.INVALID : error == -1 ? VisionFlags.TargetAmbiguity.INVALID : error <= 0.2 ? VisionFlags.TargetAmbiguity.SAFE : VisionFlags.TargetAmbiguity.UNSAFE;
+        return error == null || error == -1 ? VisionFlags.TargetAmbiguity.INVALID : error <= 0.2 ? VisionFlags.TargetAmbiguity.SAFE : VisionFlags.TargetAmbiguity.UNSAFE;
     }
 
     /**

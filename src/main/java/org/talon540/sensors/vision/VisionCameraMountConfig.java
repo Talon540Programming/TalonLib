@@ -30,8 +30,7 @@ public class VisionCameraMountConfig {
      *
      * @param mountHeightMeters height of the camera off the floor in meters
      * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-     * @param robotPositionX double robotPositionX, side to side offset (x-axis); center of the robot is (0,0) right is
-     * positive
+     * @param robotPositionX side to side offset (x-axis); center of the robot is (0,0) right is positive
      * @param robotPositionY forward or reverse offset (y-axis); center of the robot is (0,0), forward is positive
      */
     public VisionCameraMountConfig(

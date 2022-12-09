@@ -58,8 +58,8 @@ public class PhotonVision extends VisionSystem {
                 return LEDStates.OFF;
             case kBlink:
                 return LEDStates.BLINK;
-            default:
             case kDefault:
+            default:
                 return LEDStates.DEFAULT;
         }
     }
