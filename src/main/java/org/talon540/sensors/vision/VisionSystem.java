@@ -183,11 +183,6 @@ public abstract class VisionSystem implements Sendable {
                 null
         );
         builder.addDoubleProperty(
-                "error",
-                () -> targetViewed() ? getVisionState().getError() : 0,
-                null
-        );
-        builder.addDoubleProperty(
                 "latency",
                 () -> targetViewed() ? getVisionState().getPipelineLatency() : 0,
                 null

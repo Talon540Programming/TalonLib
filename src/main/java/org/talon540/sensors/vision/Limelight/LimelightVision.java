@@ -129,7 +129,6 @@ public class LimelightVision extends VisionSystem {
                 limelightTable.getEntry("ty").getDouble(0),
                 limelightTable.getEntry("ts").getDouble(0),
                 limelightTable.getEntry("ta").getDouble(0),
-                null,
                 limelightTable.getEntry("tl").getDouble(0)
         );
     }

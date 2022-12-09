@@ -1,12 +1,12 @@
 package org.talon540.sensors.vision.PhotonVision;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
-import org.talon540.sensors.vision.VisionState;
 import org.talon540.sensors.vision.VisionSystem;
 
 
@@ -108,7 +108,17 @@ public class PhotonVision extends VisionSystem {
     }
 
     @Override
-    public VisionState getVisionState() {
-        return VisionState.fromPhotonStream(camera.getLatestResult());
+    public PhotonVisionState getVisionState() {
+        return PhotonVisionState.fromPhotonStream(camera.getLatestResult());
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        builder.addDoubleProperty(
+                "id",
+                () -> targetViewed() ? getVisionState().getFiducialId() : -2,
+                null
+        );
     }
 }
