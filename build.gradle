@@ -3,13 +3,15 @@ plugins {
     id 'maven-publish'
 }
 
-group 'org.talon540'
-version '1.0.0'
+group 'com.github.Talon540Programming'
+version '2023-SNAPSHOT'
 
-def WPILIB_VERSION = '2022.4.1'
+// Dependency Versions
+def WPILIB_VERSION = '2023.1.1-beta-6'
+def PhotonVision_VERSION = 'v2023.1.1-beta-6'
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
@@ -28,7 +30,6 @@ repositories {
 
     // PhotonVision
     maven { url = uri("https://maven.photonvision.org/repository/internal") }
-    maven { url = uri("https://maven.photonvision.org/repository/snapshots") }
 }
 
 dependencies {
@@ -51,8 +52,8 @@ dependencies {
     implementation 'com.kauailabs.navx.frc:navx-java:4.0.447'
 
     // PhotonVision
-    implementation 'org.photonvision:PhotonLib-java:v2023.1.1-beta-6'
-    implementation 'org.photonvision:PhotonTargeting-java:v2023.1.1-beta-6'
+    implementation 'org.photonvision:PhotonLib-java:' + PhotonVision_VERSION
+    implementation 'org.photonvision:PhotonTargeting-java:' + PhotonVision_VERSION
     implementation 'org.jetbrains:annotations:20.1.0'
 
     // Use JUnit Jupiter for testing.
@@ -61,28 +62,14 @@ dependencies {
 }
 
 java {
-//    withJavadocJar()
+    withJavadocJar()
     withSourcesJar()
 }
 
 publishing {
     publications {
-        maven(MavenPublication) {
-            groupId = 'com.github.Talon540Programming'
-            artifactId = 'TalonLib'
-            version = 'main-SNAPSHOT'
+        library(MavenPublication) {
             from components.java
-
-            pom {
-                name = "TalonLib"
-                description = "A general useage library created by Talon540 for use within Java FRC applications."
-            }
         }
     }
 }
-
-//javadoc {
-//    if (JavaVersion.current().isJava9Compatible()) {
-//        options.addBooleanOption('html5', true)
-//    }
-//}
