@@ -48,7 +48,7 @@ public class Vector3d {
     }
 
     /**
-     * Generate a @link {Pose2d} from the current vector
+     * Generate a {@link Pose2d} from the current vector
      */
     public Pose2d toPose2d() {
         return new Pose2d(
