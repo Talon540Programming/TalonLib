@@ -1,14 +1,13 @@
 package org.talon540.math;
 
-public final class conversions {
+public final class UnitUtil {
 
     /**
      * Return the velocity of a wheel from its RPM
      *
      * @param RPM RPM of the wheel
      * @param radius radius of the rotating object (unit used is the unit returned)
-     * @return Linear velocity of the wheel in the unit of the rotating object's
-     * radius
+     * @return Linear velocity of the wheel in the unit of the rotating object's radius
      */
     public static double RPMtoLinearVelocity(double RPM, double radius) {
         return RPMMtoAngularVelocity(RPM) * radius;
@@ -43,22 +42,23 @@ public final class conversions {
     }
 
     /**
-     * Convert the velocity reported by the {@code TalonFX} integrated sensor to the
-     * linear velocity of something connected to it
+     * Convert the velocity reported by the {@code TalonFX} integrated sensor to the linear velocity of something
+     * connected to it
      *
-     * @param FXVel the velocity reported by the motor in encoder
-     * {@code ticks / 100ms}
+     * @param FXVel the velocity reported by the motor in encoder {@code ticks / 100ms}
      * @param radius radius of the item attached to motor
      * @param gearRatio gear ratio between the two
      * @return linear velocity of the rotating item
      */
     public static double Falcon500VelocityToLinearVelocity(double FXVel, double radius, double gearRatio) {
-        return RPMtoLinearVelocity(Falcon500VelocityToRPM(FXVel), radius) / gearRatio;
+        return RPMtoLinearVelocity(
+                Falcon500VelocityToRPM(FXVel),
+                radius
+        ) / gearRatio;
     }
 
     /**
-     * Convert the linear velocity of something connected to a {@code TalonFX} to a
-     * CTRE velocity
+     * Convert the linear velocity of something connected to a {@code TalonFX} to a CTRE velocity
      *
      * @param linearVelocity linear velocity in the same unit as radius
      * @param radius radius of object
@@ -66,15 +66,17 @@ public final class conversions {
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
      */
     public static double LinearVelocityToFalcon500Velocity(double linearVelocity, double radius, double gearRatio) {
-        return RPMtoFalcon500Velocity(LinearVelocityToRPM(linearVelocity, radius)) * gearRatio;
+        return RPMtoFalcon500Velocity(LinearVelocityToRPM(
+                linearVelocity,
+                radius
+        )) * gearRatio;
     }
 
     /**
-     * Convert the velocity reported by the {@code TalonFX} integrated sensor to the
-     * angular velocity of something connected to it
+     * Convert the velocity reported by the {@code TalonFX} integrated sensor to the angular velocity of something
+     * connected to it
      *
-     * @param FXVel the velocity reported by the motor in encoder
-     * {@code ticks / 100ms}
+     * @param FXVel the velocity reported by the motor in encoder {@code ticks / 100ms}
      * @param gearRatio gear ratio between the two
      * @return angular velocity of the rotating item in {@code rad/s}
      */
@@ -83,11 +85,9 @@ public final class conversions {
     }
 
     /**
-     * Convert the angular velocity of something connected to a {@code TalonFX} to a
-     * CTRE velocity
+     * Convert the angular velocity of something connected to a {@code TalonFX} to a CTRE velocity
      *
-     * @param angularVelocity angular velocity of the rotating object in
-     * {@code rad/s}
+     * @param angularVelocity angular velocity of the rotating object in {@code rad/s}
      * @param gearRatio gear ratio between the rotating object and the motor
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
      */
@@ -96,23 +96,25 @@ public final class conversions {
     }
 
     /**
-     * Convert the velocity reported by the {@code TalonFX} integrated sensor to the
-     * linear velocity of something connected to it
+     * Convert the velocity reported by the {@code TalonFX} integrated sensor to the linear velocity of something
+     * connected to it
      * <p>
      * Note: this method assumes a gear ratio of 1 (i.e. nothing between the two)
      *
-     * @param FXVel the velocity reported by the motor in encoder
-     * {@code ticks / 100ms}
+     * @param FXVel the velocity reported by the motor in encoder {@code ticks / 100ms}
      * @param radius radius of the item attached to motor
      * @return linear velocity of the rotating item
      */
     public static double Falcon500VelocityToLinearVelocity(double FXVel, double radius) {
-        return Falcon500VelocityToLinearVelocity(FXVel, radius, 1);
+        return Falcon500VelocityToLinearVelocity(
+                FXVel,
+                radius,
+                1
+        );
     }
 
     /**
-     * Convert the linear velocity of something connected to a {@code TalonFX} to a
-     * CTRE velocity
+     * Convert the linear velocity of something connected to a {@code TalonFX} to a CTRE velocity
      * <p>
      * Note: this method assumes a gear ratio of 1 (i.e. nothing between the two)
      *
@@ -121,35 +123,42 @@ public final class conversions {
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
      */
     public static double LinearVelocityToFalcon500Velocity(double linearVelocity, double radius) {
-        return LinearVelocityToFalcon500Velocity(linearVelocity, radius, 1);
+        return LinearVelocityToFalcon500Velocity(
+                linearVelocity,
+                radius,
+                1
+        );
     }
 
     /**
-     * Convert the velocity reported by the {@code TalonFX} integrated sensor to the
-     * angular velocity of something connected to it
+     * Convert the velocity reported by the {@code TalonFX} integrated sensor to the angular velocity of something
+     * connected to it
      * <p>
      * Note:  this method assumes a gear ratio of 1 (i.e. nothing between the two)
      *
-     * @param FXVel the velocity reported by the motor in encoder
-     * {@code ticks / 100ms}
+     * @param FXVel the velocity reported by the motor in encoder {@code ticks / 100ms}
      * @return angular velocity of the rotating item in {@code rad/s}
      */
     public static double Falcon500VelocityToAngularVelocity(double FXVel) {
-        return Falcon500VelocityToAngularVelocity(FXVel, 1);
+        return Falcon500VelocityToAngularVelocity(
+                FXVel,
+                1
+        );
     }
 
     /**
-     * Convert the angular velocity of something connected to a {@code TalonFX} to a
-     * CTRE velocity
+     * Convert the angular velocity of something connected to a {@code TalonFX} to a CTRE velocity
      * <p>
      * Note:  this method assumes a gear ratio of 1 (i.e. nothing between the two)
      *
-     * @param angularVelocity angular velocity of the rotating object in
-     * {@code rad/s}
+     * @param angularVelocity angular velocity of the rotating object in {@code rad/s}
      * @return CTRE TalonFX Velocity in {@code ticks / 100ms}
      */
     public static double AngularVelocityToFalcon500Velocity(double angularVelocity) {
-        return AngularVelocityToFalcon500Velocity(angularVelocity, 1);
+        return AngularVelocityToFalcon500Velocity(
+                angularVelocity,
+                1
+        );
     }
 
     /**

@@ -2,7 +2,7 @@ package org.talon540.sensors;
 
 import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import org.jetbrains.annotations.NotNull;
-import org.talon540.math.conversions;
+import org.talon540.math.UnitUtil;
 
 
 public class TalonFXMechanism {
@@ -42,7 +42,7 @@ public class TalonFXMechanism {
      * Get the angular velocity in {@code rad/s}
      */
     public double getAngularVelocity() {
-        return conversions.Falcon500VelocityToAngularVelocity(
+        return UnitUtil.Falcon500VelocityToAngularVelocity(
                 collection.getIntegratedSensorVelocity(),
                 kGearRatio
         );
@@ -52,7 +52,7 @@ public class TalonFXMechanism {
      * Get the linear velocity in meters per second
      */
     public double getLinearVelocity() {
-        return conversions.Falcon500VelocityToLinearVelocity(
+        return UnitUtil.Falcon500VelocityToLinearVelocity(
                 collection.getIntegratedSensorVelocity(),
                 kRadius,
                 kGearRatio
@@ -63,7 +63,7 @@ public class TalonFXMechanism {
      * Get the RPM of the motor
      */
     public double getRPM() {
-        return conversions.Falcon500VelocityToRPM(collection.getIntegratedSensorVelocity());
+        return UnitUtil.Falcon500VelocityToRPM(collection.getIntegratedSensorVelocity());
     }
 
     /**
