@@ -51,34 +51,21 @@ public class PhotonVision extends VisionSystem {
 
     @Override
     public LEDStates getLEDMode() {
-        switch (camera.getLEDMode()) {
-            case kOn:
-                return LEDStates.ON;
-            case kOff:
-                return LEDStates.OFF;
-            case kBlink:
-                return LEDStates.BLINK;
-            case kDefault:
-            default:
-                return LEDStates.DEFAULT;
-        }
+        return switch (camera.getLEDMode()) {
+            case kOn -> LEDStates.ON;
+            case kOff -> LEDStates.OFF;
+            case kBlink -> LEDStates.BLINK;
+            case kDefault -> LEDStates.DEFAULT;
+        };
     }
 
     @Override
     public void setLEDMode(LEDStates state) {
         switch (state) {
-            case ON:
-                camera.setLED(VisionLEDMode.kOn);
-                break;
-            case OFF:
-                camera.setLED(VisionLEDMode.kOff);
-                break;
-            case BLINK:
-                camera.setLED(VisionLEDMode.kBlink);
-                break;
-            case DEFAULT:
-                camera.setLED(VisionLEDMode.kDefault);
-                break;
+            case ON -> camera.setLED(VisionLEDMode.kOn);
+            case OFF -> camera.setLED(VisionLEDMode.kOff);
+            case BLINK -> camera.setLED(VisionLEDMode.kBlink);
+            case DEFAULT -> camera.setLED(VisionLEDMode.kDefault);
         }
     }
 

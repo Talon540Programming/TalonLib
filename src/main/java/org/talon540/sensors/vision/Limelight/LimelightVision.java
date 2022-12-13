@@ -45,39 +45,22 @@ public class LimelightVision extends VisionSystem {
 
     @Override
     public LEDStates getLEDMode() {
-        switch ((int) limelightTable.getEntry("ledMode").getDouble(0)) {
-            default:
-            case 0:
-                return LEDStates.DEFAULT;
-            case 1:
-                return LEDStates.OFF;
-            case 2:
-                return LEDStates.BLINK;
-            case 3:
-                return LEDStates.ON;
-        }
+        return switch ((int) limelightTable.getEntry("ledMode").getDouble(0)) {
+            case 1 -> LEDStates.OFF;
+            case 2 -> LEDStates.BLINK;
+            case 3 -> LEDStates.ON;
+            default -> LEDStates.DEFAULT;
+        };
     }
 
     @Override
     public void setLEDMode(LEDStates state) {
         NetworkTableEntry ledEntry = limelightTable.getEntry("ledMode");
         switch (state) {
-            case OFF:
-                ledEntry.setNumber(1);
-                break;
-
-            case BLINK:
-                ledEntry.setNumber(2);
-                break;
-
-            case ON:
-                ledEntry.setNumber(3);
-                break;
-
-            case DEFAULT:
-            default:
-                ledEntry.setNumber(0);
-
+            case OFF -> ledEntry.setNumber(1);
+            case BLINK -> ledEntry.setNumber(2);
+            case ON -> ledEntry.setNumber(3);
+            case DEFAULT -> ledEntry.setNumber(0);
         }
     }
 
@@ -96,16 +79,11 @@ public class LimelightVision extends VisionSystem {
 
     @Override
     public CAMMode getCamMode() {
-        switch ((int) limelightTable.getEntry("camMode").getDouble(-1)) {
-            case 0:
-                return CAMMode.PROCESSING;
-            case 1:
-                return CAMMode.DRIVER;
-            default:
-            case -1:
-                return CAMMode.INVALID;
-
-        }
+        return switch ((int) limelightTable.getEntry("camMode").getDouble(-1)) {
+            case 0 -> CAMMode.PROCESSING;
+            case 1 -> CAMMode.DRIVER;
+            default -> CAMMode.INVALID;
+        };
 
     }
 
