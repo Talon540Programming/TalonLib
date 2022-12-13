@@ -1,6 +1,9 @@
 package org.talon540.control.XboxController;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -67,17 +70,33 @@ public class TalonXboxController extends CommandXboxController {
     }
 
     /**
-     * Get a trigger that returns true if the trigger axis is above 20%
+     * Get a trigger that returns true if the trigger axis is above 20%. Uses default button EventLoop
      */
     public Trigger getLeftTrigger() {
-        return new Trigger(() -> getLeftTriggerAxis() > 0.2);
+        return getLeftTrigger(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
     /**
      * Get a trigger that returns true if the trigger axis is above 20%
+     * @param loop the event loop instance to attach the event to.
+     */
+    public Trigger getLeftTrigger(EventLoop loop) {
+        return new BooleanEvent(loop, () -> getLeftTriggerAxis() > 0.2).castTo(Trigger::new);
+    }
+
+    /**
+     * Get a trigger that returns true if the trigger axis is above 20%. Uses default button EventLoop
      */
     public Trigger getRightTrigger() {
-        return new Trigger(() -> getRightTriggerAxis() > 0.2);
+        return getRightTrigger(CommandScheduler.getInstance().getDefaultButtonLoop());
+    }
+
+    /**
+     * Get a trigger that returns true if the trigger axis is above 20%
+     * @param loop the event loop instance to attach the event to.
+     */
+    public Trigger getRightTrigger(EventLoop loop) {
+        return new BooleanEvent(loop, () -> getRightTriggerAxis() > 0.2).castTo(Trigger::new);
     }
 
     /**
