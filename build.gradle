@@ -16,19 +16,10 @@ targetCompatibility = JavaVersion.VERSION_17
 repositories {
     mavenCentral()
 
-    // WPILIB
     maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
-
-    // CTRE
     maven { url = uri('https://maven.ctr-electronics.com/release/') }
-
-    // REV
     maven { url = uri('https://maven.revrobotics.com/') }
-
-    // Kauailabs
     maven { url = uri("https://repo1.maven.org/maven2/") }
-
-    // PhotonVision
     maven { url = uri("https://maven.photonvision.org/repository/internal") }
 }
 
@@ -38,7 +29,6 @@ dependencies {
     implementation 'edu.wpi.first.wpilibj:wpilibj-java:' + WPILIB_VERSION
     implementation 'edu.wpi.first.wpiutil:wpiutil-java:' + WPILIB_VERSION
     implementation 'edu.wpi.first.ntcore:ntcore-java:' + WPILIB_VERSION
-
     implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:' + WPILIB_VERSION
 
     // CTRE
@@ -54,11 +44,8 @@ dependencies {
     // PhotonVision
     implementation 'org.photonvision:PhotonLib-java:' + PhotonVision_VERSION
     implementation 'org.photonvision:PhotonTargeting-java:' + PhotonVision_VERSION
-    implementation 'org.jetbrains:annotations:20.1.0'
 
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
-
+    implementation 'org.jetbrains:annotations:23.0.0'
 }
 
 java {
