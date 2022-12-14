@@ -43,24 +43,34 @@ public class UnboundRobotPositionMap implements Sendable {
      * @return robot's position on the field
      */
     public Pose2d getPositionFromTimestamp(double timestamp) {
-        if (this.map.isEmpty())
-            return null;
+        // @formatter:off
+        if (this.map.isEmpty()) return null;
 
-        if (timestamp <= this.map.firstKey()) {
+        Pose2d position = map.get(timestamp);
+        if(position != null) return position;
+
+        if (timestamp < this.map.firstKey()) {
             return this.map.firstEntry().getValue();
         }
 
-        if (timestamp >= this.map.lastKey()) {
+        if (timestamp > this.map.lastKey()) {
             return this.map.lastEntry().getValue();
         }
 
-        double lowerKeyBound = this.map.floorKey(timestamp);
-        double ceilingKeyBound = this.map.ceilingKey(timestamp);
+        double floorKey = this.map.floorKey(timestamp);
+        double ceilingKey = this.map.ceilingKey(timestamp);
 
-        return this.map.get(lowerKeyBound).interpolate(
-                this.map.get(ceilingKeyBound),
-                (timestamp - lowerKeyBound) / ((ceilingKeyBound - lowerKeyBound))
-        );
+        double range = (timestamp - floorKey) / (ceilingKey - floorKey);
+
+        return this.map.get(floorKey).interpolate(this.map.get(ceilingKey), range);
+        // @formatter:on
+    }
+
+    /**
+     * Clears the contents of the position map
+     */
+    public void clear() {
+        this.map.clear();
     }
 
     @Override

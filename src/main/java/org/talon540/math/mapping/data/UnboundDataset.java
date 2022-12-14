@@ -23,9 +23,6 @@ public class UnboundDataset implements Sendable {
      * Get average of the dataset
      */
     public double getAverage() {
-        if (nodeList.size() == 0)
-            return 0;
-
         return nodeList.stream().mapToDouble(a -> a).average().orElse(0);
     }
 
@@ -35,6 +32,7 @@ public class UnboundDataset implements Sendable {
     public double getVariance() {
         if (nodeList.size() == 0)
             return 0;
+
         // @formatter:off
         double mean = getAverage();
         return nodeList.stream().mapToDouble(a -> Math.pow( a - mean, 2)).sum() / (nodeList.size() - 1);
