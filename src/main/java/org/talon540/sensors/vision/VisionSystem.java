@@ -132,11 +132,10 @@ public abstract class VisionSystem implements Sendable {
         double deltaX = cameraPosition.getX();
         double deltaY = cameraPosition.getY();
 
-        double targetCameraOffsetRadians = Math.toRadians(getVisionState().getYaw());
         double distanceFromTargetMeters = getDistanceFromTargetBase(targetHeightMeters);
 
         // Included angle between the robot's center and the target
-        double theta = Math.signum(deltaX) * targetCameraOffsetRadians;
+        double theta = Math.signum(deltaX) * Math.toRadians(getVisionState().getYaw());
 
         // @formatter:off
 
