@@ -2,6 +2,7 @@ package org.talon540.sensors.vision;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jetbrains.annotations.NotNull;
 import org.talon540.math.Vector2d;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
@@ -77,6 +78,14 @@ public abstract class VisionSystem implements Sendable {
      * @return view status of target
      */
     public abstract boolean targetViewed();
+
+    /**
+     * Create a trigger that activates whenever a target is viewed
+     * @return target view event trigger
+     */
+    public Trigger getTargetViewedEvent() {
+        return new Trigger(this::targetViewed);
+    }
 
     /**
      * Get the current vision state data. Returns {@code null} if it doesn't exist because the target isn't found or is
