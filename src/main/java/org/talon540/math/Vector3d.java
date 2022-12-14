@@ -1,8 +1,6 @@
 package org.talon540.math;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.*;
 
 
 public class Vector3d {
@@ -12,6 +10,33 @@ public class Vector3d {
         this.vecX = velX;
         this.vecY = velY;
         this.vecZ = velRot;
+    }
+
+    /**
+     * Get X value from the vector
+     *
+     * @return x val
+     */
+    public double getX() {
+        return vecX;
+    }
+
+    /**
+     * Get Y value from the vector
+     *
+     * @return y val
+     */
+    public double getY() {
+        return vecY;
+    }
+
+    /**
+     * Get z value from the vector
+     *
+     * @return z val
+     */
+    public double getZ() {
+        return vecZ;
     }
 
     /**
@@ -47,54 +72,19 @@ public class Vector3d {
         );
     }
 
-    /**
-     * Generate a {@link Pose2d} from the current vector
-     */
-    public Pose2d toPose2d() {
-        return new Pose2d(
-                new Translation2d(
-                        vecX,
-                        vecY
-                ),
-                new Rotation2d(vecZ)
+    @SuppressWarnings("SuspiciousNameCombination")
+    public Translation3d toTranslation3d() {
+        return new Translation3d(
+                vecY,
+                -vecX,
+                vecZ
         );
     }
-
-    /**
-     * Generate a Vector3d from a Pose2d
-     */
-    public static Vector3d fromPose2d(Pose2d pose) {
+    public static Vector3d fromTranslation3d(Translation3d translation) {
         return new Vector3d(
-                pose.getX(),
-                pose.getY(),
-                pose.getRotation().getRadians()
+                -translation.getY(),
+                translation.getX(),
+                translation.getZ()
         );
-    }
-
-    /**
-     * Get X value from the vector
-     *
-     * @return x val
-     */
-    public double getX() {
-        return vecX;
-    }
-
-    /**
-     * Get Y value from the vector
-     *
-     * @return y val
-     */
-    public double getY() {
-        return vecY;
-    }
-
-    /**
-     * Get z value from the vector
-     *
-     * @return z val
-     */
-    public double getZ() {
-        return vecZ;
     }
 }

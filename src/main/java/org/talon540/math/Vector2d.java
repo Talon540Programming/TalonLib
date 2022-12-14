@@ -72,4 +72,13 @@ public class Vector2d {
         );
     }
 
+    /**
+     * Construct a {@link Vector2d} from a {@link Translation2d}. Useful for using school math in code math
+     * @param translation translation to derive vector from
+     * @return {@link Vector2d} based on translation
+     */
+    public static Vector2d fromTranslation2d(Translation2d translation) {
+        return new Vector2d(-translation.getY(), translation.getX());
+    }
+
 }
