@@ -4,10 +4,14 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
 import org.talon540.sensors.vision.VisionSystem;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 
 public class PhotonVision extends VisionSystem {
@@ -96,8 +100,36 @@ public class PhotonVision extends VisionSystem {
 
     @Override
     public PhotonVisionState getVisionState() {
-        return PhotonVisionState.fromPhotonStream(camera.getLatestResult());
+        return PhotonVisionState.fromPhotonPipelineResult(camera.getLatestResult());
     }
+
+    public List<PhotonVisionState> getVisionStates() {
+        // @formatter:off
+        PhotonPipelineResult result = camera.getLatestResult();
+
+        if (!result.hasTargets()) return null;
+
+        double latency = result.getLatencyMillis();
+
+        return result.targets.stream().map(target -> PhotonVisionState.fromPhotonTrackedTarget(target, latency)).toList();
+
+        // @formatter:on
+    }
+
+    public void poll() {
+        if (!targetViewed()) {}
+
+        // PhotonVisionState currentState
+    }
+
+    public void whenViewed(int id, Consumer<PhotonVisionState> stateConsumer) {
+
+    }
+
+    public void whenViewed(Consumer<PhotonVisionState> stateConsumer) {
+
+    }
+
 
     @Override
     public void initSendable(SendableBuilder builder) {

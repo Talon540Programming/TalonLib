@@ -1,109 +1,94 @@
 package org.talon540.sensors.vision.PhotonVision;
 
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.Timer;
 import org.jetbrains.annotations.NotNull;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 import org.talon540.sensors.vision.VisionState;
 
-public class PhotonVisionState extends VisionState {
-    private final int fiducialId;
-    // private final double poseAmbiguity;
+import java.util.List;
 
-    /**
-     * Create a vision state from data captured from a photon camera
-     *
-     * @param yaw (horizontal offset from target) of target
-     * @param pitch (vertical offset from target) pitch of target
-     * @param skew skew of target
-     * @param area area of target
-     * @param pipelineLatency latency of the pipeline (time taken to run calculations)
-     * @param fiducialId fiduciary id of the target. If none, pass -1
-     */
+public class PhotonVisionState extends PhotonTrackedTarget implements VisionState {
+    private final double pipelineLatencyMS;
+    private final double stateTimestamp;
+
     public PhotonVisionState(
-            double yaw, double pitch, double skew, double area, double pipelineLatency,
-            // double error,
-            int fiducialId
+            double yaw,
+            double pitch,
+            double area,
+            double skew,
+            int id,
+            Transform3d pose,
+            Transform3d altPose,
+            double ambiguity,
+            List<TargetCorner> corners,
+            double latency
     ) {
         super(
                 yaw,
                 pitch,
-                skew,
                 area,
-                pipelineLatency
+                skew,
+                id,
+                pose,
+                altPose,
+                ambiguity,
+                corners
         );
-
-        this.fiducialId = fiducialId;
-        // this.poseAmbiguity = error;
+        this.pipelineLatencyMS = latency;
+        this.stateTimestamp = Timer.getFPGATimestamp() - this.pipelineLatencyMS + 0.011;
     }
 
-    // /**
-    //  * Get target error or the ambiguity of the primary target. Values above a certain threshold often mean this vision
-    //  * state is unreliable or inaccurate. Will return {@code null} if the vision system doesn't support it
-    //  *
-    //  * @return target error
-    //  */
-    // public double getTargetAmbiguityPercent() {
-    //     return targetAmbiguity;
-    // }
-    //
-    // /**
-    //  * Return the ambiguity of the target of the current state
-    //  *
-    //  * @return target ambiguity
-    //  */
-    // public TargetAmbiguity getTargetAmbiguity() {
-    //     return targetAmbiguity == -1 ? TargetAmbiguity.INVALID : targetAmbiguity <= 0.2 ? TargetAmbiguity.SAFE : TargetAmbiguity.UNSAFE;
-    // }
+    @Override
+    public double getPipelineLatency() {
+        return pipelineLatencyMS;
+    }
 
-    /**
-     * Return the fiduciary id of the target if it has one. Returns -1 if there is no id
-     *
-     * @return fiduciary di
-     */
-    public int getFiducialId() {
-        return fiducialId;
+    @Override
+    public double getStateTimestamp() {
+        return stateTimestamp;
     }
 
     /**
-     * Return if the target has a fiduciary id (such as an AprilTag) or not (Retro reflective tape)
+     * Check if the target has a fiducial id
      *
-     * @return if there is a valid fiduciary id
+     * @return if the target has a fiducial id
      */
     public boolean hasFiducialId() {
         return getFiducialId() != -1;
     }
 
     /**
-     * Create a vision state from the latest data steam from a PhotonCamera. Return {@code null} if no targets
+     * Check if the target is an AprilTag (has a Fiducial ID)
      *
-     * @param stream photon camera results
-     * @return TalonVisionState
+     * @return if target is an AprilTag
      */
-    public static PhotonVisionState fromPhotonStream(@NotNull PhotonPipelineResult stream) {
-        return !stream.hasTargets() ? null : fromPhotonTarget(
-                stream.getBestTarget(),
-                stream.getLatencyMillis()
-        );
+    public boolean isAprilTag() {
+        return hasFiducialId();
     }
 
-    /**
-     * Create a vision state from a PhotonCamera Target
-     *
-     * @param target target from PhotonCamera
-     * @param pipelineLatency latency of the pipeline
-     * @return Talon Vision State from Photon Target
-     */
-    public static PhotonVisionState fromPhotonTarget(PhotonTrackedTarget target, double pipelineLatency) {
-        if (target == null)
-            return null;
-
+    public static PhotonVisionState fromPhotonTrackedTarget(@NotNull PhotonTrackedTarget target, double delay) {
         return new PhotonVisionState(
                 target.getYaw(),
                 target.getPitch(),
-                target.getSkew(),
                 target.getArea(),
-                pipelineLatency,
-                target.getFiducialId()
+                target.getSkew(),
+                target.getFiducialId(),
+                target.getBestCameraToTarget(),
+                target.getAlternateCameraToTarget(),
+                target.getPoseAmbiguity(),
+                target.getCorners(),
+                delay
         );
     }
+
+    public static PhotonVisionState fromPhotonPipelineResult(@NotNull PhotonPipelineResult pipelineResult) {
+        return pipelineResult.hasTargets() ? fromPhotonTrackedTarget(
+                pipelineResult.getBestTarget(),
+                pipelineResult.getLatencyMillis()
+        ) : null;
+    }
+
 }

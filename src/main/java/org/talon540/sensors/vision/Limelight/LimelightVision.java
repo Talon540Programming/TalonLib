@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
-import org.talon540.sensors.vision.VisionState;
 import org.talon540.sensors.vision.VisionSystem;
 
 /**
@@ -98,11 +97,11 @@ public class LimelightVision extends VisionSystem {
     }
 
     @Override
-    public VisionState getVisionState() {
+    public LimelightVisionState getVisionState() {
         if (!targetViewed())
             return null;
 
-        return new VisionState(
+        return new LimelightVisionState(
                 limelightTable.getEntry("tx").getDouble(0),
                 limelightTable.getEntry("ty").getDouble(0),
                 limelightTable.getEntry("ts").getDouble(0),
