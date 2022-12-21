@@ -7,7 +7,7 @@ group 'com.github.Talon540Programming'
 version '2023-SNAPSHOT'
 
 // Dependency Versions
-def WPILIB_VERSION = '2023.1.1-beta-6'
+def WPILIB_VERSION = '2023.1.1-beta-7'
 def PhotonVision_VERSION = 'v2023.1.1-beta-6'
 
 sourceCompatibility = JavaVersion.VERSION_17
