@@ -1,35 +1,48 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+
+    id 'edu.wpi.first.WpilibTools' version '1.0.0'
+    id "edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin" version "2020.2"
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+
+        maven { url = uri('https://maven.ctr-electronics.com/release/') }
+        maven { url = uri('https://maven.revrobotics.com/') }
+        maven { url = uri("https://repo1.maven.org/maven2/") }
+        maven { url = uri("https://maven.photonvision.org/repository/internal") }
+    }
+
+    wpilibRepositories.addAllReleaseRepositories(it)
+    wpilibRepositories.addAllDevelopmentRepositories(it)
+}
+
+ext {
+    wpilibVersion = '2023.1.1-beta-7'
+    photonVisionVersion = 'v2023.1.1-beta-6'
 }
 
 group 'com.github.Talon540Programming'
 version '2023-SNAPSHOT'
 
-// Dependency Versions
-def WPILIB_VERSION = '2023.1.1-beta-7'
-def PhotonVision_VERSION = 'v2023.1.1-beta-6'
-
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-repositories {
-    mavenCentral()
-
-    maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
-    maven { url = uri('https://maven.ctr-electronics.com/release/') }
-    maven { url = uri('https://maven.revrobotics.com/') }
-    maven { url = uri("https://repo1.maven.org/maven2/") }
-    maven { url = uri("https://maven.photonvision.org/repository/internal") }
+test {
+    useJUnitPlatform()
 }
 
+wpilibTools.deps.wpilibVersion = wpilibVersion
+
 dependencies {
-    // WPILIB
-    implementation 'edu.wpi.first.wpimath:wpimath-java:' + WPILIB_VERSION
-    implementation 'edu.wpi.first.wpilibj:wpilibj-java:' + WPILIB_VERSION
-    implementation 'edu.wpi.first.wpiutil:wpiutil-java:' + WPILIB_VERSION
-    implementation 'edu.wpi.first.ntcore:ntcore-java:' + WPILIB_VERSION
-    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:' + WPILIB_VERSION
+    implementation wpilibTools.deps.wpilibJava("wpiutil")
+    implementation wpilibTools.deps.wpilibJava("wpimath")
+    implementation wpilibTools.deps.wpilibJava("ntcore")
+    implementation wpilibTools.deps.wpilibJava("wpilibj")
+    implementation wpilibTools.deps.wpilibJava("wpilibNewCommands")
 
     // CTRE
     implementation 'com.ctre.phoenix:api-java:5.21.1'
@@ -42,8 +55,8 @@ dependencies {
     implementation 'com.kauailabs.navx.frc:navx-java:4.0.447'
 
     // PhotonVision
-    implementation 'org.photonvision:PhotonLib-java:' + PhotonVision_VERSION
-    implementation 'org.photonvision:PhotonTargeting-java:' + PhotonVision_VERSION
+    implementation 'org.photonvision:PhotonLib-java:' + photonVisionVersion
+    implementation 'org.photonvision:PhotonTargeting-java:' + photonVisionVersion
 
     implementation 'org.jetbrains:annotations:23.0.0'
 
