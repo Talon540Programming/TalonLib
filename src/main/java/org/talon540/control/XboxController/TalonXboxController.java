@@ -1,5 +1,6 @@
 package org.talon540.control.XboxController;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
@@ -39,7 +40,7 @@ public class TalonXboxController extends CommandXboxController {
      * @return normalized X
      */
     public double getLeftDeadbandX() {
-        return checkDeadband(super.getLeftX());
+        return MathUtil.applyDeadband(super.getLeftX(), this.deadband);
     }
 
     /**
@@ -48,7 +49,7 @@ public class TalonXboxController extends CommandXboxController {
      * @return normalized Y
      */
     public double getLeftDeadbandY() {
-        return checkDeadband(super.getLeftY());
+        return MathUtil.applyDeadband(super.getLeftY(), this.deadband);
     }
 
     /**
@@ -57,7 +58,7 @@ public class TalonXboxController extends CommandXboxController {
      * @return normalized X
      */
     public double getRightDeadbandX() {
-        return checkDeadband(super.getRightX());
+        return MathUtil.applyDeadband(super.getRightX(), this.deadband);
     }
 
     /**
@@ -66,7 +67,7 @@ public class TalonXboxController extends CommandXboxController {
      * @return normalized Y
      */
     public double getRightDeadbandY() {
-        return checkDeadband(super.getRightY());
+        return MathUtil.applyDeadband(super.getRightY(), this.deadband);
     }
 
     /**
@@ -165,23 +166,5 @@ public class TalonXboxController extends CommandXboxController {
      */
     public InstantCommand getStopRumble() {
         return new InstantCommand(this::stopRumble);
-    }
-
-    /**
-     * Return 0 if the reported value is within the deadband
-     *
-     * @param val current val within domain [-1, 1]
-     * @return Checked deadband value
-     */
-    private double checkDeadband(double val) {
-        if (Math.abs(val) > deadband) {
-            if (val > 0.0) {
-                return (val - deadband) / (1.0 - deadband);
-            } else {
-                return (val + deadband) / (1.0 - deadband);
-            }
-        } else {
-            return 0.0;
-        }
     }
 }
