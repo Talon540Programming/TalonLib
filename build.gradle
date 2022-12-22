@@ -31,10 +31,6 @@ version '2023-SNAPSHOT'
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-test {
-    useJUnitPlatform()
-}
-
 wpilibTools.deps.wpilibVersion = wpilibVersion
 
 dependencies {
@@ -59,8 +55,13 @@ dependencies {
     implementation 'org.photonvision:PhotonTargeting-java:' + photonVisionVersion
 
     implementation 'org.jetbrains:annotations:23.0.0'
+//    implementation "com.fasterxml.jackson.core:jackson-annotations:2.12.4"
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 java {
