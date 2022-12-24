@@ -18,7 +18,6 @@ public class TalonXboxController extends CommandXboxController {
      */
     public TalonXboxController(int port, double deadband) {
         super(port);
-
         this.deadband = deadband;
     }
 
@@ -37,44 +36,37 @@ public class TalonXboxController extends CommandXboxController {
     /**
      * Get the X value from the left joystick and check if it is within the deadband provided
      *
-     * @return normalized X
+     * @return deadband X value from the left joystick
      */
     public double getLeftDeadbandX() {
-        return MathUtil.applyDeadband(super.getLeftX(), this.deadband);
+        return MathUtil.applyDeadband(getLeftX(), this.deadband);
     }
 
     /**
      * Get the Y value from the left joystick and check if it is within the deadband provided
      *
-     * @return normalized Y
+     * @return deadband Y value from the left joystick
      */
     public double getLeftDeadbandY() {
-        return MathUtil.applyDeadband(super.getLeftY(), this.deadband);
+        return MathUtil.applyDeadband(getLeftY(), this.deadband);
     }
 
     /**
      * Get the X value from the right joystick and check if it is within the deadband provided
      *
-     * @return normalized X
+     * @return deadband X value from the right joystick
      */
     public double getRightDeadbandX() {
-        return MathUtil.applyDeadband(super.getRightX(), this.deadband);
+        return MathUtil.applyDeadband(getRightX(), this.deadband);
     }
 
     /**
      * Get the Y value from the right joystick and check if it is within the deadband provided
      *
-     * @return normalized Y
+     * @return deadband Y value from the right joystick
      */
     public double getRightDeadbandY() {
-        return MathUtil.applyDeadband(super.getRightY(), this.deadband);
-    }
-
-    /**
-     * Get a trigger that returns true if the trigger axis is above 20%. Uses default button EventLoop
-     */
-    public Trigger getLeftTrigger() {
-        return getLeftTrigger(CommandScheduler.getInstance().getDefaultButtonLoop());
+        return MathUtil.applyDeadband(getRightY(), this.deadband);
     }
 
     /**
@@ -88,8 +80,8 @@ public class TalonXboxController extends CommandXboxController {
     /**
      * Get a trigger that returns true if the trigger axis is above 20%. Uses default button EventLoop
      */
-    public Trigger getRightTrigger() {
-        return getRightTrigger(CommandScheduler.getInstance().getDefaultButtonLoop());
+    public Trigger getLeftTrigger() {
+        return getLeftTrigger(CommandScheduler.getInstance().getDefaultButtonLoop());
     }
 
     /**
@@ -101,13 +93,20 @@ public class TalonXboxController extends CommandXboxController {
     }
 
     /**
-     * Change the currently set deadband. Must be within [-1, 1]
+     * Get a trigger that returns true if the trigger axis is above 20%. Uses default button EventLoop
+     */
+    public Trigger getRightTrigger() {
+        return getRightTrigger(CommandScheduler.getInstance().getDefaultButtonLoop());
+    }
+
+    /**
+     * Change the currently set deadband. Must be within [0, 1]
      *
      * @param deadband new deadband val
      */
     public void setDeadband(double deadband) {
         if (deadband > 1 || 0 > deadband)
-            throw new IllegalArgumentException("Deadband cannot exceed max output");
+            throw new IllegalArgumentException("Deadband cannot exceed max magnitude");
         this.deadband = deadband;
     }
 
@@ -123,7 +122,7 @@ public class TalonXboxController extends CommandXboxController {
     /**
      * Start rumbling both sides of the controller to some percent
      *
-     * @param percent percent in [-1,1]
+     * @param percent percent in [0, 1]
      */
     public void startRumble(double percent) {
         this.getHID().setRumble(
@@ -134,6 +133,13 @@ public class TalonXboxController extends CommandXboxController {
                 GenericHID.RumbleType.kRightRumble,
                 percent
         );
+    }
+
+    /**
+     * Start rumbling the controller at 100%
+     */
+    public void startRumble() {
+        startRumble(1);
     }
 
     /**
@@ -156,7 +162,7 @@ public class TalonXboxController extends CommandXboxController {
      * @return rumble start command
      */
     public InstantCommand getStartRumble() {
-        return new InstantCommand(() -> this.startRumble(1));
+        return new InstantCommand(this::startRumble);
     }
 
     /**
