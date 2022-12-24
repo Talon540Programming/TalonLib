@@ -93,7 +93,7 @@ public class LimelightVision extends VisionSystem {
 
     @Override
     public boolean targetViewed() {
-        return limelightTable.getEntry("tv").getDouble(0) != 0;
+        return limelightTable.getEntry("tv").getDouble(0) == 1;
     }
 
     @Override
