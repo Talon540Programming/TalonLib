@@ -8,6 +8,8 @@ import org.talon540.math.Vector2d;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
 
+import java.util.OptionalDouble;
+
 public abstract class VisionSystem implements Sendable {
     protected final VisionCameraMountConfig mountConfig;
 
@@ -81,6 +83,7 @@ public abstract class VisionSystem implements Sendable {
 
     /**
      * Create a trigger that activates whenever a target is viewed
+     *
      * @return target view event trigger
      */
     public Trigger getTargetViewedEvent() {
@@ -88,8 +91,7 @@ public abstract class VisionSystem implements Sendable {
     }
 
     /**
-     * Get the current vision state data. Returns {@code null} if it doesn't exist because the target isn't found or is
-     * unrealistic
+     * Get the current vision state data. Returns {@code null} if there are no targets
      */
     public abstract VisionState getVisionState();
 
@@ -100,14 +102,14 @@ public abstract class VisionSystem implements Sendable {
      * <a href="https://docs.limelightvision.io/en/latest/cs_estimating_distance.html">...</a>
      *
      * @param targetHeightMeters height of the retro reflector in meters. Already offsets for mount height
-     * @return distance from the target in {@code meters}. Returns {@code null} if target is not found or value is
-     * unrealistic
+     * @return distance from the target in {@code meters}. Returns empty if target is not found
      */
-    public Double getDistanceFromTarget(double targetHeightMeters) {
+    public OptionalDouble getDistanceFromTarget(double targetHeightMeters) {
         if (!targetViewed())
-            return null;
+            return OptionalDouble.empty();
+
         double deltaAngle = Math.toRadians(this.mountConfig.getMountAngleDegrees() + this.getVisionState().getPitch());
-        return (targetHeightMeters - this.mountConfig.getMountHeightMeters()) / Math.sin(deltaAngle);
+        return OptionalDouble.of((targetHeightMeters - this.mountConfig.getMountHeightMeters()) / Math.sin(deltaAngle));
     }
 
     /**
@@ -115,33 +117,32 @@ public abstract class VisionSystem implements Sendable {
      * <a href="https://docs.limelightvision.io/en/latest/cs_estimating_distance.html">...</a>
      *
      * @param targetHeightMeters height of the retro reflector in meters. Already offsets for mount height
-     * @return distance from the base of the target in {@code meters}. Returns {@code null} if target is not found or
-     * value is unrealistic
+     * @return distance from the base of the target in {@code meters}. Returns empty if target is not found
      */
-    public Double getDistanceFromTargetBase(double targetHeightMeters) {
+    public OptionalDouble getDistanceFromTargetBase(double targetHeightMeters) {
         if (!targetViewed())
-            return null;
+            return OptionalDouble.empty();
         double deltaAngle = Math.toRadians(this.mountConfig.getMountAngleDegrees() + this.getVisionState().getPitch());
-        return (targetHeightMeters - this.mountConfig.getMountHeightMeters()) / Math.tan(deltaAngle);
+        return OptionalDouble.of((targetHeightMeters - this.mountConfig.getMountHeightMeters()) / Math.tan(deltaAngle));
     }
 
     /**
      * Get the distance from the center of the robot to the base of a target
      *
      * @param targetHeightMeters height of the retro reflector in meters. Already offsets for mount height
-     * @return distance from the base of the target in {@code meters} from the center of the robot. Returns {@code null}
-     * if target is not found or value is unrealistic
+     * @return distance from the base of the target in {@code meters} from the center of the robot. Returns empty if
+     * target is not found
      */
-    public Double getDistanceToTargetBaseFromRobotCenter(double targetHeightMeters) {
+    public OptionalDouble getDistanceToTargetBaseFromRobotCenter(double targetHeightMeters) {
         if (!targetViewed())
-            return null;
+            return OptionalDouble.empty();
 
         Vector2d cameraPosition = mountConfig.getRobotRelativePosition();
 
         double deltaX = cameraPosition.getX();
         double deltaY = cameraPosition.getY();
 
-        double distanceFromTargetMeters = getDistanceFromTargetBase(targetHeightMeters);
+        double distanceFromTargetMeters = getDistanceFromTargetBase(targetHeightMeters).getAsDouble();
 
         // Included angle between the robot's center and the target
         double theta = Math.signum(deltaX) * Math.toRadians(getVisionState().getYaw());
@@ -149,17 +150,17 @@ public abstract class VisionSystem implements Sendable {
         // @formatter:off
 
         if (deltaX == 0) {
-            return distanceFromTargetMeters + deltaY;
+            return OptionalDouble.of(distanceFromTargetMeters + deltaY);
         } else if (deltaY == 0) {
             theta += (Math.PI / 2.0);
-            return Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(deltaX, 2) - (2 * distanceFromTargetMeters * Math.abs(deltaX) * Math.cos(theta)));
+            return OptionalDouble.of(Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(deltaX, 2) - (2 * distanceFromTargetMeters * Math.abs(deltaX) * Math.cos(theta))));
         }
 
         theta += deltaY < 0 ? (Math.PI / 2.0) - Math.atan(Math.abs(deltaY) / Math.abs(deltaX)) : Math.PI - Math.atan(Math.abs(deltaX) / Math.abs(deltaY));
 
         double includedSideLength = Math.hypot(deltaX, deltaY);
 
-        return Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(includedSideLength, 2) - (2 * distanceFromTargetMeters * includedSideLength * Math.cos(theta)));
+        return OptionalDouble.of(Math.sqrt(Math.pow(distanceFromTargetMeters, 2) + Math.pow(includedSideLength, 2) - (2 * distanceFromTargetMeters * includedSideLength * Math.cos(theta))));
         // @formatter:on
     }
 
