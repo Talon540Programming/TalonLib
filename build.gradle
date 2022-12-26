@@ -23,6 +23,9 @@ allprojects {
 ext {
     wpilibVersion = '2023.1.1-beta-7'
     photonVisionVersion = 'v2023.1.1-beta-6'
+    phoniexVersion = '5.21.1'
+    revVersion = '2022.1.1'
+    kauailabsVersion = '4.0.447'
 }
 
 group 'com.github.Talon540Programming'
@@ -31,7 +34,7 @@ version '2023-SNAPSHOT'
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
-wpilibTools.deps.wpilibVersion = wpilibVersion
+wpilibTools.deps.setWpilibVersion(wpilibVersion)
 
 dependencies {
     implementation wpilibTools.deps.wpilibJava("wpiutil")
@@ -40,23 +43,17 @@ dependencies {
     implementation wpilibTools.deps.wpilibJava("ntcore")
     implementation wpilibTools.deps.wpilibJava("wpilibj")
     implementation wpilibTools.deps.wpilibJava("wpilibNewCommands")
+    implementation wpilibTools.deps.wpilibJava("apriltag")
 
-    // CTRE
-    implementation 'com.ctre.phoenix:api-java:5.21.1'
-    implementation 'com.ctre.phoenix:wpiapi-java:5.21.1'
+    implementation "com.ctre.phoenix:api-java:${phoniexVersion}"
+    implementation "com.ctre.phoenix:wpiapi-java:${phoniexVersion}"
+//    implementation "com.revrobotics.frc:REVLib-java:${revVersion}"
+//    implementation "com.kauailabs.navx.frc:navx-java:${kauailabsVersion}"
+    implementation "org.photonvision:PhotonLib-java:${photonVisionVersion}"
+    implementation "org.photonvision:PhotonTargeting-java:${photonVisionVersion}"
 
-    // REV
-    implementation 'com.revrobotics.frc:REVLib-java:2022.1.0'
-
-    // Kauailabs
-    implementation 'com.kauailabs.navx.frc:navx-java:4.0.447'
-
-    // PhotonVision
-    implementation 'org.photonvision:PhotonLib-java:' + photonVisionVersion
-    implementation 'org.photonvision:PhotonTargeting-java:' + photonVisionVersion
-
-    implementation 'org.jetbrains:annotations:23.0.0'
-//    implementation "com.fasterxml.jackson.core:jackson-annotations:2.12.4"
+    implementation "org.jetbrains:annotations:23.0.0"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.12.4"
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 }

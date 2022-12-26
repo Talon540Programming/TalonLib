@@ -66,5 +66,15 @@
       <option name="name" value="Local-Development" />
       <option name="url" value="file:/$USER_HOME$/releases/maven/development" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="Local-Release" />
+      <option name="name" value="Local-Release" />
+      <option name="url" value="file:$USER_HOME$/releases/maven/release" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="Local-Development" />
+      <option name="name" value="Local-Development" />
+      <option name="url" value="file:$USER_HOME$/releases/maven/development" />
+    </remote-repository>
   </component>
 </project>
