@@ -8,7 +8,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.talon540.math.Vector2d;
 
 /**
- * Vision utilities used for computer vision based calculations. Uses stuff from both PhotonVision and WPI
+ * Vision utilities used for computer vision based calculations. Uses stuff from both PhotonVision and WPI.
  */
 public final class VisionUtils {
     private VisionUtils() {
