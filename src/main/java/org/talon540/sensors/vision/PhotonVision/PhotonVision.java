@@ -8,6 +8,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
+import org.talon540.sensors.vision.VisionState;
 import org.talon540.sensors.vision.VisionSystem;
 
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import java.util.function.Consumer;
 
 public class PhotonVision extends VisionSystem {
     private final PhotonCamera camera;
-    private final List<Consumer<PhotonVisionState>> stateConsumers = new ArrayList<>();
 
     /**
      * Construct a photon vision system with custom values
@@ -115,26 +115,6 @@ public class PhotonVision extends VisionSystem {
         return result.targets.stream().map(target -> PhotonVisionState.fromPhotonTrackedTarget(target, latency)).toList();
 
         // @formatter:on
-    }
-
-    public void poll() {
-        if (!targetViewed())
-            return;
-
-        for (PhotonVisionState state : getVisionStates()) {
-            for (Consumer<PhotonVisionState> stateConsumer : stateConsumers) {
-                stateConsumer.accept(state);
-            }
-        }
-    }
-
-    /**
-     * Accept consumer when a target or targets are viewed.
-     *
-     * @param stateConsumer consumer
-     */
-    public void whenViewed(Consumer<PhotonVisionState> stateConsumer) {
-        stateConsumers.add(stateConsumer);
     }
 
     @Override

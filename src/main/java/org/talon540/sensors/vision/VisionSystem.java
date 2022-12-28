@@ -2,16 +2,21 @@ package org.talon540.sensors.vision;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jetbrains.annotations.NotNull;
 import org.talon540.math.Vector2d;
 import org.talon540.sensors.vision.VisionFlags.CAMMode;
 import org.talon540.sensors.vision.VisionFlags.LEDStates;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.OptionalDouble;
+import java.util.function.Consumer;
 
 public abstract class VisionSystem implements Sendable {
     protected final VisionCameraMountConfig mountConfig;
+    protected final Collection<Consumer<VisionState>> viewEvents = new LinkedHashSet<>();
 
     protected VisionSystem(@NotNull VisionCameraMountConfig mountConfig) {
         this.mountConfig = mountConfig;
@@ -82,7 +87,13 @@ public abstract class VisionSystem implements Sendable {
     public abstract boolean targetViewed();
 
     /**
-     * Create a trigger that activates whenever a target is viewed
+     * Get the current vision state data. Returns {@code null} if there are no targets
+     */
+    public abstract VisionState getVisionState();
+
+    /**
+     * Create a trigger that activates whenever a target is viewed. Useful if you need to schedule a
+     * command whenever target data is needed.
      *
      * @return target view event trigger
      */
@@ -91,9 +102,23 @@ public abstract class VisionSystem implements Sendable {
     }
 
     /**
-     * Get the current vision state data. Returns {@code null} if there are no targets
+     * Provide the vision state to the provided event consumer when a target is viewed.\
+     *
+     * @param event Event consumer that receives the state.
      */
-    public abstract VisionState getVisionState();
+    public void whenViewed(Consumer<VisionState> event) {
+        viewEvents.add(event);
+    }
+
+    /**
+     * Poll the vision camera and feeds event consumers provided with
+     * {@link VisionSystem#whenViewed(Consumer)}. Put this in the robot periodic method or addPeriodic in TimedRobot.
+     */
+    public void poll() {
+        if(!targetViewed()) return;
+
+        viewEvents.forEach(eventConsumer -> eventConsumer.accept(getVisionState()));
+    }
 
     // Calculations
 
