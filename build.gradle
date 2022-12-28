@@ -4,6 +4,7 @@ plugins {
 
     id 'edu.wpi.first.WpilibTools' version '1.0.0'
     id "edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin" version "2020.2"
+    id 'com.diffplug.spotless' version '6.12.0'
 }
 
 allprojects {
@@ -18,14 +19,6 @@ allprojects {
 
     wpilibRepositories.addAllReleaseRepositories(it)
     wpilibRepositories.addAllDevelopmentRepositories(it)
-}
-
-ext {
-    wpilibVersion = '2023.1.1-beta-7'
-    photonVisionVersion = 'v2023.1.1-beta-6'
-    phoniexVersion = '5.21.1'
-    revVersion = '2022.1.1'
-    kauailabsVersion = '4.0.447'
 }
 
 wrapper {
@@ -78,3 +71,5 @@ publishing {
         }
     }
 }
+
+apply from: 'javastyle.gradle'
