@@ -28,6 +28,10 @@ ext {
     kauailabsVersion = '4.0.447'
 }
 
+wrapper {
+    gradleVersion '7.5.1'
+}
+
 group 'com.github.Talon540Programming'
 version '2023-SNAPSHOT'
 
@@ -47,8 +51,8 @@ dependencies {
 
     implementation "com.ctre.phoenix:api-java:${phoniexVersion}"
     implementation "com.ctre.phoenix:wpiapi-java:${phoniexVersion}"
-//    implementation "com.revrobotics.frc:REVLib-java:${revVersion}"
-//    implementation "com.kauailabs.navx.frc:navx-java:${kauailabsVersion}"
+    // implementation "com.revrobotics.frc:REVLib-java:${revVersion}"
+    // implementation "com.kauailabs.navx.frc:navx-java:${kauailabsVersion}"
     implementation "org.photonvision:PhotonLib-java:${photonVisionVersion}"
     implementation "org.photonvision:PhotonTargeting-java:${photonVisionVersion}"
 
