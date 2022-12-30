@@ -2,67 +2,44 @@ package org.talon540.sensors.vision.PhotonVision;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.talon540.sensors.vision.VisionCAMMode;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
-import org.talon540.sensors.vision.VisionFlags.CAMMode;
-import org.talon540.sensors.vision.VisionFlags.LEDStates;
+import org.talon540.sensors.vision.VisionLEDMode;
 import org.talon540.sensors.vision.VisionSystem;
 
 public class PhotonVision extends VisionSystem {
   private final PhotonCamera camera;
 
   /**
-   * Construct a photon vision system with custom values
+   * Construct a PhotonVision system.
    *
-   * @param cameraName name of the camera sub-table
-   * @param cameraPlacement camera placement relative to the robot
-   * @param camMode camera mode to use
-   * @param pipeline pipeline to set processing for
+   * @param cameraName name of the photon camera as configured.
+   * @param config Mount config of the camera.
    */
-  public PhotonVision(
-      @NotNull String cameraName,
-      @NotNull VisionCameraMountConfig cameraPlacement,
-      CAMMode camMode,
-      int pipeline) {
-    super(cameraPlacement);
+  public PhotonVision(String cameraName, VisionCameraMountConfig config) {
+    super(config);
     this.camera = new PhotonCamera(cameraName);
-
-    setPipelineIndex(pipeline);
-    setCamMode(camMode);
-  }
-
-  /**
-   * Construct a photon vision system with default pipeline and using the camera as a vision
-   * processor
-   *
-   * @param cameraName name of the camera sub-table
-   * @param cameraPlacement camera placement relative to the robot
-   */
-  public PhotonVision(
-      @NotNull String cameraName, @NotNull VisionCameraMountConfig cameraPlacement) {
-    this(cameraName, cameraPlacement, CAMMode.PROCESSING, 0);
   }
 
   @Override
-  public LEDStates getLEDMode() {
+  public VisionLEDMode getLEDMode() {
     return switch (camera.getLEDMode()) {
-      case kOn -> LEDStates.ON;
-      case kOff -> LEDStates.OFF;
-      case kBlink -> LEDStates.BLINK;
-      case kDefault -> LEDStates.DEFAULT;
+      case kOn -> VisionLEDMode.kOn;
+      case kOff -> VisionLEDMode.kOff;
+      case kBlink -> VisionLEDMode.kBlink;
+      case kDefault -> VisionLEDMode.kDefault;
     };
   }
 
   @Override
-  public void setLEDMode(LEDStates state) {
+  public void setLEDMode(VisionLEDMode state) {
     switch (state) {
-      case ON -> camera.setLED(VisionLEDMode.kOn);
-      case OFF -> camera.setLED(VisionLEDMode.kOff);
-      case BLINK -> camera.setLED(VisionLEDMode.kBlink);
-      case DEFAULT -> camera.setLED(VisionLEDMode.kDefault);
+      case kOn -> camera.setLED(org.photonvision.common.hardware.VisionLEDMode.kOn);
+      case kOff -> camera.setLED(org.photonvision.common.hardware.VisionLEDMode.kOff);
+      case kBlink -> camera.setLED(org.photonvision.common.hardware.VisionLEDMode.kBlink);
+      case kDefault -> camera.setLED(org.photonvision.common.hardware.VisionLEDMode.kDefault);
     }
   }
 
@@ -77,13 +54,13 @@ public class PhotonVision extends VisionSystem {
   }
 
   @Override
-  public CAMMode getCamMode() {
-    return camera.getDriverMode() ? CAMMode.DRIVER : CAMMode.PROCESSING;
+  public VisionCAMMode getCamMode() {
+    return camera.getDriverMode() ? VisionCAMMode.kDriver : VisionCAMMode.kProcessing;
   }
 
   @Override
-  public void setCamMode(CAMMode targetMode) {
-    camera.setDriverMode(targetMode == CAMMode.DRIVER);
+  public void setCamMode(VisionCAMMode targetMode) {
+    camera.setDriverMode(targetMode == VisionCAMMode.kDriver);
   }
 
   @Override
@@ -91,30 +68,30 @@ public class PhotonVision extends VisionSystem {
     return camera.getLatestResult().hasTargets();
   }
 
-  @Override
+  /**
+   * Return the vision state of the best target from the pipeline results.
+   *
+   * @return PhotonVisionState of best result.
+   */
   public PhotonVisionState getVisionState() {
     return PhotonVisionState.fromPhotonPipelineResult(camera.getLatestResult());
   }
 
+  /**
+   * Return the current results of the pipeline in terms of {@link PhotonVisionState} objects. List
+   * will be empty if there are no valid targets.
+   *
+   * @return List of {@link PhotonVisionState} objects from pipeline results.
+   */
   public List<PhotonVisionState> getVisionStates() {
-    // @formatter:off
-    PhotonPipelineResult result = camera.getLatestResult();
+    PhotonPipelineResult pipelineResult = camera.getLatestResult();
+    double stateTimestamp = pipelineResult.getTimestampSeconds();
 
-    if (!result.hasTargets()) return null;
-
-    double latency = result.getLatencyMillis();
-
-    return result.targets.stream()
-        .map(target -> PhotonVisionState.fromPhotonTrackedTarget(target, latency))
+    return pipelineResult.targets.stream()
+        .map(target -> PhotonVisionState.fromPhotonTrackedTarget(target, stateTimestamp))
         .toList();
-
-    // @formatter:on
   }
 
   @Override
-  public void initSendable(SendableBuilder builder) {
-    super.initSendable(builder);
-    builder.addDoubleProperty(
-        "id", () -> targetViewed() ? getVisionState().getFiducialId() : -2, null);
-  }
+  public void initSendable(SendableBuilder builder) {}
 }

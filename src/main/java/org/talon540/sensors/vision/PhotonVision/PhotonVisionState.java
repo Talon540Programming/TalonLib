@@ -3,17 +3,14 @@ package org.talon540.sensors.vision.PhotonVision;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Timer;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
-import org.talon540.sensors.vision.VisionState;
 
-public class PhotonVisionState extends PhotonTrackedTarget implements VisionState {
-  private final double pipelineLatencyMS;
+public class PhotonVisionState extends PhotonTrackedTarget {
   private final double stateTimestamp;
 
-  public PhotonVisionState(
+  private PhotonVisionState(
       double yaw,
       double pitch,
       double area,
@@ -23,18 +20,18 @@ public class PhotonVisionState extends PhotonTrackedTarget implements VisionStat
       Transform3d altPose,
       double ambiguity,
       List<TargetCorner> corners,
-      double latency) {
+      double resultTimestampSeconds) {
     super(yaw, pitch, area, skew, id, pose, altPose, ambiguity, corners);
-    this.pipelineLatencyMS = latency;
-    this.stateTimestamp = Timer.getFPGATimestamp() - this.pipelineLatencyMS + 0.011;
+
+    this.stateTimestamp = resultTimestampSeconds;
   }
 
-  @Override
-  public double getPipelineLatency() {
-    return pipelineLatencyMS;
-  }
-
-  @Override
+  /**
+   * Get the timestamp of the current state in seconds since the robot has started. Safe to compare
+   * to {@link Timer#getFPGATimestamp()}
+   *
+   * @return state of the timestamp in terms of the FPGA clock.
+   */
   public double getStateTimestamp() {
     return stateTimestamp;
   }
@@ -58,7 +55,7 @@ public class PhotonVisionState extends PhotonTrackedTarget implements VisionStat
   }
 
   public static PhotonVisionState fromPhotonTrackedTarget(
-      @NotNull PhotonTrackedTarget target, double delay) {
+      PhotonTrackedTarget target, double stateTimestamp) {
     return new PhotonVisionState(
         target.getYaw(),
         target.getPitch(),
@@ -69,13 +66,13 @@ public class PhotonVisionState extends PhotonTrackedTarget implements VisionStat
         target.getAlternateCameraToTarget(),
         target.getPoseAmbiguity(),
         target.getCorners(),
-        delay);
+        stateTimestamp);
   }
 
-  public static PhotonVisionState fromPhotonPipelineResult(
-      @NotNull PhotonPipelineResult pipelineResult) {
+  public static PhotonVisionState fromPhotonPipelineResult(PhotonPipelineResult pipelineResult) {
     return pipelineResult.hasTargets()
-        ? fromPhotonTrackedTarget(pipelineResult.getBestTarget(), pipelineResult.getLatencyMillis())
+        ? fromPhotonTrackedTarget(
+            pipelineResult.getBestTarget(), pipelineResult.getTimestampSeconds())
         : null;
   }
 }
