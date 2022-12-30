@@ -8,10 +8,10 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents the position of the vision camera relative to the origin point of the robot. The
- * origin point of the robot is the point horizontally and vertically centered lying on the ground.
- * In the robot coordinate system, this would be {@code new Pose3d(0, 0, 0)} The origin point is
- * mostly used for position estimation calculations.
+ * Represents the position of a vision camera relative to the origin of the robot in the RCS or <a
+ * href="https://docs.wpilib.org/en/stable/docs/software/advanced-controls/geometry/coordinate-systems.html#robot-coordinate-system">Robot
+ * Coordinate System</a>. For most use cases, an origin point of {@code new Pose3d()} is the
+ * default.
  */
 public class VisionCameraMountConfig {
   private final Pose3d robotOrigin;
@@ -19,9 +19,8 @@ public class VisionCameraMountConfig {
 
   /**
    * Construct a CameraMountConfig from a {@link Pose3d} supplier. This can be useful if the camera
-   * is mounted on a non-static surface such as a turret or telescoping pole. The logic for the
-   * Transform of the camera must be handled by this supplier. The supplier <b>cannot</b> return
-   * null or else an error will be thrown.
+   * is mounted on a non-static surface such as a turret or telescoping pole. The supplier
+   * <b>cannot</b> return null or else an error will be thrown.
    *
    * @param robotOrigin {@link Pose3d} representing the position of the robot origin in the RCS.
    * @param cameraPosition {@link Pose3d} supplier that returns the position of the camera in the
@@ -40,10 +39,9 @@ public class VisionCameraMountConfig {
 
   /**
    * Construct a CameraMountConfig from a {@link Pose3d} supplier. This can be useful if the camera
-   * is mounted on a non-static surface such as a turret or telescoping pole. The logic for the
-   * Transform of the camera must be handled by this supplier. The supplier <b>cannot</b> return
-   * null or else an error will be thrown. Assumes that the robot origin is the point on the floor
-   * horizontally and vertically centered to the robot.
+   * is mounted on a non-static surface such as a turret or telescoping pole. The supplier
+   * <b>cannot</b> return null or else an error will be thrown. Assumes that the robot origin is the
+   * point on the floor horizontally and vertically centered to the robot.
    *
    * @param cameraPosition {@link Pose3d} representing the position of the camera in the RCS.
    */
@@ -52,7 +50,8 @@ public class VisionCameraMountConfig {
   }
 
   /**
-   * Construct a CameraMountConfig for a statically mounted camera from the position of the camera.
+   * Construct a CameraMountConfig for a statically mounted camera from the position of the camera
+   * as a {@link Pose3d}.
    *
    * @param robotOrigin {@link Pose3d} representing the position of the robot origin in the RCS.
    * @param cameraPosition {@link Pose3d} representing the position of the camera in the RCS.
@@ -62,9 +61,9 @@ public class VisionCameraMountConfig {
   }
 
   /**
-   * Construct a CameraMountConfig for a statically mounted camera from the position of the camera.
-   * Assumes that the robot origin is the point on the floor horizontally and vertically centered to
-   * the robot.
+   * Construct a CameraMountConfig for a statically mounted camera from the position of the camera
+   * as a {@link Pose3d}. Assumes that the robot origin is the point on the floor horizontally and
+   * vertically centered to the robot.
    *
    * @param cameraPosition {@link Pose3d} of the position of the camera in the RCS.
    */
@@ -92,7 +91,7 @@ public class VisionCameraMountConfig {
 
   /**
    * Return the pitch of the camera relative to the horizontal plane the camera sits on assuming the
-   * plane bisects the camera sensor.
+   * plane bisects the camera's sensor.
    *
    * @return camera pitch in radians.
    * @see <a
@@ -104,8 +103,8 @@ public class VisionCameraMountConfig {
   }
 
   /**
-   * Return the height of the camera relative to the origin of the robot. Assuming the origin is on
-   * the floor, this would be the height of the camera off the floor.
+   * Return the height of the camera relative to the origin of the robot. Assuming the origin has a
+   * height/Z of 0, this would be the height of the camera off the floor.
    *
    * @return height of the camera relative to the origin of the robot.
    * @see <a
