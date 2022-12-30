@@ -4,8 +4,6 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jetbrains.annotations.NotNull;
-import org.talon540.sensors.vision.VisionFlags.CAMMode;
-import org.talon540.sensors.vision.VisionFlags.LEDStates;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -34,34 +32,34 @@ public abstract class VisionSystem implements Sendable {
     /**
      * @return current mode of the LEDs
      */
-    public abstract LEDStates getLEDMode();
+    public abstract VisionLEDModes getLEDMode();
 
     /**
      * Set the mode of the LEDs of the vision system
      *
      * @param state target state of the camera
      */
-    public abstract void setLEDMode(LEDStates state);
+    public abstract void setLEDMode(VisionLEDModes state);
 
     /**
      * Enables vision system LEDs
      */
     public void enableLEDS() {
-        setLEDMode(LEDStates.ON);
+        setLEDMode(VisionLEDModes.ON);
     }
 
     /**
      * Disable vision system LEDs
      */
     public void disableLEDS() {
-        setLEDMode(LEDStates.OFF);
+        setLEDMode(VisionLEDModes.OFF);
     }
 
     /**
      * Blinks vision system LEDs
      */
     public void blinkLEDS() {
-        setLEDMode(LEDStates.BLINK);
+        setLEDMode(VisionLEDModes.BLINK);
     }
 
     /**
@@ -69,12 +67,12 @@ public abstract class VisionSystem implements Sendable {
      *
      * @return current camera mode
      */
-    public abstract CAMMode getCamMode();
+    public abstract VisionCAMMode getCamMode();
 
     /**
      * Set the camera mode of the vision system
      */
-    public abstract void setCamMode(CAMMode targetMode);
+    public abstract void setCamMode(VisionCAMMode targetMode);
 
     /**
      * Whether the vision system target is currently viewed
@@ -133,16 +131,6 @@ public abstract class VisionSystem implements Sendable {
         builder.addDoubleProperty(
                 "pitch",
                 () -> targetViewed() ? getVisionState().getPitch() : 0,
-                null
-        );
-        builder.addDoubleProperty(
-                "skew",
-                () -> targetViewed() ? getVisionState().getSkew() : 0,
-                null
-        );
-        builder.addDoubleProperty(
-                "area",
-                () -> targetViewed() ? getVisionState().getArea() : 0,
                 null
         );
         builder.addDoubleProperty(
