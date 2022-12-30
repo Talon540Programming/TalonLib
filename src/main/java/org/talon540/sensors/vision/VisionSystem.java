@@ -12,56 +12,56 @@ public abstract class VisionSystem implements Sendable {
   }
 
   /**
-   * Get the current index of the running vision system pipeline
+   * Get the current index of the running vision system pipeline.
    *
-   * @return current index
+   * @return current pipeline index.
    */
   public abstract int getPipelineIndex();
 
-  /** Set the index of the vision system's pipeline */
+  /** Set the index of the vision system's pipeline. */
   public abstract void setPipelineIndex(int index);
 
   /**
-   * @return current mode of the LEDs
+   * @return current mode of the vision system's LEDs.
    */
   public abstract VisionLEDMode getLEDMode();
 
   /**
-   * Set the mode of the LEDs of the vision system
+   * Set the mode of the LEDs of the vision system.
    *
-   * @param state target state of the camera
+   * @param state LED mode to set.
    */
   public abstract void setLEDMode(VisionLEDMode state);
 
-  /** Enables vision system LEDs */
+  /** Enables the vision system's LEDs. */
   public void enableLEDS() {
     setLEDMode(VisionLEDMode.kOn);
   }
 
-  /** Disable vision system LEDs */
+  /** Disables the vision system's LEDs. */
   public void disableLEDS() {
     setLEDMode(VisionLEDMode.kOff);
   }
 
-  /** Blinks vision system LEDs */
+  /** Blinks the vision system's LEDs. */
   public void blinkLEDS() {
     setLEDMode(VisionLEDMode.kBlink);
   }
 
   /**
-   * Get the current camera mode of the vision system
+   * Get the current camera mode of the vision system.
    *
-   * @return current camera mode
+   * @return current camera mode.
    */
   public abstract VisionCAMMode getCamMode();
 
-  /** Set the camera mode of the vision system */
+  /** Set the camera mode of the vision system. */
   public abstract void setCamMode(VisionCAMMode targetMode);
 
   /**
-   * Whether the vision system target is currently viewed
+   * Whether the vision system has any valid targets in its view.
    *
-   * @return view status of target
+   * @return view status of a valid target.
    */
   public abstract boolean targetViewed();
 }
