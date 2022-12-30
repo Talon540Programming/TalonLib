@@ -3,103 +3,136 @@ package org.talon540.sensors.vision.Limelight;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import org.jetbrains.annotations.NotNull;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import java.util.Optional;
+import org.talon540.sensors.vision.VisionCAMMode;
 import org.talon540.sensors.vision.VisionCameraMountConfig;
-import org.talon540.sensors.vision.VisionFlags.CAMMode;
-import org.talon540.sensors.vision.VisionFlags.LEDStates;
+import org.talon540.sensors.vision.VisionLEDMode;
 import org.talon540.sensors.vision.VisionSystem;
 
 /** An object used to get data and manipulate the state of a limelight camera */
 public class LimelightVision extends VisionSystem {
-  private final NetworkTable limelightTable =
-      NetworkTableInstance.getDefault().getTable("limelight");
+  // Target Data
+  private final NetworkTableEntry targetViewedEntry;
+  private final NetworkTableEntry targetYawEntry;
+  private final NetworkTableEntry targetPitchEntry;
+  private final NetworkTableEntry targetAreaEntry;
+  private final NetworkTableEntry targetSkewEntry;
+  private final NetworkTableEntry pipelineLatencyEntry;
+
+  // Camera Controls
+  private final NetworkTableEntry ledModeEntry;
+  private final NetworkTableEntry camModeEntry;
+  private final NetworkTableEntry pipelineEntry;
+  private final NetworkTableEntry snapshotEntry;
 
   /**
-   * Construct a limelight object
+   * Construct a Limelight camera using a specific NT instance.
    *
-   * @param cameraPlacement camera placement relative to the robot
-   * @param camMode camera mode to use
-   * @param pipeline pipeline to set processing for
+   * @param instance NT instance to use.
+   * @param config Mount config of the camera.
    */
-  public LimelightVision(
-      @NotNull VisionCameraMountConfig cameraPlacement, CAMMode camMode, int pipeline) {
-    super(cameraPlacement);
+  public LimelightVision(NetworkTableInstance instance, VisionCameraMountConfig config) {
+    super(config);
 
-    setCamMode(camMode);
-    setPipelineIndex(pipeline);
+    NetworkTable limelightTable = instance.getTable("limelight");
+    this.targetViewedEntry = limelightTable.getEntry("tv");
+    this.targetYawEntry = limelightTable.getEntry("tx");
+    this.targetPitchEntry = limelightTable.getEntry("ty");
+    this.targetAreaEntry = limelightTable.getEntry("ta");
+    this.targetSkewEntry = limelightTable.getEntry("ts");
+    this.pipelineLatencyEntry = limelightTable.getEntry("tl");
+
+    this.ledModeEntry = limelightTable.getEntry("ledMode");
+    this.camModeEntry = limelightTable.getEntry("camMode");
+    this.pipelineEntry = limelightTable.getEntry("pipeline");
+    this.snapshotEntry = limelightTable.getEntry("snapshot");
   }
 
   /**
-   * Create a limelight object with the LEDs and Pipeline set to default
+   * Construct a limelight camera using the default NetworkTablesInstance.
    *
-   * @param cameraPlacement camera placement relative to the robot
+   * @param config Mount config of the camera.
    */
-  public LimelightVision(@NotNull VisionCameraMountConfig cameraPlacement) {
-    this(cameraPlacement, CAMMode.PROCESSING, 0);
+  public LimelightVision(VisionCameraMountConfig config) {
+    this(NetworkTableInstance.getDefault(), config);
   }
 
   @Override
-  public LEDStates getLEDMode() {
-    return switch ((int) limelightTable.getEntry("ledMode").getDouble(0)) {
-      case 1 -> LEDStates.OFF;
-      case 2 -> LEDStates.BLINK;
-      case 3 -> LEDStates.ON;
-      default -> LEDStates.DEFAULT;
+  public VisionLEDMode getLEDMode() {
+    return switch (ledModeEntry.getNumber(-1).intValue()) {
+      case 1 -> VisionLEDMode.kOff;
+      case 2 -> VisionLEDMode.kBlink;
+      case 3 -> VisionLEDMode.kOn;
+      default -> VisionLEDMode.kDefault;
     };
   }
 
   @Override
-  public void setLEDMode(LEDStates state) {
-    NetworkTableEntry ledEntry = limelightTable.getEntry("ledMode");
+  public void setLEDMode(VisionLEDMode state) {
     switch (state) {
-      case OFF -> ledEntry.setNumber(1);
-      case BLINK -> ledEntry.setNumber(2);
-      case ON -> ledEntry.setNumber(3);
-      case DEFAULT -> ledEntry.setNumber(0);
+      case kOff -> ledModeEntry.setNumber(1);
+      case kBlink -> ledModeEntry.setNumber(2);
+      case kOn -> ledModeEntry.setNumber(3);
+      case kDefault -> ledModeEntry.setNumber(0);
     }
   }
 
   @Override
   public int getPipelineIndex() {
-    return (int) limelightTable.getEntry("getpipe").getDouble(0);
+    return pipelineEntry.getNumber(-1).intValue();
   }
 
   @Override
   public void setPipelineIndex(int index) {
-    if (!(0 <= index && index <= 9))
-      throw new IllegalArgumentException("Pipeline must be within 0-9");
-
-    limelightTable.getEntry("pipeline").setNumber(index);
+    pipelineEntry.setNumber(index);
   }
 
   @Override
-  public CAMMode getCamMode() {
-    return switch ((int) limelightTable.getEntry("camMode").getDouble(-1)) {
-      case 0 -> CAMMode.PROCESSING;
-      case 1 -> CAMMode.DRIVER;
-      default -> CAMMode.INVALID;
+  public VisionCAMMode getCamMode() {
+    return switch (camModeEntry.getNumber(-1).intValue()) {
+      case 0 -> VisionCAMMode.kProcessing;
+      case 1 -> VisionCAMMode.kDriver;
+      default -> VisionCAMMode.kInvalid;
     };
   }
 
   @Override
-  public void setCamMode(CAMMode targetMode) {
-    limelightTable.getEntry("camMode").setNumber(targetMode.val);
+  public void setCamMode(VisionCAMMode targetMode) {
+    switch (targetMode) {
+      case kProcessing -> camModeEntry.setNumber(0);
+      case kDriver -> camModeEntry.setNumber(1);
+    }
   }
 
   @Override
   public boolean targetViewed() {
-    return limelightTable.getEntry("tv").getDouble(0) == 1;
+    return targetViewedEntry.getDouble(0) == 1;
+  }
+
+  /** Take a snapshot (photo) from the limelight. */
+  public void takeSnapshot() {
+    snapshotEntry.setNumber(1);
+  }
+
+  /**
+   * Get the current vision state of the limelight of any targets seen by the camera. Will return
+   * empty if there are no targets.
+   *
+   * @return current vision state.
+   */
+  public Optional<LimelightVisionState> getVisionState() {
+    if (!targetViewed()) return Optional.empty();
+
+    return Optional.of(
+        new LimelightVisionState(
+            targetYawEntry.getDouble(0),
+            targetPitchEntry.getDouble(0),
+            targetAreaEntry.getDouble(0),
+            targetSkewEntry.getDouble(0),
+            pipelineLatencyEntry.getDouble(0)));
   }
 
   @Override
-  public LimelightVisionState getVisionState() {
-    if (!targetViewed()) return null;
-
-    return new LimelightVisionState(
-        limelightTable.getEntry("tx").getDouble(0),
-        limelightTable.getEntry("ty").getDouble(0),
-        limelightTable.getEntry("ts").getDouble(0),
-        limelightTable.getEntry("ta").getDouble(0),
-        limelightTable.getEntry("tl").getDouble(0));
-  }
+  public void initSendable(SendableBuilder builder) {}
 }
