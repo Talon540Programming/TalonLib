@@ -1,20 +1,20 @@
 package org.talon540.sensors.vision;
 
-public enum VisionLEDModes {
+public enum VisionLEDMode {
     /**
      * Turn on the processioning unit's LEDs
      */
-    ON,
+    kOn,
     /**
      * Turn off the processioning unit's LEDs
      */
-    OFF,
+    kOff,
     /**
      * Blink the processioning unit's LEDs
      */
-    BLINK,
+    kBlink,
     /**
      * Set the processioning unit's LEDs to the pipeline or camera default
      */
-    DEFAULT
+    kDefault
 }
