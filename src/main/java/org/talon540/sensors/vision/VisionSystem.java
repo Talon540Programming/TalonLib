@@ -4,11 +4,15 @@ import edu.wpi.first.util.sendable.Sendable;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Utilities used by vision systems. This class shouldn't be used unless as a camera control parameter. Subclasses
+ * are responsible for returning their own vision data per their own vision system
+ */
 public abstract class VisionSystem implements Sendable {
-  protected final VisionCameraMountConfig mountConfig;
+  protected final VisionCameraMountConfig cameraMountConfig;
 
   protected VisionSystem(@NotNull VisionCameraMountConfig mountConfig) {
-    this.mountConfig = Objects.requireNonNull(mountConfig);
+    this.cameraMountConfig = Objects.requireNonNull(mountConfig);
   }
 
   /**
@@ -64,4 +68,13 @@ public abstract class VisionSystem implements Sendable {
    * @return view status of a valid target.
    */
   public abstract boolean targetViewed();
+
+  /**
+   * Get the mount config of the camera.
+   *
+   * @return hardware mount config of the camera.
+   */
+  public VisionCameraMountConfig getCameraMountConfig() {
+    return this.cameraMountConfig;
+  }
 }
