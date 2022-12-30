@@ -1,19 +1,22 @@
 package org.talon540.sensors.vision;
 
+/**
+ * Represents a simple result state from a vision system.
+ */
 public interface VisionState {
-  /**
-   * Get latency from the pipeline (the time required to do calculations
-   *
-   * @return pipeline calculation time/latency
-   */
-  double getPipelineLatency();
-
   /**
    * Get the timestamp of the time of calculation of the current state
    *
    * @return VisionState timestamp
    */
   double getStateTimestamp();
+
+  /**
+   * Get latency from the pipeline (the time required to do calculations
+   *
+   * @return pipeline calculation time/latency
+   */
+  double getPipelineLatency();
 
   /**
    * Get target yaw in degrees. Equivalent to tx
@@ -28,18 +31,4 @@ public interface VisionState {
    * @return target pitch
    */
   double getPitch();
-
-  /**
-   * Get target skew
-   *
-   * @return target skew
-   */
-  double getSkew();
-
-  /**
-   * Get target area [0, 100]
-   *
-   * @return target area
-   */
-  double getArea();
 }
