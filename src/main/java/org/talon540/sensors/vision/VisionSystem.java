@@ -5,8 +5,9 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Utilities used by vision systems. This class shouldn't be used unless as a camera control parameter. Subclasses
- * are responsible for returning their own vision data per their own vision system
+ * Utilities used by vision systems. This class shouldn't be used unless as a camera control
+ * parameter. Subclasses are responsible for returning their own vision data per their own vision
+ * system
  */
 public abstract class VisionSystem implements Sendable {
   protected final VisionCameraMountConfig cameraMountConfig;
