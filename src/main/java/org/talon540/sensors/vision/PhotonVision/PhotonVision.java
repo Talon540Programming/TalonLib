@@ -92,6 +92,15 @@ public class PhotonVision extends VisionSystem {
         .toList();
   }
 
+  /**
+   * Return the photon camera used for this system.
+   *
+   * @return photon camera being used.
+   */
+  public PhotonCamera getCamera() {
+    return camera;
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {}
 }
