@@ -1,109 +1,125 @@
 package org.talon540.sensors.vision;
 
-import org.jetbrains.annotations.NotNull;
-import org.talon540.math.Vector2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import java.util.Objects;
+import java.util.function.Supplier;
 
+/**
+ * Represents the position of a vision camera relative to the origin of the robot in the <a
+ * href="https://docs.wpilib.org/en/stable/docs/software/advanced-controls/geometry/coordinate-systems.html#robot-coordinate-system">Robot
+ * Coordinate System</a>.
+ */
 public class VisionCameraMountConfig {
-  private final double mountHeightMeters;
-  private final double mountAngleDegrees, mountAngleRadians;
-  private final Vector2d robotRelativePosition;
+  private final Pose3d robotOriginPosition;
+  private final Supplier<Pose3d> cameraPosition;
 
   /**
-   * Create an object used to tell the position of the camera on the robot
+   * Construct a VisionCameraMountConfig from a {@link Pose3d} supplier. This can be useful if the
+   * camera is mounted on a non-static surface such as a turret or telescoping pole. The supplier
+   * <b>cannot</b> return null or else an error will be thrown.
    *
-   * @param mountHeightMeters height of the camera off the floor in meters
-   * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-   * @param robotRelativePosition camera's position relative to the center of the robot. (Pos X =
-   *     right, Pos y = forward)
+   * @param robotOriginPosition {@link Pose3d} representing the position of the robot origin in the
+   *     RCS.
+   * @param cameraPosition {@link Pose3d} supplier that returns the position of the camera in the
+   *     RCS.
    */
-  private VisionCameraMountConfig(
-      double mountHeightMeters, double mountAngleDegrees, @NotNull Vector2d robotRelativePosition) {
-    this.mountHeightMeters = mountHeightMeters;
-    this.mountAngleDegrees = mountAngleDegrees;
-    this.mountAngleRadians = Math.toRadians(mountAngleDegrees);
-    this.robotRelativePosition = robotRelativePosition;
+  public VisionCameraMountConfig(Pose3d robotOriginPosition, Supplier<Pose3d> cameraPosition) {
+    this.robotOriginPosition = Objects.requireNonNull(robotOriginPosition);
+    this.cameraPosition = Objects.requireNonNull(cameraPosition);
+
+    if (!robotOriginPosition.getRotation().equals(new Rotation3d())) {
+      throw new IllegalArgumentException(
+          "Robot origin cannot have a non-zero roll, pitch, or yaw.");
+    }
   }
 
   /**
-   * Create an object used to tell the position of the camera on the robot.
+   * Construct a VisionCameraMountConfig from a {@link Pose3d} supplier. This can be useful if the
+   * camera is mounted on a non-static surface such as a turret or telescoping pole. The supplier
+   * <b>cannot</b> return null or else an error will be thrown. Assumes that the robot origin is the
+   * point on the floor horizontally and vertically centered to the robot.
    *
-   * @param mountHeightMeters height of the camera off the floor in meters
-   * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
-   * @param robotPositionX side to side offset (x-axis); center of the robot is (0,0) right is
-   *     positive
-   * @param robotPositionY forward or reverse offset (y-axis); center of the robot is (0,0), forward
-   *     is positive
+   * @param cameraPosition {@link Pose3d} representing the position of the camera in the RCS.
    */
-  public VisionCameraMountConfig(
-      double mountHeightMeters,
-      double mountAngleDegrees,
-      double robotPositionX,
-      double robotPositionY) {
-    this(mountHeightMeters, mountAngleDegrees, new Vector2d(robotPositionX, robotPositionY));
+  public VisionCameraMountConfig(Supplier<Pose3d> cameraPosition) {
+    this(new Pose3d(), cameraPosition);
   }
 
   /**
-   * Create a camera position with no defined camera position. Assumes the camera is mounted in the
-   * center of the robot (0, 0)
+   * Construct a VisionCameraMountConfig for a statically mounted camera from the position of the
+   * camera as a {@link Pose3d}.
    *
-   * @param mountHeightMeters height of the camera off the floor in meters
-   * @param mountAngleDegrees pitch of the camera from the horizontal axis (positive values mean up)
+   * @param robotOriginPosition {@link Pose3d} representing the position of the robot origin in the
+   *     RCS.
+   * @param cameraPosition {@link Pose3d} representing the position of the camera in the RCS.
    */
-  public VisionCameraMountConfig(double mountHeightMeters, double mountAngleDegrees) {
-    this(mountHeightMeters, mountAngleDegrees, new Vector2d(0, 0));
+  public VisionCameraMountConfig(Pose3d robotOriginPosition, Pose3d cameraPosition) {
+    this(robotOriginPosition, () -> cameraPosition);
   }
 
   /**
-   * Get the height of the camera from the ground in meters
+   * Construct a VisionCameraMountConfig for a statically mounted camera from the position of the
+   * camera as a {@link Pose3d}. Assumes that the robot origin is the point on the floor
+   * horizontally and vertically centered to the robot.
    *
-   * @return height of the camera
+   * @param cameraPosition {@link Pose3d} of the position of the camera in the RCS.
    */
-  public double getMountHeightMeters() {
-    return mountHeightMeters;
+  public VisionCameraMountConfig(Pose3d cameraPosition) {
+    this(new Pose3d(), cameraPosition);
   }
 
   /**
-   * Get the mount angle of the camera in degrees
+   * Return the specified robot origin in the RCS.
    *
-   * @return mount angle in degrees
+   * @return robot origin in the RCS.
    */
-  public double getMountAngleDegrees() {
-    return mountAngleDegrees;
+  public Pose3d getRobotOriginPosition() {
+    return this.robotOriginPosition;
   }
 
   /**
-   * Get the mount angle of the camera in radians
+   * Return the current position of the camera in the RCS.
    *
-   * @return mount angle in radians
+   * @return camera position in the RCS.
    */
-  public double getMountAngleRadians() {
-    return mountAngleRadians;
+  public Pose3d getCameraPosition() {
+    return Objects.requireNonNull(cameraPosition.get(), "The provided camera position was null");
   }
 
   /**
-   * Get the position of the camera relative to the center (0, 0) of the robot
+   * Return the current transform between the origin of the robot to the camera.
    *
-   * @return relative position of the camera
+   * @return current {@link Transform3d}.
    */
-  public Vector2d getRobotRelativePosition() {
-    return robotRelativePosition;
+  public Transform3d getRobotToCamera() {
+    return new Transform3d(robotOriginPosition, getCameraPosition());
   }
 
   /**
-   * Get the camera's side to side distance from the center of the robot
+   * Return the pitch of the camera relative to the horizontal plane the camera sits on assuming the
+   * plane bisects the camera's sensor. This angle is signed.
    *
-   * @return side to side offset (x-axis)
+   * @return camera pitch in radians.
+   * @see <a
+   *     href="https://docs.limelightvision.io/en/latest/_images/DistanceEstimation.jpg"><i>a1</i>
+   *     in the figure</a>
    */
-  public double getOffsetX() {
-    return robotRelativePosition.getX();
+  public double getCameraPitch() {
+    return getCameraPosition().getRotation().getY();
   }
 
   /**
-   * Get the camera's forward or reverse distance from the center of the robot
+   * Return the height of the camera relative to the origin of the robot. Assuming the origin has a
+   * height/Z value of 0, this would be the height of the camera off the floor.
    *
-   * @return forward or reverse offset (y-axis)
+   * @return height of the camera relative to the origin of the robot.
+   * @see <a
+   *     href="https://docs.limelightvision.io/en/latest/_images/DistanceEstimation.jpg"><i>h1</i>
+   *     in the figure</a>
    */
-  public double getOffsetY() {
-    return robotRelativePosition.getY();
+  public double getCameraHeight() {
+    return getCameraPosition().getTranslation().getZ();
   }
 }
