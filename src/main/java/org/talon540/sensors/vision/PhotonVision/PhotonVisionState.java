@@ -19,9 +19,11 @@ public class PhotonVisionState extends PhotonTrackedTarget {
       Transform3d pose,
       Transform3d altPose,
       double ambiguity,
-      List<TargetCorner> corners,
+      List<TargetCorner> minAreaRectCorners,
+      List<TargetCorner> detectedCorners,
       double resultTimestampSeconds) {
-    super(yaw, pitch, area, skew, id, pose, altPose, ambiguity, corners);
+    super(
+        yaw, pitch, area, skew, id, pose, altPose, ambiguity, minAreaRectCorners, detectedCorners);
 
     this.stateTimestamp = resultTimestampSeconds;
   }
@@ -65,7 +67,8 @@ public class PhotonVisionState extends PhotonTrackedTarget {
         target.getBestCameraToTarget(),
         target.getAlternateCameraToTarget(),
         target.getPoseAmbiguity(),
-        target.getCorners(),
+        target.getMinAreaRectCorners(),
+        target.getDetectedCorners(),
         stateTimestamp);
   }
 
